@@ -6,6 +6,3 @@ __pycache__/
 *.pyc
 .venv/
 node_modules/
-
-# Binary / generated diagrams — not shipped in public repo (links may point to hosted assets)
-docs/images/

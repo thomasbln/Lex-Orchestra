@@ -1,0 +1,113 @@
+<svg width="100%" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0d1117"/>
+    <stop offset="100%" stop-color="#141920"/>
+  </linearGradient>
+</defs>
+
+<rect width="800" height="520" fill="url(#bg)" rx="12"/>
+<g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+  <line x1="0" y1="80" x2="800" y2="80"/>
+  <line x1="267" y1="80" x2="267" y2="480"/>
+  <line x1="534" y1="80" x2="534" y2="480"/>
+</g>
+
+<!-- Title -->
+<text x="400" y="32" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.3)" letter-spacing="3">INFRASTRUCTURE SCOUT — 3-LAYER LOCAL PIPELINE</text>
+<text x="400" y="56" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.25)">All three layers run locally. Only anonymised UUIDs leave the network.</text>
+
+<!-- Layer 1 header -->
+<text x="133" y="102" text-anchor="middle" font-size="10" fill="#AFA9EC" letter-spacing="2">LAYER 1</text>
+<text x="133" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#CECBF6">Regex Scanner</text>
+<text x="133" y="136" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.55)">Deterministic · no LLM</text>
+
+<!-- Layer 1 items -->
+<rect x="20" y="150" width="213" height="44" rx="6" fill="rgba(83,74,183,0.12)" stroke="#534AB7" stroke-width="0.5"/>
+<text x="126" y="168" text-anchor="middle" font-size="11" font-weight="500" fill="#CECBF6">Service detection</text>
+<text x="126" y="184" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.55)">Stripe, AWS, Supabase, OpenAI…</text>
+
+<rect x="20" y="204" width="213" height="44" rx="6" fill="rgba(83,74,183,0.12)" stroke="#534AB7" stroke-width="0.5"/>
+<text x="126" y="222" text-anchor="middle" font-size="11" font-weight="500" fill="#CECBF6">Secrets &amp; env files</text>
+<text x="126" y="238" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.55)">API keys, cleartext credentials</text>
+
+<rect x="20" y="258" width="213" height="44" rx="6" fill="rgba(83,74,183,0.12)" stroke="#534AB7" stroke-width="0.5"/>
+<text x="126" y="276" text-anchor="middle" font-size="11" font-weight="500" fill="#CECBF6">Docker misconfigs</text>
+<text x="126" y="292" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.55)">Exposed ports, volumes, env</text>
+
+<rect x="20" y="312" width="213" height="44" rx="6" fill="rgba(83,74,183,0.12)" stroke="#534AB7" stroke-width="0.5"/>
+<text x="126" y="330" text-anchor="middle" font-size="11" font-weight="500" fill="#CECBF6">LLM system prompts</text>
+<text x="126" y="346" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.55)">Presence detected, never forwarded</text>
+
+<text x="126" y="390" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.4)">confidence 0.95</text>
+<text x="126" y="408" text-anchor="middle" font-size="10" fill="rgba(175,169,236,0.3)">Pure Python · local</text>
+
+<!-- Arrow 1→2 -->
+<line x1="240" y1="280" x2="278" y2="280" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Layer 2 header -->
+<text x="400" y="102" text-anchor="middle" font-size="10" fill="#5DCAA5" letter-spacing="2">LAYER 2</text>
+<text x="400" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#9FE1CB">PII Filter</text>
+<text x="400" y="136" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.55)">Presidio · local · pre-LLM</text>
+
+<!-- Layer 2 items -->
+<rect x="287" y="150" width="213" height="44" rx="6" fill="rgba(15,110,86,0.15)" stroke="#1D9E75" stroke-width="0.5"/>
+<text x="393" y="168" text-anchor="middle" font-size="11" font-weight="500" fill="#9FE1CB">Names → &lt;PERSON&gt;</text>
+<text x="393" y="184" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.55)">Emails → &lt;EMAIL&gt;</text>
+
+<rect x="287" y="204" width="213" height="44" rx="6" fill="rgba(15,110,86,0.15)" stroke="#1D9E75" stroke-width="0.5"/>
+<text x="393" y="222" text-anchor="middle" font-size="11" font-weight="500" fill="#9FE1CB">IBANs, phone numbers</text>
+<text x="393" y="238" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.55)">IP addresses, IDs</text>
+
+<rect x="287" y="258" width="213" height="44" rx="6" fill="rgba(15,110,86,0.15)" stroke="#1D9E75" stroke-width="0.5"/>
+<text x="393" y="276" text-anchor="middle" font-size="11" font-weight="500" fill="#9FE1CB">System-prompt content</text>
+<text x="393" y="292" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.55)">Never forwarded to any API</text>
+
+<rect x="287" y="312" width="213" height="44" rx="6" fill="rgba(15,110,86,0.12)" stroke="rgba(29,158,117,0.4)" stroke-width="0.5"/>
+<text x="393" y="330" text-anchor="middle" font-size="11" font-weight="500" fill="#9FE1CB">Strips PII before Layer 3</text>
+<text x="393" y="346" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.55)">Output: anonymised text only</text>
+
+<text x="393" y="390" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.4)">microsoft/presidio · local</text>
+<text x="393" y="408" text-anchor="middle" font-size="10" fill="rgba(93,202,165,0.3)">spaCy NER models</text>
+
+<!-- Arrow 2→3 -->
+<line x1="507" y1="280" x2="545" y2="280" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Layer 3 header -->
+<text x="667" y="102" text-anchor="middle" font-size="10" fill="#EF9F27" letter-spacing="2">LAYER 3</text>
+<text x="667" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#FAC775">Local LLM</text>
+<text x="667" y="136" text-anchor="middle" font-size="10" fill="rgba(239,159,39,0.55)">Semantic · local · Ollama</text>
+
+<!-- Layer 3 items -->
+<rect x="554" y="150" width="226" height="44" rx="6" fill="rgba(133,79,11,0.2)" stroke="#EF9F27" stroke-width="0.5"/>
+<text x="667" y="168" text-anchor="middle" font-size="11" font-weight="500" fill="#FAC775">System-prompt role</text>
+<text x="667" y="184" text-anchor="middle" font-size="10" fill="rgba(250,199,117,0.55)">HR, marketing, customer service…</text>
+
+<rect x="554" y="204" width="226" height="44" rx="6" fill="rgba(133,79,11,0.2)" stroke="#EF9F27" stroke-width="0.5"/>
+<text x="667" y="222" text-anchor="middle" font-size="11" font-weight="500" fill="#FAC775">Decision logic patterns</text>
+<text x="667" y="238" text-anchor="middle" font-size="10" fill="rgba(250,199,117,0.55)">approveLoan → High Risk flag</text>
+
+<rect x="554" y="258" width="226" height="44" rx="6" fill="rgba(133,79,11,0.2)" stroke="#EF9F27" stroke-width="0.5"/>
+<text x="667" y="276" text-anchor="middle" font-size="11" font-weight="500" fill="#FAC775">GDPR Art. 9 categories</text>
+<text x="667" y="292" text-anchor="middle" font-size="10" fill="rgba(250,199,117,0.55)">Health, biometric, sensitive data</text>
+
+<rect x="554" y="312" width="226" height="44" rx="6" fill="rgba(133,79,11,0.2)" stroke="#EF9F27" stroke-width="0.5"/>
+<text x="667" y="330" text-anchor="middle" font-size="11" font-weight="500" fill="#FAC775">Autonomy degree</text>
+<text x="667" y="346" text-anchor="middle" font-size="10" fill="rgba(250,199,117,0.55)">Autonomous vs. assistive system</text>
+
+<text x="667" y="390" text-anchor="middle" font-size="10" fill="rgba(239,159,39,0.4)">semantic classification · local</text>
+<text x="667" y="408" text-anchor="middle" font-size="10" fill="rgba(239,159,39,0.3)">Ollama · local only</text>
+
+<!-- Bottom bar -->
+<rect x="20" y="430" width="760" height="1" fill="rgba(255,255,255,0.06)"/>
+<text x="400" y="458" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.3)">→ anonymised UUIDs and abstract asset types only leave the local host to Neo4j + Anthropic API</text>
+
+<!-- Corner accents -->
+<path d="M20 48 L20 20 L48 20" stroke="rgba(83,74,183,0.3)" stroke-width="1" fill="none"/>
+<path d="M780 48 L780 20 L752 20" stroke="rgba(29,158,117,0.3)" stroke-width="1" fill="none"/>
+<path d="M20 472 L20 500 L48 500" stroke="rgba(239,159,39,0.3)" stroke-width="1" fill="none"/>
+<path d="M780 472 L780 500 L752 500" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
+</svg>
