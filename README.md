@@ -56,7 +56,7 @@ The system does not ask what you use. It reads the code and sees it.
 
 ## How it works
 
-![Scout Layers](docs/images/architecture-scout-layers-dark.svg)
+![Sense → Know → Act](docs/images/architecture.svg)
 
 1. **Scan** — reads the repository directly (docker-compose, package.json, .env, Dockerfiles, system prompts)
 2. **Detect** — identifies services, sub-processors, AI components, and security signals
@@ -76,6 +76,8 @@ Repository (local)
       ↓
 Documents delivered to legal/ — ready for review, not for discovery
 ```
+
+![Scout — three-layer local analysis](docs/images/architecture-scout-layers-dark.svg)
 
 ---
 
@@ -112,8 +114,6 @@ Every document includes a confidence score, a disclaimer confirming draft status
 ---
 
 ## For engineers
-
-![Architecture](docs/images/architecture.svg)
 
 One command. Documents in `legal/`. No Word files.
 
