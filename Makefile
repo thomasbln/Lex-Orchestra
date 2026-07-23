@@ -30,8 +30,12 @@ seed-all:
 
 # ── ADR-100 Graph Integrity Validator ────────────────────────────────────────
 # Runs validate_graph() — §4.1–§4.4 checks on the live graph, no writes.
+# On success, prints the completion banner (reachable URLs). The banner is the
+# recipe's last line, so it runs only if validation exits 0; it never fails the
+# target itself (ready-banner.sh always exits 0 — pure post-setup info).
 seed-validate:
 	$(PYTHON) scripts/seed_both.py --validate-only --target $(TARGET)
+	@sh scripts/ready-banner.sh
 
 seed-extras:
 	$(PYTHON) scripts/check_tier_bc_pdfs.py

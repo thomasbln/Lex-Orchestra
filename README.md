@@ -75,7 +75,7 @@ make seed-all        # knowledge graph (layer manifest + modules + validator)
 make seed-validate
 ```
 
-Then open `http://<your-host>:3000`, create a project, and run the first scan.
+When the last step finishes it prints your dashboard URL — open it, create a project, and run the first scan.
 
 **What to expect:** the first scan on CPU-only hardware takes a few minutes — measured
 4 min 02 s end-to-end on a 12-core mini PC (no GPU), including local LLM
@@ -91,13 +91,25 @@ is only installed if you copied it yourself — disable it first if you did).
 ```bash
 cd docker && docker compose --profile with-neo4j --profile with-ollama down -v
 # removes containers, network, and ALL volumes — including the graph and the model
-docker rmi $(docker images -q 'docker-*' 'ollama/*' 'neo4j*')   # optional: images too
+docker network rm docker_lex-net 2>/dev/null || true   # compose leaves this one: it is declared external
+# optional: images too
+docker images -q --filter=reference='docker-*' --filter=reference='ollama/*' --filter=reference='neo4j*' | xargs -r docker rmi -f
 cd .. && cd .. && sudo rm -rf Lex-Orchestra
 ```
 
 The `sudo` is honest, not lazy: the database volume directory (`pgdata`) and generated
 `legal/` files are written by containers and end up root-owned on the host. If you
 prefer to avoid sudo, delete them from a throwaway container first.
+
+**In a hurry?** The same four steps as one line:
+
+```bash
+(cd docker && docker compose --profile with-neo4j --profile with-ollama down -v; docker network rm docker_lex-net 2>/dev/null; docker images -q --filter=reference='docker-*' --filter=reference='ollama/*' --filter=reference='neo4j*' | xargs -r docker rmi -f); cd .. && sudo rm -rf Lex-Orchestra
+```
+
+Run it from the clone directory. It removes the images too, so the next install
+re-pulls and re-builds from scratch — including the language model, which is the
+slow part.
 
 ### Security posture (self-hosters)
 
