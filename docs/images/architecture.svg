@@ -55,14 +55,9 @@
 <rect class="box-gray" x="118" y="80" width="126" height="52" rx="8" stroke-width="0.5"/>
 <text class="th t-gray" x="181" y="100" text-anchor="middle" dominant-baseline="central">Git repo</text>
 <text class="ts" x="181" y="118" text-anchor="middle" dominant-baseline="central">source code</text>
-<rect class="box-gray" x="262" y="80" width="126" height="52" rx="8" stroke-width="0.5"/>
-<text class="th t-gray" x="325" y="100" text-anchor="middle" dominant-baseline="central">Live URL</text>
-<text class="ts" x="325" y="118" text-anchor="middle" dominant-baseline="central">website scan</text>
 
 <line x1="181" y1="132" x2="181" y2="166" class="arr" marker-end="url(#arrow)"/>
-<line x1="325" y1="132" x2="325" y2="166" class="arr" marker-end="url(#arrow)"/>
 <path d="M181 166 Q181 176 218 176" fill="none" stroke="#999" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M325 166 Q325 176 288 176" fill="none" stroke="#999" stroke-width="1"/>
 
 <rect class="box-teal" x="166" y="166" width="200" height="56" rx="8" stroke-width="0.5"/>
 <text class="th t-teal" x="266" y="186" text-anchor="middle" dominant-baseline="central">Infrastructure Scout</text>
@@ -81,14 +76,14 @@
 <rect class="box-purple" x="152" y="254" width="220" height="68" rx="8" stroke-width="0.5"/>
 <text class="th t-purple" x="262" y="274" text-anchor="middle" dominant-baseline="central">Context Graph</text>
 <text class="ts" x="262" y="294" text-anchor="middle" dominant-baseline="central">match tech → law deterministically</text>
-<text class="ts" x="262" y="310" text-anchor="middle" dominant-baseline="central">GDPR · AI Act · CRA · ISO 27001</text>
+<text class="ts" x="262" y="310" text-anchor="middle" dominant-baseline="central">GDPR · AI Act · CRA · NIS2</text>
 <rect class="dash" x="382" y="264" width="56" height="20" rx="5" fill="none" stroke-width="0.5" stroke-dasharray="3 2"/>
 <text class="ts" x="410" y="274" text-anchor="middle" dominant-baseline="central">Neo4j</text>
 
 <rect class="box-gray" x="452" y="254" width="196" height="68" rx="8" stroke-width="0.5"/>
 <text class="th t-gray" x="550" y="272" text-anchor="middle" dominant-baseline="central">Legal News Scanner</text>
-<text class="ts" x="550" y="290" text-anchor="middle" dominant-baseline="central">EUR-Lex · national DPAs</text>
-<text class="ts" x="550" y="306" text-anchor="middle" dominant-baseline="central">court databases · confidence decay</text>
+<text class="ts" x="550" y="290" text-anchor="middle" dominant-baseline="central">planned · EUR-Lex · national DPAs</text>
+<text class="ts" x="550" y="306" text-anchor="middle" dominant-baseline="central">courts · confidence decay</text>
 <line x1="452" y1="288" x2="374" y2="288" class="arr" stroke="#999" marker-end="url(#arrow)"/>
 
 <line x1="262" y1="322" x2="262" y2="392" class="arr" marker-end="url(#arrow)"/>
@@ -124,14 +119,5 @@
 <text class="th t-gray" x="550" y="548" text-anchor="middle" dominant-baseline="central">legal/scan/ in repo</text>
 <text class="ts" x="550" y="566" text-anchor="middle" dominant-baseline="central">git commit · archive</text>
 
-<rect class="box-coral" x="452" y="80" width="196" height="72" rx="8" stroke-width="0.5"/>
-<text class="th t-coral" x="550" y="100" text-anchor="middle" dominant-baseline="central">Other tools</text>
-<text class="ts" x="550" y="120" text-anchor="middle" dominant-baseline="central">LLM guesses · probabilistic</text>
-<text class="ts" x="550" y="138" text-anchor="middle" dominant-baseline="central">code leaves your network</text>
-<text class="th" x="550" y="162" text-anchor="middle" font-size="13">VS</text>
-<rect class="box-teal" x="452" y="170" width="196" height="72" rx="8" stroke-width="0.5"/>
-<text class="th t-teal" x="550" y="190" text-anchor="middle" dominant-baseline="central">Lex-Orchestra</text>
-<text class="ts" x="550" y="210" text-anchor="middle" dominant-baseline="central">graph · deterministic</text>
-<text class="ts" x="550" y="228" text-anchor="middle" dominant-baseline="central">nothing leaves network</text>
 
 </svg>

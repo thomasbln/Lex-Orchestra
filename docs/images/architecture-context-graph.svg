@@ -49,7 +49,7 @@
   <rect x="30" y="158" width="740" height="110" rx="12" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1"/>
   <rect x="30" y="158" width="6" height="110" rx="3" fill="#1D9E75"/>
   <text x="56" y="184" font-size="13" font-weight="700" fill="#04342C">Layer 2 — Temporal Graph + Confidence (✅ complete)</text>
-  <text x="56" y="202" font-size="11" fill="#085041">All 35 Law nodes: applies_from · valid_from · confidence · jurisdictions · source — verified from official PDFs</text>
+  <text x="56" y="202" font-size="11" fill="#085041">All Law nodes: applies_from · valid_from · confidence · jurisdictions · source — verified from official PDFs</text>
 
   <!-- two code blocks side by side -->
   <rect x="56" y="212" width="310" height="44" rx="6" fill="#9FE1CB" stroke="#5DCAA5" stroke-width="0.5"/>
@@ -73,14 +73,14 @@
   <!-- left: scanner -->
   <rect x="56" y="352" width="290" height="64" rx="8" fill="#CECBF6" stroke="#AFA9EC" stroke-width="0.5"/>
   <text x="72" y="370" font-size="10" font-weight="600" fill="#26215C">Scanner → ProjectAsset</text>
-  <text x="72" y="386" font-size="10" fill="#3C3489">Project:uuid → USES → Stripe → AVV</text>
+  <text x="72" y="386" font-size="10" fill="#3C3489">Project:uuid → USES → Stripe → DPA</text>
   <text x="72" y="401" font-size="10" fill="#534AB7">rescan = delta → compliance_task</text>
 
   <!-- right: UseCase -->
   <rect x="358" y="352" width="390" height="64" rx="8" fill="#534AB7" stroke="#3C3489" stroke-width="0.5"/>
   <text x="374" y="370" font-size="10" font-weight="600" fill="#EEEDFE">UseCase Nodes — Deployer Risk</text>
   <text x="374" y="386" font-size="10" fill="#CECBF6">customer_service_chatbot → Limited (Art. 50)</text>
-  <text x="374" y="401" font-size="10" fill="#AFA9EC">hr_recruitment_screening → High (Anhang III Nr. 4)</text>
+  <text x="374" y="401" font-size="10" fill="#AFA9EC">hr_recruitment_screening → High (Annex III No. 4)</text>
 
   <!-- connector -->
   <line x1="400" y1="428" x2="400" y2="454" stroke="#AFA9EC" stroke-width="1.5" marker-end="url(#arr-purple)"/>
@@ -89,7 +89,7 @@
   <!-- ── LAYER 4 — Self-Describing ── -->
   <rect x="30" y="458" width="740" height="130" rx="12" fill="#FAEEDA" stroke="#FAC775" stroke-width="1"/>
   <rect x="30" y="458" width="6" height="130" rx="3" fill="#BA7517"/>
-  <text x="56" y="484" font-size="13" font-weight="700" fill="#412402">Layer 4 — Self-Describing Context Graph</text>
+  <text x="56" y="484" font-size="13" font-weight="700" fill="#412402">Layer 4 — Self-Describing Context Graph (planned)</text>
   <text x="56" y="502" font-size="11" fill="#633806">Graph knows what it does not know · NewsEvents signal regulatory changes · confidence decay marks staleness</text>
 
   <!-- three badges -->
@@ -110,6 +110,6 @@
 
   <rect x="160" y="612" width="480" height="52" rx="8" fill="#2C2C2A" stroke="#444441" stroke-width="0.5"/>
   <text x="400" y="634" text-anchor="middle" font-size="11" font-weight="600" fill="#FAC775">Self-Learning Orchestrator</text>
-  <text x="400" y="652" text-anchor="middle" font-size="10" fill="#B4B2A9">rescan delta → /approve feedback → Preference Node → weighted findings</text>
+  <text x="400" y="652" text-anchor="middle" font-size="10" fill="#B4B2A9">rescan delta → /approve feedback → weighted findings</text>
 
 </svg>
