@@ -1,0 +1,21 @@
+export const strings = {
+  lex: {
+    panelTitle:       'LEX',
+    toggleOpen:       '≡ Lex',
+    toggleClose:      '×',
+    showGaps:         '▦ LÜCKEN ANZEIGEN',
+    placeholder:      'Frage zu DSGVO, EU AI Act, TOM oder AVV...',
+    inputPlaceholder: 'Lex fragen…',
+    thinking:         'Lex überlegt…',
+    sendLabel:        'Senden',
+    errorUnavailable: 'Lex ist gerade nicht erreichbar — bitte nochmal versuchen.',
+    errorTimeout:     'Lex hat zu lange gebraucht — bitte nochmal versuchen.',
+    errorNetwork:     'Verbindungsproblem — bitte die Netzwerkverbindung prüfen.',
+    errorUnknown:     'Ein unbekannter Fehler ist aufgetreten.',
+    proactiveText:    'Scan abgeschlossen. Soll ich durch die offenen Compliance-Lücken führen?',
+    proactiveAction:  'Ja, durchführen',
+    phase2Suffix:     '[Phase 2]',
+    ariaOpenPanel:    'Lex-Panel öffnen',
+    ariaClosePanel:   'Lex-Panel schließen',
+  },
+} as const

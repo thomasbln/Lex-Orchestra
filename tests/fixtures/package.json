@@ -1,0 +1,13 @@
+{
+  "name": "my-saas-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "next": "^14.0.0",
+    "@stripe/stripe-js": "^3.0.0",
+    "@supabase/supabase-js": "^2.0.0",
+    "resend": "^3.0.0",
+    "openai": "^4.0.0",
+    "@clerk/nextjs": "^5.0.0",
+    "@sentry/nextjs": "^8.0.0"
+  }
+}

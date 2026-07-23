@@ -1,0 +1,155 @@
+{% import '_marker.md.j2' as marker with context %}
+# AI Usage Policy
+## Internal policy pursuant to EU AI Act Art. 4 + Art. 26
+[[LEX_HEAD_END]]
+
+**Company:** {{ company_name }}
+**Project:** {{ project_name }}
+**Version:** 1.0 | **Effective from:** {{ generation_date }}
+**Responsible:** {% if responsible_name %}{{ responsible_name }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+**Run ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Company data") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## 1. Scope and purpose
+
+This policy applies to all employees of {{ company_name }}
+who use AI-supported tools in their daily work.
+
+---
+
+## 2. AI systems in use (as of: {{ generation_date }})
+
+| Tool / system | Purpose | Status | Approval |
+|---|---|---|---|
+{% for service in model.ai_services %}| {{ service.name }} | {{ service.purpose or "—" }} | ✅ in use | — |
+{% else %}| (no AI services detected) | — | — | — |
+{% endfor %}
+
+---
+
+## 3. Permitted AI use
+
+**Approved AI services and use cases:**
+
+{% if model.ai_services %}
+{% for service in model.ai_services %}- ✅ **{{ service.name }}**{% if service.purpose %} — {{ service.purpose }}{% endif %}
+{% endfor %}
+{% else %}
+> ⚠️ No AI services detected in the scan. Add approved use cases manually.
+{% endif %}
+
+### 3.1 Prohibited AI practices (Art. 5 EU AI Act)
+
+The following AI practices are **legally prohibited** and must not be used under
+any circumstances — regardless of the business purpose:
+
+1. **Manipulation through subliminal techniques** or deliberate exploitation of
+   cognitive weaknesses with the aim of materially influencing the behaviour of
+   persons — where this causes significant harm (Art. 5(1)(a)).
+2. **Exploitation of vulnerable groups** due to age, disability
+   or social/economic situation (Art. 5(1)(b)).
+3. **Social scoring** by public authorities or on their behalf to evaluate the
+   social trustworthiness of natural persons (Art. 5(1)(c)).
+4. **Purely algorithmic predictive policing** (risk assessment of future
+   criminal offences based solely on profiling) (Art. 5(1)(d)).
+5. **Untargeted scraping** of facial images from the internet or from
+   CCTV footage to build biometric databases (Art. 5(1)(e)).
+6. **Emotion recognition in the workplace and in educational institutions** — except
+   for medical or safety-related reasons (Art. 5(1)(f)).
+7. **Biometric categorisation** to infer race, political
+   opinion, trade union membership, religious/philosophical
+   beliefs, sex life or sexual orientation (Art. 5(1)(g)).
+8. **Real-time remote identification** using biometric methods in publicly
+   accessible spaces for law enforcement purposes — except in narrowly defined
+   exceptions with judicial authorisation (Art. 5(1)(h)).
+
+_Violations can be sanctioned under Art. 99 EU AI Act with fines of up to **EUR 35 million** or
+**7 % of worldwide annual turnover**._
+
+### 3.2 Do / Don't for employees _(DSK OH KI 2024)_
+
+**✅ Do:**
+
+- **No PII in prompts** — pseudonymise or anonymise customer, employee and applicant
+  data before passing it to an LLM (UUID-only pattern, Presidio pre-filter).
+- **No client or customer data to cloud LLMs without a DPA** — third-country processing
+  only via SCCs + TIA. Prefer EU-hosted alternatives (Mistral AI EU, Aleph Alpha).
+- **Always review output** — validate LLM responses, never adopt them unchecked for
+  decisions with legal effect (Art. 22 GDPR).
+- **Demand sources** — for RAG/fact-relevant use cases, insist on grounding +
+  source citation. Do not pass on hallucinations.
+- **Four-eyes principle** for critical decisions, especially in the
+  HR context, in credit decisions and in customer service.
+
+**🔴 Don't:**
+
+- **No applicant evaluation by AI alone** — violates Art. 22 GDPR
+  and § 26 BDSG; HR use cases are high-risk (Annex III No. 4).
+- **No sensitive data** (health, religion, sexual orientation) in
+  AI workflows without an Art. 9 GDPR legal basis and a DPIA.
+- **No model tuning with personal data** without a documented
+  legal basis and the ability to delete trained models.
+- **No unauthorised introduction of AI tools** without prior approval — all
+  new AI services must go through a section 2 entry and a data protection review.
+
+---
+
+## 4. Training and AI literacy (Art. 4 EU AI Act)
+
+Employees must complete basic AI training, read and confirm this policy,
+and attend annual refresher training (Art. 4 EU AI Act).
+
+**Status of AI literacy measures:** {% if model.ai_literacy_measures is not none %}{% if model.ai_literacy_measures %}The deployer ensures a sufficient level of AI literacy pursuant to Art. 4 EU AI Act (awareness/training of the staff concerned){% if model.ai_literacy_note %} — {{ model.ai_literacy_note }}{% endif %}.{% else %}AI literacy measures pursuant to Art. 4 EU AI Act have not yet been implemented.{% endif %}{% else %}{{ inline_gap_marker('ai_literacy_measures_missing') }}{% endif %}
+
+### 4.1 Privacy by design — protection goals for AI use
+_(per Standard Data Protection Model v3.1, Part D1.8)_
+
+AI systems may only be used after the following data protection
+protection goals have been deliberately addressed — as a design strategy, not
+retroactively:
+
+- **Data minimisation (Dm):** Do not bring more or different data into the AI context
+  than necessary for the purpose. Anonymisation/pseudonymisation before prompt handover.
+- **Unlinkability (Nn):** No linking of AI outputs with additional
+  personal attributes without a legal basis. Purpose-specific pseudonyms.
+- **Transparency (Tp):** Disclose AI use to data subjects (Art. 12-14
+  GDPR + EU AI Act Art. 50). Audit trail of all AI decisions (Art. 12 AI Act).
+- **Intervenability (Iv):** Data subjects can exercise their intervention rights (Art. 22(3)
+  GDPR); single point of contact for AI-related access requests.
+- **Confidentiality (Vt) + integrity (Ig):** TOMs pursuant to Art. 32 GDPR; validate
+  output (Pydantic/Zod); do not pass LLM responses to the client unchecked.
+
+---
+
+## 5. Reporting obligations
+
+Data protection incidents and AI-related errors must be reported without undue delay to {% if responsible_name %}{{ responsible_name }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %} (Art. 26 EU AI Act, Art. 28 GDPR).
+
+---
+
+## 6. Review and updates
+
+**Review:** This policy is reviewed on an event-driven basis — in particular when the legal situation, the AI services in use or the responsibilities change.
+
+---
+
+I have read this AI usage policy:
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ city or zip_city or "(city)" }}, {{ generation_date }}
+
+---
+_Generated by Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Legal basis: EU AI Act Art. 4 (AI literacy) + Art. 26 (deployer obligations)_

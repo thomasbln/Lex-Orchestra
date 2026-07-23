@@ -1,0 +1,210 @@
+{% import '_marker.md.j2' as marker with context %}
+{% import '_bfdi_footer.md.j2' as bfdi with context %}
+# Data Processing Agreement (DPA)
+## pursuant to Art. 28 GDPR
+[[LEX_HEAD_END]]
+
+**Project:** {{ project_name }}
+
+**Controller:**
+{{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %}
+
+{{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %}
+
+**Contact:** {{ contact_email }}{% if website_url %} | {{ website_url }}{% endif %}
+
+represented by: {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+— hereinafter referred to as the "Controller" —
+
+**Date:** {{ generation_date }}
+**Run ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Company data") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## Preamble
+
+By entering into the service agreement, the contracting parties have established a
+data processing relationship. In order to specify the rights and obligations under
+the GDPR, the contracting parties conclude the following agreement.
+
+---
+
+{% if model.services_summary and model.services_summary | length > 1 %}
+> **Meta-DPA (Lex-Orchestra convention).** This DPA jointly covers the
+> {{ model.services_summary | length }} processors listed in § 1. The existence of a
+> provider-specific detailed DPA is indicated in the "DPA" column; in the event of deviations
+> or additional clauses, the provider-specific DPAs take precedence.
+
+---
+
+{% endif %}
+## § 1 Scope
+
+This agreement applies to the processing of personal data in the course of the
+provision of services by the following processors:
+
+{% if model.services_summary %}
+| Service | Country | GDPR status | DPA required | DPA |
+|---|---|---|---|---|
+{% for row in model.services_summary %}| {{ row.name }} | {{ row.country or "⚠️ TBD" }} | {{ row.gdpr_status }} | {% if row.acts_as_role == 'controller' %}— independent controller (§ 1.1){% elif row.avv_required %}✅{% else %}—{% endif %} | {% if row.dpa_url %}✓{% else %}—{% endif %} |
+{% endfor %}
+
+_Data categories and retention periods per service: see § 7 (deletion) and
+`tom_{{ run_id[:8] }}.md` (technical measures)._
+{% else %}
+_(no processors detected)_
+{% endif %}
+{% if model.psp_roles %}
+### § 1.1 Data protection role of the payment service providers
+
+Not every listed service is a processor within the meaning of Art. 28 GDPR. The role
+of a payment service provider is determined per processing activity (EDPB 07/2020):
+
+{% for r in model.psp_roles %}{% if r.role == 'special_case' %}- **{{ r.service_name }}:** 🔴 Separate legal review required — {{ r.role_source }}
+{% else %}- **{{ r.service_name }} — {{ r.role_label }} (independent controllership).** Not a processor within the meaning of Art. 28 GDPR; the role is determined per processing activity. Evidenced by {{ r.role_source }}.
+{% endif %}{% endfor %}
+{% endif %}
+
+### § 1.5 Term of the agreement
+
+This data processing agreement applies for the term of the underlying main
+contract, or for as long as the Processor processes personal data of the
+Controller. It ends automatically upon termination of the main contract and the
+complete return or deletion of the data pursuant to § 7. A separate termination
+of the DPA is not required.
+
+---
+
+## § 2 Specification of the processing
+
+(1) The following types of personal data are subject to the processing — grouped per processor:
+
+{% if model.service_data_blocks %}{% for block in model.service_data_blocks %}
+**{{ block.service_name }}:**
+{% if block.data_categories_gap %}{{ inline_gap_marker('payment_integration_mode_unknown') }}
+{% else %}{% for cat in block.data_categories %}- {{ cat }}
+{% endfor %}{% endif %}{% endfor %}{% elif model.data_categories %}{% for cat in model.data_categories %}- {{ cat }}
+{% endfor %}{% else %}{{ inline_gap_marker('avv_data_categories_missing') }}
+{% endif %}
+
+(2) The categories of data subjects comprise: {% if model.data_subjects is string %}{{ model.data_subjects }}{% else %}{{ inline_gap_marker('avv_data_subjects_missing') }}{% endif %}
+
+(3) Special categories of data are **{% if model.special_categories %}processed{% else %}not processed{% endif %}**.
+
+---
+
+## § 3 Obligations and authority to issue instructions
+
+Persons authorised to issue instructions on the Controller's side:
+{% if instructing_persons %}{% for wb in instructing_persons %}- {{ wb.name }}{% if wb.title %}, {{ wb.title }}{% endif %}
+{% endfor %}{% else %}{{ inline_gap_marker('avv_instructing_persons_missing') }}
+{% endif %}
+
+The Processor may process data solely within the scope of the Controller's
+instructions (Art. 28(3) sentence 2 (a) GDPR).
+
+---
+
+## § 4 Technical and organisational measures
+
+The technical and organisational measures are documented in the attached TOM
+(tom_{{ run_id[:8] }}.md).
+
+---
+
+## § 5 Third-country transfer
+
+{% if transfer_mechanism %}
+Transfers to third countries take place on the basis of: **{{ transfer_mechanism }}**.
+
+The affected services are marked in § 1 (column "GDPR status").
+Transfer Impact Assessment and provider-specific DPAs: see `scc_{{ run_id[:8] }}.md`.
+{% else %}
+No third-country transfer identified.
+{% endif %}
+
+---
+
+## § 6 Notification of infringements
+
+The Processor shall inform the Controller without undue delay of any infringements of
+data protection provisions (Art. 33(2) GDPR — notification obligation within 72 hours).
+
+---
+
+## § 7 Deletion and return of data
+
+{% if deletion_periods %}{% for item in deletion_periods %}- **{{ item.service }}**: {{ item.period if item.period else inline_gap_marker('retention_missing') }}
+{% endfor %}{% else %}{{ inline_gap_marker('retention_missing') }}
+{% endif %}
+{% if model.owner_retention %}
+_Retention periods (controller's own entries, per data type):_
+
+{% for r in model.owner_retention %}- **{{ r.category }}**: {{ r.duration }} _(source: {{ r.source }})_
+{% endfor %}
+{% endif %}
+
+After termination of the main contract, all personal data must be deleted
+or returned (Art. 28(3)(g) GDPR).
+
+---
+
+## § 8 Sub-processors
+
+The sub-processors of the listed processors are governed by their respective DPAs;
+a consolidated list is not available.
+
+---
+
+## § 9 Data protection audits
+
+The Processor undertakes to grant the Controller's data protection officer
+access as required for the performance of his or her statutorily assigned
+tasks. In particular, the Processor shall tolerate rights of entry,
+inspection and inquiry. The Processor will instruct its staff to cooperate
+with the data protection officer.
+
+The Controller may carry out reviews itself or have them carried out by a
+commissioned auditor. The Processor shall make available all necessary
+information and shall enable the performance of inspections
+(Art. 28(3)(h) GDPR).
+
+Proof of compliance may be provided through certification pursuant to Art. 42 GDPR,
+attestations by independent auditors, or adherence to approved codes of conduct pursuant to Art. 40 GDPR.
+
+---
+
+## § 10 Liability and damages
+
+Reference is made to Art. 82 GDPR.
+
+---
+
+## § 11 Final provisions
+
+Amendments and supplements to this agreement must be made in writing.
+Should individual provisions be invalid, the validity of the remaining
+provisions shall remain unaffected.
+
+---
+
+## Signatures
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ city or zip_city or "(city)" }}, {{ generation_date }}
+
+{{ bfdi.render(model.bfdi_citations) }}
+
+---
+_Generated by Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Structural basis: BayLDA + DSK model DPA + BfDI guidance_

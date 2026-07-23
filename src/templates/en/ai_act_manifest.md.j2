@@ -1,0 +1,173 @@
+{% import '_marker.md.j2' as marker with context %}
+{% import '_bfdi_footer.md.j2' as bfdi with context %}
+# EU AI Act Risk Manifest
+[[LEX_HEAD_END]]
+
+**Project:** {{ project_name }}
+**Date:** {{ generation_date }}
+**Run ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Company data") }}
+{% endif %}
+
+{% set _lm = ["gap", "duty"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{% if model.has_audit_trail_gap %}{% set _lm = _lm + ["derived"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## 1. Clarification of Roles and Responsibilities — Your Input (Art. 3, 26 EU AI Act)
+
+| Role | Name / Function |
+|---|---|
+| Strategic responsibility (management) | {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %} |
+| Operational AI responsibility | {% if model.operative_responsible %}{{ model.operative_responsible }}{% else %}{{ inline_gap_marker('ai_act_operative_responsible_missing') }}{% endif %} |
+| Technical responsibility | {% if model.tech_responsible %}{{ model.tech_responsible }}{% else %}{{ inline_gap_marker('ai_act_tech_responsible_missing') }}{% endif %} |
+| Data Protection Officer | {% if dpo_name %}{{ dpo_name }}{% if dpo_email %} — {{ dpo_email }}{% endif %}{% else %}(not appointed / not subject to mandatory appointment){% endif %} |
+
+**Role under the EU AI Act:** Deployer (Art. 3 No. 4) — AI systems are used in a
+professional context; the company is not the manufacturer (provider).
+
+---
+
+## 2. AI Systems in Use (Provider Perspective) — From the Scan (Art. 13 EU AI Act)
+
+| Model | Risk class |
+|---|---|
+{% for r in model.risk_levels %}| {{ r.service or "" }} | {{ r.level or "" }} |
+{% else %}| (none detected) | — |
+{% endfor %}
+
+_Resulting obligations (e.g. GPAI Art. 51–53) are listed under "Obligation Notices under the EU AI Act"._
+
+{% if model.service_risk_diverges %}
+_This classification is the project-wide assessment from the code analysis (estimated intended purpose). For individual services the classification may differ based on your dashboard input — see the AI system documentation._
+{% endif %}
+---
+
+## 3. Deployer Risk and Use Case — From the Scan (Art. 6, 50 EU AI Act)
+
+{% if model.deployer_usecase %}
+**Configured use case:** {{ model.deployer_usecase.title_de }}
+**Risk class:** {{ model.deployer_usecase.risk_level or "—" }}
+**Legal basis:** EU AI Act Art. {{ model.deployer_usecase.article }}
+
+**Reasoning:** {{ model.deployer_usecase.reason }}
+
+**Your obligations:** {{ model.deployer_usecase.deployer_action }}
+{% elif model.ai_usecase_type %}
+**Configured use case:** `{{ model.ai_usecase_type }}` (not found in database)
+{% else %}
+> ⚠️ Lex-Orchestra cannot automatically detect your use case.
+> Enter `ai_usecase_type` in project_config to personalize this overview.
+{% if model.indicated_usecases %}
+> Detected AI services indicate the following use cases: {% for u in model.indicated_usecases %}`{{ u.type }}`{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endif %}
+
+| Use case | Risk class | Your obligations |
+|---|---|---|
+{% for u in model.all_usecases %}| {{ u.title_de }} | {{ u.risk_level }} | {{ u.deployer_action }} |
+{% endfor %}
+{% endif %}
+
+---
+
+## 4. Obligation Notices under the EU AI Act
+
+> The following items are **legal obligations** of the deployer — not missing
+> inputs. They cannot be added in the project settings; they must be implemented
+> organisationally and evidenced. Violations can trigger fines of up to EUR 35 million
+> or 7 % of global annual turnover (Art. 99 EU AI Act).
+
+### ⚖️ Always apply (all deployers)
+
+| Obligation | Legal basis | Evidenced by |
+|---|---|---|
+| Ensure AI literacy of staff (applies since {{ model.art4_effective_date | en_date }}) | Art. 4 EU AI Act | documented training/competence measures |
+
+{% if model.bias_risk_annex_iii_nr_4 or (model.deployer_usecase and model.deployer_usecase.risk_level == "High") %}
+### ⚖️ Due to high-risk classification (Annex III)
+
+For high-risk AI, the following obligations must be established and documented before putting the system into service:
+
+| Obligation | Legal basis | Evidenced by |
+|---|---|---|
+| FRIA — fundamental rights impact assessment before putting into service | Art. 27 EU AI Act | documented impact assessment |
+| Conformity assessment (CE) by a notified body | Art. 43 EU AI Act | to be requested from the provider |
+| Registration in the EU database | Art. 49 EU AI Act | before placing on the market |
+| Human oversight (four-eyes principle, override capability) | Art. 14 EU AI Act | to be anchored organisationally |
+| Automatic logging (audit trail, retention 5+ years) | Art. 12 EU AI Act | logging evidence |
+{% endif %}
+
+{% if model.risk_levels | selectattr("level", "equalto", "GPAI") | list %}
+### ⚖️ Due to GPAI use
+
+| Obligation | Legal basis | Evidenced by |
+|---|---|---|
+| Technical documentation, copyright policy, GPAI Code of Practice, transparency towards users | Art. 51–53 EU AI Act | published documentation + transparency disclosures |
+{% endif %}
+
+{% if model.bias_risk_annex_iii_nr_4 %}
+### ⚖️ Due to use case: HR recruiting (Annex III No. 4 — Employment)
+
+Automated applicant selection is a high-risk use case under EU AI Act Annex III No. 4.
+Bias can lead to indirect discrimination (gender, age, origin, disability).
+Legally relevant: Art. 22 GDPR (prohibition of purely automated decisions with legal
+effect), AGG §§ 1–3 (German General Equal Treatment Act — protection against discrimination), Art. 10 EU AI Act (data quality for high-risk AI).
+
+| Obligation | Legal basis | Evidenced by |
+|---|---|---|
+| Bias audit + four-eyes principle before every final selection decision | Annex III No. 4 · Art. 10 · Art. 14 EU AI Act | bias audit report + review protocols (see DPIA + ki_system_*.md) |
+{% endif %}
+
+---
+
+## 5. AI Literacy — Your Input (Art. 4 EU AI Act)
+
+> The obligation to ensure adequate AI literacy (Art. 4) is listed above under
+> "Obligation Notices under the EU AI Act". Here you document your implementation status.
+
+**Status:** {% if model.ai_literacy_measures is not none %}{% if model.ai_literacy_measures %}The deployer ensures an adequate level of AI literacy (Art. 4){% if model.ai_literacy_note %} — {{ model.ai_literacy_note }}{% endif %}.{% else %}AI literacy measures under Art. 4 have not yet been implemented.{% endif %}{% else %}{{ inline_gap_marker('ai_literacy_measures_missing') }}{% endif %}
+
+**Responsible for training:** {% if responsible_name %}{{ responsible_name }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+---
+
+## 6. Governance and Document References
+
+| Document | Reference |
+|---|---|
+| Internal AI usage policy (AI policy) | See ki_policy_{{ run_id[:8] }}.md |
+| DPIA for high-risk processing (Art. 35 GDPR) | See dsfa_{{ run_id[:8] }}.md |
+| TOM pursuant to Art. 32 GDPR | See tom_{{ run_id[:8] }}.md |
+| DPA with all processors | See avv_{{ run_id[:8] }}.md |
+| SCCs for third-country transfers (where required) | See scc_{{ run_id[:8] }}.md |
+
+{% if model.has_audit_trail_gap %}
+---
+
+## ▸ Audit Trail Review (EU AI Act Art. 12)
+
+▸ **Machine pre-classification (to be assessed by the DPO/lawyer): no logging tool detected.**
+
+This is a machine classification from the scan — not an input and not a standalone
+obligation. The associated logging obligation (Art. 12) is listed above under
+"Obligation Notices", provided a high-risk classification applies.
+
+**Required steps:** integrate a logging tool (Langfuse recommended — EU/DE),
+store input hash + output hash per LLM call, log consent status for
+every call, document a human-oversight escalation flag,
+define a retention policy (at least 90 days).
+
+**Recommendation:** Langfuse (langfuse.com) — open source, self-hostable, GDPR-compliant.
+
+{% endif %}
+
+{{ bfdi.render(model.bfdi_citations) }}
+
+---
+_Generated by Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Structural basis: EU AI Act full text + DSK OH KI-Systeme + BfDI commentary_

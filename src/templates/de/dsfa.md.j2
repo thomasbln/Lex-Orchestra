@@ -1,0 +1,120 @@
+{% import '_marker.md.j2' as marker with context %}
+{% import '_bfdi_footer.md.j2' as bfdi with context %}
+# Datenschutz-Folgenabschätzung (DSFA)
+## gem. Art. 35 DSGVO
+[[LEX_HEAD_END]]
+
+**Unternehmen:** {{ company_name }}
+**Projekt:** {{ project_name }}
+**Verantwortlich:** {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+**DSB:** {% if dpo_name %}{{ dpo_name }}{% else %}(nicht bestellt){% endif %}
+
+**Datum:** {{ generation_date }} | **Run-ID:** `{{ run_id }}`
+
+**Rechtspflicht:** Muss vor Inbetriebnahme abgeschlossen sein (Art. 35 Abs. 10 DSGVO)
+
+**DSFA-Pflicht ausgelöst durch:**
+{% if model.triggered_by_high_risk_usecase %}- Hochrisiko-KI: {{ model.ai_usecase.title_de }} (EU AI Act Art. 6 + Anhang III)
+{% endif %}{% if model.risks.rag_over_pii %}- Erkanntes Risiko: RAG über personenbezogene Daten
+{% endif %}{% if model.risks.pii_in_llm_context %}- Erkanntes Risiko: PII im LLM-Kontext
+{% endif %}
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Unternehmensdaten") }}
+{% endif %}
+
+{% set _lm = ["gap", "derived"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## Schritt 1: Beschreibung der Verarbeitungsvorgänge — Aus Scan + Ihren Eingaben (Art. 35 Abs. 7 lit. a)
+
+| Feld | Inhalt |
+|---|---|
+| **Zweck** | {% if model.zweck is string %}{{ model.zweck }}{% else %}{{ inline_gap_marker(model.zweck.gap_id) }}{% endif %} |
+| **Rechtsgrundlage** | {% if model.rechtsgrundlage is string %}{{ model.rechtsgrundlage }}{% else %}{{ inline_gap_marker(model.rechtsgrundlage.gap_id) }}{% endif %} |
+| **Betroffene Personen** | {% if model.data_subjects is string %}{{ model.data_subjects }}{% else %}{{ inline_gap_marker(model.data_subjects.gap_id) }}{% endif %} |
+| **Dienste mit Datenverarbeitung** | {% if model.pii_services %}{{ model.pii_services | join(", ") }}{% endif %} |
+| **Eingesetzte KI-Systeme** | {% for s in model.ai_services %}{{ s.name }}{% if not loop.last %}, {% endif %}{% endfor %} |
+
+---
+
+## Schritt 2: Notwendigkeit und Verhältnismäßigkeit (Art. 35 Abs. 7 lit. b)
+
+**Notwendigkeit der Verarbeitung:**
+{{ model.step2.notwendigkeit }}
+
+**Verhältnismäßigkeit gegenüber dem Zweck:**
+{{ model.step2.verhaeltnismaessigkeit }}
+
+**Datenminimierung (Art. 5 Abs. 1 lit. c DSGVO):**
+{{ model.step2.datenminimierung }}
+
+---
+
+## Schritt 3: Risiken für Rechte und Freiheiten (Art. 35 Abs. 7 lit. c)
+
+{% if model.damage_scenarios %}
+### Schadensszenarien je Gewährleistungsziel _(Fraunhofer-DSFA-Methodik §6.3)_
+
+| Gewährleistungsziel | Risikoquelle | Schaden | Wkt | Schwere | Maßnahmen-Refs |
+|---|---|---|---|---|---|
+{% for s in model.damage_scenarios %}| {{ s.gewaehrleistungsziel }} | {{ s.risikoquelle }} | {{ s.schaden }} | {{ s.wahrscheinlichkeit }} | {{ s.schwere }} | {{ s.measure_refs | join(", ") }} |
+{% endfor %}
+
+_Maßnahmen-IDs (`d1.x-...`) referenzieren konkrete SDM-D1-Maßnahmen
+([Standard-Datenschutzmodell v3.1, Teil D1](https://www.datenschutzkonferenz-online.de/standard-datenschutzmodell.html))._
+
+{% else %}
+
+| Risiko | Wahrscheinlichkeit | Schwere | Maßnahme |
+|---|---|---|---|
+{% if has_signal("decision_logic") or model.triggered_by_high_risk_usecase %}| Diskriminierung durch KI | hoch | hoch | Menschliche Kontrolle, Bias-Audit |
+{% endif %}{% if model.ai_services | selectattr("gdpr_adequate", "equalto", false) | list %}| Datenleck (Drittlandtransfer) | mittel | hoch | Verschlüsselung, Zugangskontrolle, AVV |
+{% endif %}{% if has_signal("ai_usage") %}| Intransparenz | mittel | mittel | Erklärungspflicht, Auskunftsrecht |
+{% endif %}{% if has_signal("personal_data") and has_signal("ai_usage") %}| PII in LLM-Kontext | hoch | hoch | UUID-Only Pattern, PII-Scrubbing, Presidio Pre-Filter |
+{% elif has_signal("personal_data") or has_signal("ai_usage") %}| PII in LLM-Kontext | mittel | hoch | UUID-Only Pattern, PII-Scrubbing |
+{% elif model.risks.pii_in_llm_context or model.risks.rag_over_pii %}| PII in LLM-Kontext | hoch | hoch | UUID-Only Pattern, PII-Scrubbing, Presidio Pre-Filter |
+{% endif %}
+{% endif %}
+
+---
+
+## Schritt 4: Maßnahmen zur Risikobehandlung (Art. 35 Abs. 7 lit. d)
+
+| Maßnahme | Status | Bezug |
+|---|---|---|
+{% for row in model.step4 %}| {{ row.measure }} | {{ row.status }} | {{ row.control_ref or "—" }} |
+{% endfor %}
+
+---
+
+## Schritt 5: Konsultation Aufsichtsbehörde (Art. 36 DSGVO)
+
+{% if model.step5.konsultation_erforderlich %}
+▸ **Maschinelle Vorab-Einordnung (durch DSB/Anwalt zu bewerten): deutet auf eine mögliche Konsultationspflicht nach Art. 36 DSGVO hin.** {{ model.step5.begruendung }}
+
+_Die zuständige Aufsichtsbehörde ist anhand des Unternehmenssitzes manuell zu
+bestimmen (eine Bundesland-Auswahl in den Projekteinstellungen folgt — das Feld
+existiert noch nicht)._
+
+{% else %}
+▸ **Maschinelle Vorab-Einordnung (durch DSB/Anwalt zu bewerten): keine Konsultationspflicht nach Art. 36 DSGVO erkennbar.** {{ model.step5.begruendung }}
+{% endif %}
+
+---
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ zip_city or "(Ort)" }}, {{ generation_date }}
+
+{{ bfdi.render(model.bfdi_citations) }}
+
+---
+_Generiert von Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Strukturbasis: DSK Prüfschema DSFA + Fraunhofer DSFA-Handbuch + BfDI-Erläuterungen_
+_Rechtsgrundlage: DSGVO Art. 35_

@@ -1,0 +1,91 @@
+{% import '_marker.md.j2' as marker with context %}
+{% import '_bfdi_footer.md.j2' as bfdi with context %}
+# Verzeichnis von Verarbeitungstätigkeiten (VVT)
+## gem. Art. 30 DSGVO
+[[LEX_HEAD_END]]
+
+**Verantwortlicher:**
+{{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %}
+
+{{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %}
+
+{% if register_court %}Handelsregister: {{ register_court }}{% if register_number %}, {{ register_number }}{% endif %}
+
+{% endif %}**Vertreten durch:** {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+**Datenschutzbeauftragter:** {% if dpo_name %}{{ dpo_name }}{% if dpo_email %} — {{ dpo_email }}{% endif %}{% else %}(nicht bestellt){% endif %}
+
+**Projekt:** {{ project_name }}
+**Datum:** {{ generation_date }}
+**Run-ID:** `{{ run_id }}`
+
+**Rechtspflicht:** Verzeichnis gem. Art. 30 DSGVO
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Unternehmensdaten") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{% if model.activities | selectattr('purpose_inferred') | list %}{% set _lm = _lm + ["inferred"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+{% for activity in model.activities %}
+## Verarbeitungstätigkeit: {{ activity.name }}
+
+| Feld | Inhalt |
+|---|---|
+| **Verarbeitungszweck** | {% if activity.purpose_inferred %}{{ marker.inferred_mark() }} {% endif %}{{ activity.purpose or "" }} |
+| **Rechtsgrundlage** | {{ activity.legal_basis or inline_gap_marker('vvt_legal_basis_missing') }} |
+{% if activity.role == 'special_case' %}| **Rolle (DSGVO)** | 🔴 Gesonderte rechtliche Prüfung erforderlich — {{ activity.role_source }} |
+{% elif activity.role %}| **Rolle (DSGVO)** | {{ activity.role_label }} (kein Auftragsverarbeiter i.S.v. Art. 28 DSGVO) — {{ activity.role_source }} |
+{% endif %}| **KI im Einsatz** | {% if activity.ai_type %}✅ {{ activity.ai_type }}{% else %}—{% endif %} |
+{% if activity.ai_type %}| **KI-Risikoklasse** | {{ activity.ai_risk_level or "—" }} |
+{% endif %}
+| **Betroffene Personen** | {{ activity.data_subjects or inline_gap_marker('vvt_data_subjects_missing') }} |
+| **Datenkategorien** | {% if activity.data_categories_gap %}{{ inline_gap_marker('payment_integration_mode_unknown') }}{% else %}{{ activity.data_categories or inline_gap_marker('vvt_data_categories_missing') }}{% endif %} |
+| **{% if activity.role == 'controller' %}Empfänger (eigenverantwortlich){% else %}Empfänger / Auftragsverarbeiter{% endif %}** | {{ activity.recipients or "" }} |
+| **Drittlandtransfer** | {{ activity.third_country or "Kein Transfer" }}{% if activity.dpa_url %} — [DPA]({{ activity.dpa_url }}){% endif %} |
+| **Löschfristen** | {{ activity.retention or inline_gap_marker('retention_missing') }} |
+| **IT-Systeme** | {{ activity.systems or "" }} |
+
+{% else %}
+_(keine Verarbeitungstätigkeiten erkannt)_
+{% endfor %}
+{% if model.owner_retention %}
+## Aufbewahrungsfristen (Angaben des Verantwortlichen)
+
+| Datenart | Frist | Quelle |
+|---|---|---|
+{% for r in model.owner_retention %}| {{ r.category }} | {{ r.duration }} | {{ r.source }} |
+{% endfor %}
+{% endif %}
+{% if model.scc_doc_ref %}
+---
+
+## Drittlandtransfers — Zusammenfassung (Art. 30 Abs. 1 lit. e DSGVO)
+
+{{ model.non_eu_count }} Dienst(e) mit Transfer in Drittländer identifiziert.
+Rechtsgrundlage: SCCs (Art. 46 Abs. 2 lit. c DSGVO). Details pro Dienst siehe
+Verarbeitungstätigkeiten oben. Transfer Impact Assessments und anbieter-spezifische
+DPAs: siehe `{{ model.scc_doc_ref }}`.
+{% endif %}
+
+---
+
+## Technische Maßnahmen
+
+→ Dokumentiert in `tom_{{ run_id[:8] }}.md` (Art. 32 DSGVO)
+
+---
+
+**Letzte Aktualisierung:** {{ generation_date }}
+
+{{ bfdi.render(model.bfdi_citations) }}
+
+---
+_Generiert von Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Strukturbasis: DSK VVT-Hinweise + BayLDA Anwendungshinweise + BfDI-Erläuterungen_
+_Rechtsgrundlage: DSGVO Art. 30_

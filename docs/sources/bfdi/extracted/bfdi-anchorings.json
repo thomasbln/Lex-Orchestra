@@ -1,0 +1,252 @@
+{
+  "_meta": {
+    "schema_version": "0.3",
+    "status": "schema-realigned — target_node_match carries both semantic keys (topic/scope/aspect) and schema-real keys (id/framework). Ready for seed_bfdi() in seed_both.py.",
+    "source": "bfdi-dsgvo-bdsg-2026-1aufl",
+    "source_full_title": "Datenschutz-Grundverordnung – Bundesdatenschutzgesetz – Texte und Erläuterungen",
+    "source_pdf_path": "docs/sources/bfdi/INFO1 (1).pdf",
+    "source_pdf_sha256": "e10b5907246e4fedaee093646dbc549b24eea53d8d72e3315dd46a5838be926e",
+    "source_pdf_url": "https://www.bfdi.bund.de/DE/Service/Publikationen/Broschueren/broschueren_node.html",
+    "publisher": "Die Bundesbeauftragte für den Datenschutz und die Informationsfreiheit (BfDI)",
+    "edition": "1. Auflage",
+    "publication_date": "2026-03",
+    "license": "dl-de/by-2-0",
+    "license_url": "https://www.govdata.de/dl-de/by-2-0",
+    "license_attribution_required": "Die Bundesbeauftragte für den Datenschutz und die Informationsfreiheit",
+    "copyright_cleared": true,
+    "extraction_date": "2026-05-27",
+    "extracted_by": "claude (ADR-stub-bfdi-broschuere-2026.md Phase 2, partial — AVV+DSB only)",
+    "extraction_method": "pdftotext -layout, manuelle Block-Segmentierung",
+    "qa_reviewed": false,
+    "scope_note": "Nur Kapitel 3.1 (DSB, S. 44-47) und 3.2 (AVV, S. 47-49). Kapitel 1 und 4 in späterer Welle. TOM und DSFA NICHT enthalten — dort liefert die BfDI-Broschüre keinen eigenen Erläuterungstext.",
+    "id_convention": "Framework-prefix + Artikel-Absatz-Litera (Bsp. DSGVO-37-1-a). Matches existing schema (BSI/CRA: APP.3.1.A1, CRA-I-1a).",
+    "target_node_match_note": "Each anchoring carries two equivalent match blocks: (a) semantic — for human-readable audit, (b) schema — actual MERGE keys used by seed_bfdi(). Seeder uses (b)."
+  },
+
+  "anchorings": [
+
+    {
+      "id": "bfdi-3.1-dsb-pflicht-oeffentlich",
+      "topic": "DSB-Bestellung — öffentliche Stellen",
+      "title_de": "DSB-Bestellungspflicht öffentliche Stellen",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Bestellung", "scope": "oeffentlich" },
+      "target_node_match": { "id": "DSGVO-37-1-a", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Alle öffentlichen Stellen müssen eine/n Datenschutzbeauftragte/n benennen. Ausgenommen hiervon sind Gerichte und unabhängige Justizbehörden im Rahmen ihrer justiziellen Tätigkeit. Je nach Struktur und Größe der Stelle können mehrere Behörden auch eine/n gemeinsame/n Datenschutzbeauftragte/n benennen.",
+      "source_section": "3.1",
+      "source_pages": "S. 44",
+      "law_refs": ["DSGVO Art. 37", "BDSG § 5"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.1-dsb-pflicht-nichtoeffentlich",
+      "topic": "DSB-Bestellung — nicht-öffentliche Stellen (20-Personen-Schwelle)",
+      "title_de": "DSB-Bestellungspflicht nicht-öffentliche Stellen (20-Personen-Schwelle)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Bestellung", "scope": "nichtoeffentlich" },
+      "target_node_match": { "id": "BDSG-38-1", "framework": "BDSG" },
+      "property": "bfdi_guidance",
+      "value": "Bei den nichtöffentlichen Stellen hängt die Verpflichtung zur Benennung einer/s Beauftragten von der Zahl der in der Regel mit der automatisierten Verarbeitung personenbezogener Daten beschäftigten Personen ab. § 38 Abs. 1 BDSG legt hierbei eine Grenze von 20 Personen fest. Die freiwillige Benennung einer/s Datenschutzbeauftragten ist immer möglich.",
+      "source_section": "3.1",
+      "source_pages": "S. 44",
+      "law_refs": ["BDSG § 38 Abs. 1"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.1-dsb-pflicht-kerntaetigkeit",
+      "topic": "DSB-Bestellung — Kerntätigkeit / besondere Datenkategorien",
+      "title_de": "DSB-Bestellungspflicht bei Kerntätigkeit (umfangreiche Überwachung / Art. 9/10 Daten)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Bestellung", "scope": "kerntaetigkeit" },
+      "target_node_match": { "id": "DSGVO-37-1-b", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Auf jeden Fall sind aber Datenschutzbeauftragte zu benennen, wenn die Kerntätigkeit des Verantwortlichen oder des Auftragsverarbeiters in der Durchführung von Verarbeitungsvorgängen besteht, die aufgrund ihrer Art, ihres Umfangs und/oder ihrer Zwecke eine umfangreiche regelmäßige und systemische Überwachung von betroffenen Personen erforderlich machen oder ihre Kerntätigkeit in der umfangreichen Verarbeitung besonders schützenswerter Kategorien von Daten gemäß Art. 9 DSGVO oder von personenbezogenen Daten über strafrechtliche Verurteilungen und Straftaten gemäß Art. 10 DSGVO besteht. Auch bei der geschäftsmäßigen Datenverarbeitung zum Zweck der Übermittlung oder anonymisierten Übermittlung oder für Zwecke der Markt- oder Meinungsforschung müssen immer Datenschutzbeauftragte bestellt werden. Beispiel: So müssen z. B. Auskunfteien oder Unternehmen des Adresshandels unabhängig von der Zahl der Beschäftigten eine/n Datenschutzbeauftragte/n bestellen. Dies gilt auch stets, wenn wegen besonders risikoreicher Datenverarbeitung eine sogenannte Datenschutz-Folgenabschätzung durchgeführt werden muss. Gemäß der DSGVO müssen auch Auftragsverarbeiter eine/n Datenschutzbeauftragte/n benennen.",
+      "source_section": "3.1",
+      "source_pages": "S. 44–45",
+      "law_refs": ["DSGVO Art. 37 Abs. 1", "DSGVO Art. 9", "DSGVO Art. 10"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.1-dsb-stellung-unabhaengigkeit",
+      "topic": "DSB — Stellung, Weisungsfreiheit, Kündigungsschutz",
+      "title_de": "DSB-Stellung — Weisungsfreiheit und Kündigungsschutz",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Stellung" },
+      "target_node_match": { "id": "DSGVO-38", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Datenschutzbeauftragte gehören zwar zur jeweiligen Behörde oder zum Betrieb, haben jedoch nach dem Gesetz eine herausgehobene Stellung. Sie berichten unmittelbar der höchsten Leitungsebene. Deren Aufgaben sind in der Geschäftsordnung sowie im Geschäftsverteilungsplan der verantwortlichen Stelle darzustellen. In der Ausübung ihrer Fachkunde sind sie weisungsfrei. Damit kann ihnen niemand, auch nicht die Leitung der Stelle, vorschreiben, wie sie datenschutzrechtliche Fragen bewerten. Die Unabhängigkeit der Datenschutzbeauftragten wird durch ein besonderes Benachteiligungsverbot und einen besonderen Kündigungsschutz gesichert. Sie dürfen wegen der Erfüllung ihrer Aufgaben nicht benachteiligt und können nur aus wichtigem Grund abberufen werden. Sind die Datenschutzbeauftragten bei der verantwortlichen Stelle beschäftigt, können sie während der Amtszeit bzw. bis ein Jahr nach Beendigung der Benennung nur aus wichtigem Grund gekündigt werden; etwa bei einem Einstellungsbetrug. Im Falle der freiwilligen Benennung einer/s Datenschutzbeauftragten besteht kein besonderer gesetzlicher Abberufungs- oder Kündigungsschutz. Die Leitung der Stelle ist nicht an das Votum der/s internen Datenschutzbeauftragten gebunden. Damit bleibt die Letztverantwortung für die Datenverarbeitung bei der Unternehmens- oder Behördenleitung.",
+      "source_section": "3.1",
+      "source_pages": "S. 45–46",
+      "law_refs": ["DSGVO Art. 38", "BDSG § 6"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.1-dsb-qualifikation",
+      "topic": "DSB — Qualifikation und Ressourcen",
+      "title_de": "DSB-Qualifikation und Ressourcen-Bereitstellung",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Qualifikation" },
+      "target_node_match": { "id": "DSGVO-37-5", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Die Datenschutzbeauftragten werden auf der Grundlage ihrer beruflichen Qualifikation und insbesondere ihres Fachwissens benannt, das sie auf dem Gebiet des Datenschutzrechts und der Datenschutzpraxis besitzen sowie auf der Grundlage ihrer Fähigkeit zur Erfüllung der gesetzlichen Aufgaben. Sie müssen die entsprechenden rechtlichen und auch technischen Kenntnisse haben. Die verantwortliche Stelle ist verpflichtet, den Datenschutzbeauftragten die zum Erhalt des Fachwissens erforderlichen Ressourcen zur Verfügung zu stellen. Dazu hat sie ihnen die Teilnahme an Schulungs- und Fortbildungsveranstaltungen zu ermöglichen und hierfür die Kosten zu übernehmen.",
+      "source_section": "3.1",
+      "source_pages": "S. 46",
+      "law_refs": ["DSGVO Art. 37 Abs. 5", "DSGVO Art. 38 Abs. 2"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.1-dsb-verschwiegenheit",
+      "topic": "DSB — Verschwiegenheitspflicht",
+      "title_de": "DSB-Verschwiegenheitspflicht",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Verschwiegenheit" },
+      "target_node_match": { "id": "DSGVO-38-5", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Die Datenschutzbeauftragten sind gesetzlich zur Verschwiegenheit verpflichtet. Über die Identität der Betroffenen oder Umstände, die Rückschlüsse hierüber erlauben, dürfen sie keine Auskünfte geben. Eine Ausnahme gilt nur, wenn die betroffenen Personen sie von ihrer Verschwiegenheitsverpflichtung befreien.",
+      "source_section": "3.1",
+      "source_pages": "S. 46",
+      "law_refs": ["DSGVO Art. 38 Abs. 5", "BDSG § 6 Abs. 5"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.1-dsb-aufgaben",
+      "topic": "DSB — Aufgabenkatalog",
+      "title_de": "DSB-Aufgabenkatalog (Art. 39)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "DSB-Aufgaben" },
+      "target_node_match": { "id": "DSGVO-39", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Die Aufgaben der Datenschutzbeauftragten sind vielfältig. Sie sind Ansprechpartner/innen der Betroffenen für alle Fragen rund um das Thema Datenschutz. Betroffene haben das Recht, sich direkt an die Datenschutzbeauftragten zu wenden und sie um Rat zu fragen, sofern es um die Verarbeitung ihrer personenbezogenen Daten und die Wahrnehmung ihrer Rechte geht. Die Datenschutzbeauftragten müssen: (1) die Organisationseinheiten der verantwortlichen Stelle und die Beschäftigten über ihre datenschutzrechtlichen Pflichten beraten und unterrichten; hierzu können sie auch Schulungen durchführen, allerdings bleibt die Pflicht zur ausreichenden Schulung weiterhin beim Verantwortlichen; (2) die Einhaltung der DSGVO, des BDSG und anderer Vorschriften über den Datenschutz sowie die Strategien und Regeln, die sich die verantwortliche Stelle im Bereich Datenschutz selbst gegeben hat, überwachen; (3) den Verantwortlichen hinsichtlich der Sensibilisierung und Schulung von Mitarbeiterinnen und Mitarbeitern überwachen; (4) im Zusammenhang mit der sogenannten Datenschutz-Folgenabschätzung beraten und ihre Durchführung überwachen; (5) mit der Datenschutzaufsichtsbehörde zusammenarbeiten. Außerdem sind sie Anlaufstelle für die Aufsichtsbehörde.",
+      "source_section": "3.1",
+      "source_pages": "S. 46–47",
+      "law_refs": ["DSGVO Art. 39"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-grundlagen",
+      "topic": "AVV — Grundlagen und Begriff",
+      "title_de": "AVV — Grundlagen und Begriff",
+      "target_node_type": "DocumentType",
+      "target_node_match_semantic": { "name": "AVV" },
+      "target_node_match": { "type": "AVV" },
+      "property": "bfdi_commentary",
+      "value": "Privatwirtschaft wie auch öffentliche Verwaltung setzen in vielen Fällen Dritte ein, die ihnen bei der Erfüllung ihrer eigenen Aufgaben behilflich sind. Sofern dabei mit personenbezogenen Daten umgegangen wird, handelt es sich häufig um eine sogenannte Auftragsverarbeitung. Davon zu trennen ist die Frage, ob ein solches Outsourcing, bzw. ein „Zusammenschluss\" von Behörden in bestimmen Verwaltungsangelegenheiten, überhaupt zulässig ist. Entschließt sich eine Stelle zum Outsourcing solcher Tätigkeiten, die auch die Erhebung, Verarbeitung und Nutzung personenbezogener Daten beinhalten, muss sie dabei verschiedene rechtliche, technische und organisatorische Voraussetzungen erfüllen. Art. 28 DSGVO regelt die sogenannte Auftragsverarbeitung. Beispiele für die Auftragsverarbeitung: Betrieb eines Rechenzentrums im Auftrag; Entsorgung von Datenträgern; technischer Betrieb einer virtuellen Poststelle.",
+      "source_section": "3.2",
+      "source_pages": "S. 47",
+      "law_refs": ["DSGVO Art. 28", "DSGVO Art. 30 Abs. 2", "DSGVO Art. 32", "DSGVO Art. 37"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-rechtsgrundlage",
+      "topic": "AVV — Rechtsgrundlage und Verantwortlichkeit",
+      "title_de": "AVV-Rechtsgrundlage und Verantwortlichkeit (Art. 28)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "Auftragsverarbeitung", "aspect": "rechtsgrundlage" },
+      "target_node_match": { "id": "DSGVO-28", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Für die Weitergabe von personenbezogenen Daten an den Auftragsverarbeiter und die Verarbeitung durch den Auftragsverarbeiter bedarf es regelmäßig keiner weiteren Rechtsgrundlage im Sinne von Art. 6 bis 10 DSGVO als derjenigen, auf die der Verantwortliche selbst die Verarbeitung stützt. Gegenüber den betroffenen Personen bleibt die Stelle, um deren Aufgabe es geht, dafür verantwortlich, dass mit ihren personenbezogenen Daten rechtmäßig umgegangen wird. Daneben ist nunmehr nach der DSGVO und dem BDSG auch der Auftragsverarbeiter eigenständiger Adressat der DSGVO.",
+      "source_section": "3.2",
+      "source_pages": "S. 47–48",
+      "law_refs": ["DSGVO Art. 6", "DSGVO Art. 28"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-voraussetzungen",
+      "topic": "AVV — Voraussetzungen (Vertrag, Weisungsbindung, Garantien)",
+      "title_de": "AVV-Voraussetzungen — Vertrag, Weisungsbindung, TOM-Garantien (Art. 28 Abs. 3)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "Auftragsverarbeitung", "aspect": "voraussetzungen" },
+      "target_node_match": { "id": "DSGVO-28-3", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Die Auftragsverarbeitung setzt voraus, dass die Verarbeitung durch den Auftragsverarbeiter auf der Grundlage eines Vertrages oder eines anderen Rechtsinstituts nach dem Unionsrecht oder dem Recht der Mitgliedstaaten erfolgen muss (siehe im Einzelnen Art. 28 Abs. 3 DSGVO), und dass der Auftragsverarbeiter nur im Rahmen der Weisungen seines Verantwortlichen tätig werden darf. Der Auftragsverarbeiter muss hinreichend Garantien dafür bieten, dass geeignete technische und organisatorische Maßnahmen so durchgeführt werden, dass die Verarbeitung im Einklang mit der DSGVO erfolgt und den Schutz der Rechte der betroffenen Person gewährleistet. Als Beleg solcher Garantien können auch die Einhaltung genehmigter Verhaltensregeln gemäß Art. 40 DSGVO oder eines genehmigten Zertifizierungsverfahrens gemäß Art. 42 DSGVO durch den Auftragsverarbeiter dienen. Zu beachten ist, dass bei der Auftragsverarbeitung nunmehr auch der Auftragsverarbeiter mitverantwortlich für die Einhaltung der technisch-organisatorischen Maßnahmen ist.",
+      "source_section": "3.2",
+      "source_pages": "S. 48",
+      "law_refs": ["DSGVO Art. 28 Abs. 3", "DSGVO Art. 40", "DSGVO Art. 42"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-subunternehmer",
+      "topic": "AVV — Subunternehmer (Subauftragsverarbeiter)",
+      "title_de": "AVV-Subunternehmer — Genehmigungspflicht (Art. 28 Abs. 2)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "Auftragsverarbeitung", "aspect": "subunternehmer" },
+      "target_node_match": { "id": "DSGVO-28-2", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Der Einsatz von Subunternehmern durch den Auftragsverarbeiter bedarf der vorherigen (schriftlichen oder elektronischen) Genehmigung des Verantwortlichen.",
+      "source_section": "3.2",
+      "source_pages": "S. 48",
+      "law_refs": ["DSGVO Art. 28 Abs. 2"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-drittstaaten",
+      "topic": "AVV — Drittstaaten-Übermittlung",
+      "title_de": "AVV-Drittstaaten-Übermittlung — angemessenes Schutzniveau (Art. 28 Abs. 3 lit. a / Art. 44 ff.)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "Auftragsverarbeitung", "aspect": "drittstaaten" },
+      "target_node_match": { "id": "DSGVO-28-3-a", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Werden Aufträge an Auftragsverarbeiter erteilt, die ihren Sitz im Europäischen Wirtschaftsraum haben und die Datenverarbeitung dort ausführen, gelten dieselben Vorgaben wie für inländische Auftragsverarbeiter. Bei der Auftragsvergabe an Auftragsverarbeiter in sonstigen Drittstaaten sind zudem besondere Bedingungen zu beachten. Es bedarf zusätzlich der Sicherstellung eines angemessenen Schutzniveaus nach Art. 44 ff. DSGVO. In dem Vertrag oder dem Rechtsinstrument zwischen Verantwortlichem und Auftragsverarbeiter ist festzulegen, ob der Auftragsverarbeiter personenbezogene Daten des Verantwortlichen in einem Drittland verarbeiten darf (Art. 28 Abs. 3 lit. a) DSGVO).",
+      "source_section": "3.2",
+      "source_pages": "S. 48–49",
+      "law_refs": ["DSGVO Art. 28 Abs. 3 lit. a", "DSGVO Art. 44 ff."],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-weisungsverstoss",
+      "topic": "AVV — Folgen bei Weisungsverstoß (Statuswechsel zum Verantwortlichen)",
+      "title_de": "AVV-Weisungsverstoß — Statuswechsel zum Verantwortlichen (Art. 28 Abs. 10)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "Auftragsverarbeitung", "aspect": "weisungsverstoss" },
+      "target_node_match": { "id": "DSGVO-28-10", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Zu beachten ist insbesondere auch, dass ein Auftragsverarbeiter selbst als Verantwortlicher gilt, soweit er gegen die Pflicht zur weisungsgebundenen Verarbeitung verstößt, indem er die Daten des Auftraggebers für eigene Zwecke oder Zwecke Dritter verarbeitet (Art. 28 Abs. 10 DSGVO). Dies gilt z. B. auch hinsichtlich der Erfüllung der Betroffenenrechte.",
+      "source_section": "3.2",
+      "source_pages": "S. 49",
+      "law_refs": ["DSGVO Art. 28 Abs. 10"],
+      "append_mode": false
+    },
+
+    {
+      "id": "bfdi-3.2-avv-haftung-meldung-bussgeld",
+      "topic": "AVV — Haftung, Meldepflicht, Bußgeld, VVT-Pflicht",
+      "title_de": "AVV-Pflichten Auftragsverarbeiter — VVT, Meldung, Haftung, Bußgeld (Art. 30/33/82/83)",
+      "target_node_type": "Requirement",
+      "target_node_match_semantic": { "topic": "Auftragsverarbeitung", "aspect": "haftung-meldung-vvt" },
+      "target_node_match": { "id": "DSGVO-30-2", "framework": "DSGVO" },
+      "property": "bfdi_guidance",
+      "value": "Gemäß der DSGVO gelten spezielle Haftungsregelungen für Auftragsverarbeiter. Danach sind auch Auftragsverarbeiter bei Verstößen gegenüber Betroffenen schadensersatzpflichtig. Von Bedeutung ist zudem Art. 33 Abs. 2 DSGVO. Danach muss ein Auftragsverarbeiter eine Verletzung des Schutzes personenbezogener Daten unverzüglich nach Bekanntwerden dem Verantwortlichen melden. Zu beachten sind auch die umfassenden Bußgeldvorschriften des Art. 83 Abs. 4 bis 6 DSGVO. Diese können bei Verstößen durchaus auch bei einem Auftragsverarbeiter zur Anwendung kommen. Nach der DSGVO muss auch der Auftragsverarbeiter ein Verzeichnis zu allen Kategorien von im Auftrag des Verantwortlichen durchgeführten Tätigkeiten der Verarbeitung führen (Art. 30 Abs. 2 DSGVO).",
+      "source_section": "3.2",
+      "source_pages": "S. 49",
+      "law_refs": ["DSGVO Art. 33 Abs. 2", "DSGVO Art. 82", "DSGVO Art. 83 Abs. 4-6", "DSGVO Art. 30 Abs. 2"],
+      "append_mode": false
+    }
+
+  ],
+
+  "_pending_extraction": [
+    "Kapitel 1.4.1–1.4.5 (Grundprinzipien, S. 23–24) — Anreicherung Law-Nodes Art. 5",
+    "Kapitel 1.5.1, 1.5.3 (Marktortprinzip, One-Stop-Shop, S. 25–26)",
+    "Kapitel 1.6 (Rechtmäßigkeit, S. 28–37) — Anreicherung Law Art. 6",
+    "Kapitel 4 (Betroffenenrechte, S. 50–66) — Anreicherung Requirements Informationspflicht, Auskunft, Löschung, Datenübertragbarkeit, Widerspruch, Einwilligungswiderruf, automatisierte Entscheidung"
+  ],
+
+  "_not_in_this_source": {
+    "TOM": "BfDI-Broschüre liefert keinen eigenen Erläuterungstext zu TOM (nur Verweis auf DSGVO Art. 32 im Anhang). Quelle: BSI IT-Grundschutz Kompendium.",
+    "DSFA": "BfDI-Broschüre liefert keinen eigenen Erläuterungstext zur DSFA (nur Verweis auf DSGVO Art. 35 im Anhang). Quelle: EDSA-Guidelines / DSK-Kurzpapiere.",
+    "VVT": "Nur indirekt über AVV-Kontext (Art. 30 Abs. 2). Eigenständiger Erläuterungstext fehlt."
+  }
+}

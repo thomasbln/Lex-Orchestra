@@ -1,0 +1,348 @@
+{
+  "company": {
+    "name": "Rand Industries Inc.",
+    "legal_form": "Inc.",
+    "address": "12 Alias Lane",
+    "zip_city": "10117 Berlin",
+    "contact_email": "legal@rand-industries.example.com",
+    "website_url": "https://rand-industries.example.com",
+    "responsible_name": "Misty Knight",
+    "responsible_title": "Managing Director",
+    "dpo_name": "Danny Rand",
+    "dpo_email": "dpo@rand-industries.example.com"
+  },
+  "generation_date": "2026-04-20",
+  "run_id": "0158d042",
+  "warn_header_gaps": [
+    {
+      "id": "retention_missing",
+      "severity": "REQUIRED",
+      "article": "DSGVO Art. 13 Abs. 2 lit. a; Art. 28 Abs. 3 lit. g; Art. 30 Abs. 1 lit. f",
+      "doc_affected": [
+        "AVV",
+        "VVT",
+        "Datenschutzerkl\u00e4rung"
+      ],
+      "description": "Speicherfristen / L\u00f6schkonzept",
+      "description_en": "",
+      "field": "retention",
+      "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+      "affected_docs": [
+        "AVV",
+        "VVT",
+        "Datenschutzerkl\u00e4rung"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/retention",
+      "fix_label": "Add retention policies",
+      "priority": 1
+    },
+    {
+      "id": "avv_instructing_persons_missing",
+      "severity": "REQUIRED",
+      "article": "DSGVO Art. 28 Abs. 3 Satz 2 lit. a",
+      "doc_affected": [
+        "AVV"
+      ],
+      "description": "Weisungsberechtigte Person(en) auf Seiten des Verantwortlichen",
+      "description_en": "",
+      "field": "instructing_persons",
+      "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+      "affected_docs": [
+        "AVV"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/instructing_persons",
+      "fix_label": "Weisungsberechtigte erg\u00e4nzen",
+      "priority": 1
+    }
+  ],
+  "services_summary": [
+    {
+      "name": "Braintree",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": null,
+      "acts_as_role": null
+    },
+    {
+      "name": "Elasticsearch",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://www.elastic.co/legal/elastic-dpa",
+      "acts_as_role": null
+    },
+    {
+      "name": "MongoDB",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": null,
+      "acts_as_role": null
+    },
+    {
+      "name": "OpenAI",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://openai.com/policies/data-processing-addendum",
+      "acts_as_role": null
+    },
+    {
+      "name": "Postmark",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://wildbit.com/dpa",
+      "acts_as_role": null
+    },
+    {
+      "name": "Redis",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://redis.com/legal/redis-enterprise-cloud-dpa/",
+      "acts_as_role": null
+    },
+    {
+      "name": "Resend",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://resend.com/legal/dpa",
+      "acts_as_role": null
+    },
+    {
+      "name": "Segment",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": null,
+      "acts_as_role": null
+    },
+    {
+      "name": "Sentry",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://sentry.io/legal/dpa/",
+      "acts_as_role": null
+    },
+    {
+      "name": "Stripe",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": false,
+      "dpa_url": "https://stripe.com/de/legal/dpa",
+      "acts_as_role": "controller"
+    },
+    {
+      "name": "Supabase",
+      "country": "USA",
+      "gdpr_status": "SCC erforderlich",
+      "avv_required": true,
+      "dpa_url": "https://supabase.com/legal/dpa",
+      "acts_as_role": null
+    }
+  ],
+  "psp_roles": [
+    {
+      "service_name": "Stripe",
+      "role": "controller",
+      "role_label": "Verantwortlicher",
+      "role_source": "EDPB 07/2020 Rn. 26 + Rn. 82 + Bank payments example (under Rn. 40, p. 15)"
+    }
+  ],
+  "data_subjects": "Kunden, Endnutzer, Website-Besucher",
+  "data_categories": [
+    "API-Anfragen",
+    "Anwendungsdaten",
+    "Authentifizierungsdaten",
+    "Cache-Daten",
+    "Datenbankinhalt",
+    "Delivery-Logs",
+    "E-Mail-Adressen",
+    "E-Mail-Inhalte",
+    "Error-Logs",
+    "Event-Daten",
+    "Ger\u00e4tedaten",
+    "IP-Adressen",
+    "Indizierte Dokumente",
+    "Kreditkartendaten (tokenisiert)",
+    "Logs",
+    "Modell-Inputs und -Outputs",
+    "Nutzer-IDs",
+    "Nutzerdaten",
+    "Nutzungsverhalten",
+    "Rechnungsadressen",
+    "Session-Daten",
+    "Stack-Traces",
+    "Suchanfragen",
+    "Transaktionsdaten",
+    "Versand-Metadaten",
+    "Zahlungsdaten",
+    "ggf. personenbezogene Daten in Fehlerberichten",
+    "ggf. personenbezogene Inhalte",
+    "ggf. personenbezogene Inhalte in Prompts"
+  ],
+  "service_data_blocks": [
+    {
+      "service_name": "Braintree",
+      "data_categories": [
+        "Kreditkartendaten (tokenisiert)",
+        "Rechnungsadressen",
+        "Transaktionsdaten",
+        "Zahlungsdaten"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Elasticsearch",
+      "data_categories": [
+        "Indizierte Dokumente",
+        "Suchanfragen",
+        "ggf. personenbezogene Inhalte"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "OpenAI",
+      "data_categories": [
+        "API-Anfragen",
+        "Modell-Inputs und -Outputs",
+        "ggf. personenbezogene Inhalte in Prompts"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Postmark",
+      "data_categories": [
+        "Delivery-Logs",
+        "E-Mail-Adressen",
+        "E-Mail-Inhalte",
+        "Versand-Metadaten"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Redis",
+      "data_categories": [
+        "Cache-Daten",
+        "Session-Daten",
+        "ggf. personenbezogene Inhalte"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Resend",
+      "data_categories": [
+        "Delivery-Logs",
+        "E-Mail-Adressen",
+        "E-Mail-Inhalte",
+        "Versand-Metadaten"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Segment",
+      "data_categories": [
+        "Event-Daten",
+        "Ger\u00e4tedaten",
+        "Nutzer-IDs",
+        "Nutzungsverhalten",
+        "Session-Daten"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Sentry",
+      "data_categories": [
+        "Error-Logs",
+        "IP-Adressen",
+        "Stack-Traces",
+        "ggf. personenbezogene Daten in Fehlerberichten"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Stripe",
+      "data_categories": [
+        "Kreditkartendaten (tokenisiert)",
+        "Rechnungsadressen",
+        "Transaktionsdaten",
+        "Zahlungsdaten"
+      ],
+      "data_categories_gap": false
+    },
+    {
+      "service_name": "Supabase",
+      "data_categories": [
+        "Anwendungsdaten",
+        "Authentifizierungsdaten",
+        "Datenbankinhalt",
+        "Logs",
+        "Nutzerdaten"
+      ],
+      "data_categories_gap": false
+    }
+  ],
+  "special_categories": false,
+  "instructing_persons": {
+    "gap_id": "avv_instructing_persons_missing",
+    "article": "DSGVO Art. 28 Abs. 3 lit. a",
+    "fix_url": "/project/rand-industries/company"
+  },
+  "transfer_block": {
+    "mechanism": "SCCs",
+    "scc_doc_ref": "scc_0158d042.md",
+    "affected_service_count": 11
+  },
+  "deletion_periods": [
+    {
+      "service": "Braintree",
+      "period": null
+    },
+    {
+      "service": "Elasticsearch",
+      "period": "Bei Index-L\u00f6schung"
+    },
+    {
+      "service": "MongoDB",
+      "period": null
+    },
+    {
+      "service": "OpenAI",
+      "period": "Gem\u00e4\u00df OpenAI DPA \u2014 kein Training auf API-Daten per default"
+    },
+    {
+      "service": "Postmark",
+      "period": "Event-Logs 30-90 Tage \u2014 gem\u00e4\u00df DPA"
+    },
+    {
+      "service": "Redis",
+      "period": "TTL-basiert \u2014 konfigurierbar"
+    },
+    {
+      "service": "Resend",
+      "period": "Event-Logs 30-90 Tage \u2014 gem\u00e4\u00df DPA"
+    },
+    {
+      "service": "Segment",
+      "period": null
+    },
+    {
+      "service": "Sentry",
+      "period": "Standard 90 Tage \u2014 konfigurierbar bis 365 Tage"
+    },
+    {
+      "service": "Stripe",
+      "period": "Gem\u00e4\u00df Stripe DPA \u2014 Finanzdaten bis 7 Jahre (gesetzliche Aufbewahrungspflicht)"
+    },
+    {
+      "service": "Supabase",
+      "period": "Auf Anfrage des Verantwortlichen \u2014 konfigurierbar"
+    }
+  ],
+  "owner_retention": [],
+  "bfdi_citations": []
+}

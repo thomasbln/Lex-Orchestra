@@ -1,0 +1,54 @@
+# requirements.txt — Lex-Orchestra
+# Python 3.12+ | x86_64 Linux (tested); aarch64 untested
+# Install into a project venv (never --break-system-packages):
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+# ── Orchestration ────────────────────────────────────────────
+langgraph>=0.2.0
+langgraph-checkpoint-postgres>=0.1.0
+langgraph-cli[inmem]>=0.1.0       # langgraph dev — LangGraph Server (inmem includes langgraph-api)
+
+# ── LLM ─────────────────────────────────────────────────────
+anthropic>=0.40.0         # optional cloud LLM backend (non-default; local Gemma via Ollama is the default)
+
+# ── Neo4j ───────────────────────────────────────────────────
+neo4j>=5.0.0
+
+# ── PostgreSQL / Supabase ────────────────────────────────────
+# psycopg2-binary: prebuilt wheels (ARM64-compatible) — not psycopg2
+psycopg2-binary>=2.9.0
+asyncpg>=0.29.0          # LangGraph PostgresSaver (async)
+sqlalchemy>=2.0.0
+
+# ── Scout — HTTP + Parsing ───────────────────────────────────
+requests>=2.31.0
+httpx>=0.27.0             # async HTTP for the scout
+beautifulsoup4>=4.12.0    # Legal Page Parser (Impressum, Datenschutz)
+lxml>=5.0.0               # BeautifulSoup HTML-Parser Backend
+
+# ── Scout — Config / Repo Parsing ────────────────────────────
+pyyaml>=6.0.0             # parse docker-compose.yml
+python-dotenv>=1.0.0
+
+# ── Developer Tooling ────────────────────────────────────────
+pre-commit>=3.5.0         # ADR-100 pre-commit hook (graph integrity)
+
+
+# ── Approve API (FastAPI sidecar port 8001) ──────────────────
+fastapi>=0.115.0
+uvicorn>=0.30.0
+
+# ── Document Generation ──────────────────────────────────────
+jinja2>=3.1.0             # template engine for the generated documents
+pypandoc>=1.13.0          # legacy Markdown→PDF path (unused; kept for compat)
+weasyprint>=60.0          # Markdown→HTML→PDF rendering (needs Pango/Cairo system libs)
+markdown>=3.5             # Markdown→HTML step for the WeasyPrint renderer
+
+# ── PDF Processing ───────────────────────────────────────────
+pdfplumber>=0.11.0        # read source PDFs (optional pdf_ingest re-ingestion)
+
+# ── PII Anonymization (ADR-028 Layer 2) ──────────────────────
+# spacy 3.8+ required for Python 3.13 (3.7.x only supports up to 3.12)
+presidio-analyzer==2.2.354
+presidio-anonymizer==2.2.354
+spacy>=3.8.0

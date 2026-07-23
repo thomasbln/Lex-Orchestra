@@ -1,167 +1,195 @@
-# Lex-Orchestra ⚖️
+<p align="center">
+  <img src="docs/images/logo.svg" alt="Lex-Orchestra" width="120">
+</p>
 
-**Open source compliance infrastructure for regulated software.**  
-Reads your codebase. Maps it to the law. Delivers documents ready for legal review.
+# Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![Status: Pre-release](https://img.shields.io/badge/Status-Pre--release-orange)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
-> Your source code never leaves your network.  
-> Fully local if you need it. Hybrid if you want it.
+<!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
+**Local compliance agent for software teams.**
+From git push to legal draft — on your own hardware.
 
----
+A single line of code can trigger a GDPR violation that costs your company millions.
+Most developers find out months later — from a lawyer.
 
-## Status
+Lex-Orchestra scans your code repository, detects which laws apply, and generates
+pre-filled legal documents — DPA, TOM, records of processing, DPIA, SCC assessment,
+AI Act manifest and more — automatically, in German and English.
+Your source code never leaves your network. Not as a policy. As an architectural constraint.
 
-**Pre-release** — The pipeline is operational. Core documents are generated and tested against real infrastructure.
+One scan. Nine document types. Two languages. Fully local.
 
-Active development. APIs and document schemas may change before stable release.  
-Partner access available on request.
+![Lex-Orchestra — repo in, compliance docs out](docs/assets/lex-demo-dark.gif#gh-dark-mode-only)
+![Lex-Orchestra — repo in, compliance docs out](docs/assets/lex-demo-light.gif#gh-light-mode-only)
 
----
+![Lex-Orchestra Architecture — Sense, Know, Act](docs/images/architecture.svg)
 
-## What it does
 
-You use Stripe and Supabase. Your system includes an AI component with a system prompt.
+## The problem
 
-Lex-Orchestra scans the repository and delivers:
+Every current approach to software compliance is broken. Questionnaire tools ask you
+to describe your infrastructure from memory — you forget the analytics pixel you added
+in March, and the tool has no way to know. Cloud-based LLM tools guess compliance
+probabilistically — an AI that is "85% confident" about a legal requirement is not an
+auditable answer, it is a liability. Code upload tools ask you to hand your IP and
+secrets to a third party to check for privacy violations — you violate data sovereignty
+to verify data sovereignty.
 
-```
-Stripe detected       → GDPR Art. 44 (international transfer)
-                      → Standard Contractual Clauses required
-                      → DPA missing — signing link included
+In code we trust. The infrastructure speaks for itself.
 
-Supabase detected     → GDPR Art. 28
-                      → DPA missing — signing link included
 
-System prompt found   → EU AI Act Art. 52 (transparency obligation)
-                      → AI Act Manifest required
-                      → Risk level: limited
+## Legal moves into the pipeline
 
-3 documents generated. Ready for review.
-```
+In the old world, legal was the bottleneck at the end of the pipeline. A developer
+ships, weeks later legal reviews, finds gaps, sends it back. The legal team spent most
+of their time just capturing what the infrastructure actually does — reconstructing
+configurations, chasing down which services process what data, filling in the blanks
+from memory.
 
-Lex-Orchestra turns your codebase into compliance decisions.
+With Lex-Orchestra, legal moves into the pipeline — at commit time, not after
+deployment. The system already knows what runs. Documents are pre-filled, referenced,
+and carry explicit gap markers where only a human can decide. The legal team's job
+shifts from data collection to review and sign-off.
 
-Before your coffee gets cold —  
-pre-filled drafts are ready for legal review.  
-Not a substitute for legal advice.
+Ready for legal review — not for legal discovery.
 
----
-
-## The gap this closes
-
-Legal teams spend most of their compliance time not on legal judgement — but on reconstruction.  
-Which services does the system actually use? What data flows where? Which sub-processors are active?
-
-That information lives in the code. Not in questionnaires. Not in memory.
-
-Traditional compliance tools create a risky gap between the actual, constantly changing infrastructure and static legal documentation. Lex-Orchestra closes that gap — automatically, at scan time, from the source.
-
-The system does not ask what you use. It reads the code and sees it.
-
----
 
 ## How it works
 
-![Sense → Know → Act](docs/images/architecture.svg)
-
-1. **Scan** — reads the repository directly (docker-compose, package.json, .env, Dockerfiles, system prompts)
-2. **Detect** — identifies services, sub-processors, AI components, and security signals
-3. **Map** — traverses the Context Graph to derive applicable legal obligations
-4. **Generate** — renders pre-filled document drafts with source citations
-
 ```
-Repository (local)
-      ↓
-   Scout — local detection, three layers, no data leaves the network
-      ↓
-   Presidio — strips all PII before any external call
-      ↓
-   Context Graph — maps anonymised signals to GDPR, EU AI Act, ISO 27001, BSI, NIS2, CRA
-      ↓
-   Document Architect — renders drafts from verified graph paths
-      ↓
-Documents delivered to legal/ — ready for review, not for discovery
+git push  -->  Scout (local)  -->  Context Graph (local)  -->  Documents  -->  Dashboard
+                    |
+          Source code never leaves your network
 ```
 
-![Scout — three-layer local analysis](docs/images/architecture-scout-layers-dark.svg)
+### The Scout
 
----
+The Scout reads your repository directly — docker-compose files, package manifests
+(npm, pip, poetry, composer, go), .env patterns, Dockerfiles. It detects services
+automatically against a curated catalogue of 67 processors, including a direct link
+to each processor's DPA signing page. No forms.
+No memory. The code is the real data flow.
 
-## The Context Graph
+Detection is layered and local: pattern matching against a curated signal map first;
+anything unknown is classified by a local LLM (Gemma 4 via Ollama) running on your
+machine. Only canonical service names and anonymised identifiers ever reach the graph —
+never file names, variables, code content or secrets (the logbook and graph enforce
+this as an invariant, not a convention).
 
-The reasoning engine is a property graph built on Neo4j — not a language model making probabilistic guesses.
+The Scout does not ask what you use. It sees it.
 
-Every compliance finding is derived by traversing verified paths between infrastructure nodes and regulatory requirements. If a path exists from a detected service to a legal obligation, the obligation is flagged. If no path exists, nothing is flagged.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/architecture-scout-layers-dark.svg">
+  <img src="docs/images/architecture-scout-layers.svg" alt="Scout — layered local analysis pipeline">
+</picture>
 
-The Context Graph reduces the risk of LLM inaccuracies drastically — every document generation is constrained by deterministic paths to official sources. The LLM formats and structures the output. The graph determines what is legally relevant.
+### The Context Graph
 
-GDPR · EU AI Act · CRA · NIS2 · DSA · ISO 27001 · BSI IT-Grundschutz · BSI C5 · BSI AIC4 · OWASP LLM Top 10 · OWASP API Security · NIST CSF 2.0
+The Context Graph is not a feature. It is the engine that makes the whole system work.
 
-All seeded from official sources. Every node carries a source reference. Every document carries a confidence score.
+Built on Neo4j (a local container by default), the Context Graph maps your
+infrastructure to legal requirements deterministically. It does not guess. It
+traverses verified legal norms against your actual stack. Every finding is traceable
+to a specific node and an official source. The graph either finds a path from your
+detected component to a legal requirement — or it does not.
 
-→ [Context Graph documentation](docs/architecture/context-graph.md)
+The graph knows not just what applies, but when it applies (enforcement dates on law
+nodes), for whom it applies (jurisdiction layers), and where the knowledge comes from
+(source and license provenance on nodes and relationships).
 
----
+Provider risk and deployer risk are correctly separated. Using an LLM API does not
+make you a GPAI provider — that is the model vendor's concern. If you build a customer
+service chatbot, your obligation is Art. 50 transparency, not GPAI systemic-risk
+reporting. The graph knows the difference.
 
-## For legal and compliance professionals
+### Privacy by architecture
 
-Lex-Orchestra does not produce legal opinions. It eliminates the discovery phase.
+The default profile is fully sovereign: Neo4j runs as a local container, the LLM runs
+locally via Ollama, documents are assembled deterministically from the graph. In this
+setup nothing leaves your network at all. If you opt into a cloud-hosted graph
+instead, it receives anonymised UUIDs and abstract asset types only — compliance
+logic, not your infrastructure details.
 
-Reviewing a new system today typically means reconstructing: which tools are active, which data flows exist, which sub-processors are involved, which transfer mechanisms apply. That reconstruction takes hours and depends on developers answering correctly from memory.
+This is not a privacy policy. It is an architectural constraint.
 
-Lex-Orchestra delivers that reconstruction automatically — sourced directly from the infrastructure. The legal team receives pre-filled drafts with citations, not blank templates. The job shifts from data collection to review and judgement.
 
-**Documents generated today:**
+## What it looks like in practice
 
-AVV / DPA · TOM · RoPA (Art. 30 GDPR) · SCC · AI Act Manifest
+You use Stripe and Supabase. Your system includes an AI component.
 
-Every document includes a confidence score, a disclaimer confirming draft status, and source traceability to the applicable regulation.
+```
+Stripe detected       → GDPR Art. 44 ff. (third-country transfer)
+                      → Standard Contractual Clauses assessed
+                      → DPA missing — signing link included
 
----
+Supabase detected     → GDPR Art. 28 (processor)
+                      → DPA missing — signing link included
 
-## For engineers
-
-One command. Documents in `legal/`. No Word files.
-
-```bash
-lex-orchestra scan --repo ./my-project
+AI service detected   → EU AI Act Art. 50 (transparency obligation)
+                      → AI Act manifest + AI policy generated
+                      → Risk level: limited
 ```
 
-The Scout detects 50+ services automatically — Stripe, AWS, Postmark, OpenAI, and others — including a direct DPA signing link for each processor. Three detection layers run locally: regex pattern matching, Presidio PII filtering, and semantic classification via a local LLM. Only anonymised UUIDs leave the machine.
+Nine documents generated, in German or English. Ready for review.
 
-**Deployment:**
+Documents land in `legal/drafts/` as Markdown and PDF, with a per-document provenance
+logbook. The dashboard (port 3000) shows scan status, gaps with fix links, and lets
+you edit the technical-measures catalogue before re-rendering.
 
-**Hybrid (default)** — Scout and PII filtering run locally. Only anonymised UUIDs and abstract asset types reach external services — never source code, secrets, or real infrastructure details. The privacy boundary is identical to fully local mode. Compliance reasoning and document drafting use external APIs.
-
-**Fully local** — all components in Docker on your own infrastructure, including LLM and graph database. Zero external APIs. Requires 16 GB RAM.
-
----
 
 ## Data boundary
 
-| Stays local — always                | External services receive                                    |
-| ----------------------------------- | ------------------------------------------------------------ |
-| Source code and repository          | Neo4j: anonymised UUIDs and abstract asset types only        |
-| docker-compose, .env, Dockerfiles   | LLM API: anonymised structural context only                  |
-| PII filtering and classification    | Example: "Service type: payment (USA), requires DPA and SCC" |
-| Generated documents (DPA, TOM, SCC) | Never: file names, variables, code, secrets, IP addresses    |
-| Scan results and project state      |                                                              |
+| Stays local (always) | Optional cloud graph receives (anonymised only) |
+|---|---|
+| Source code and git repository | UUIDs and abstract asset types |
+| docker-compose, .env, Dockerfiles | — |
+| Generated legal documents + PDFs | — |
+| Scan results and project state (Postgres) | — |
+| LLM classification (Ollama, local) | — |
+| Real file names, variables, secrets | Never sent anywhere |
 
-Data sovereignty is not a policy statement. It is an architectural constraint.
+In the default sovereign profile there is no cloud component at all.
 
-→ [Data sovereignty — what stays where](docs/architecture/data-sovereignty.md)
 
----
+## How Lex-Orchestra compares
+
+| Dimension | Typical compliance tools | Lex-Orchestra |
+|---|---|---|
+| How it decides | LLM guesses probabilistically | Context Graph traverses deterministically |
+| Where your code goes | Uploaded to cloud for analysis | Never leaves your network |
+| When compliance happens | Legal reviews after deployment | Integrated at commit time |
+| What you get for a missing DPA | "You need a DPA with Stripe" | Pre-filled DPA draft with direct signing link |
+| How often it runs | Once a year, maybe | Re-scan on demand, delta on every run |
+| Auditability | Black box — no trace | Every finding traceable to a graph node and source |
+
+
+## What's in the knowledge graph
+
+| Content | Coverage | Source |
+|---|---|---|
+| GDPR, EU AI Act, NIS2, CRA, DORA, DSA + German national law (BGB, UWG, TTDSG, PAngV, DDG) | 55+ law articles with enforcement dates | EUR-Lex / official texts |
+| BSI IT-Grundschutz | 22 controls (titles + mappings; full requirement texts are license-gated — bring your own Kompendium copy) | BSI |
+| NIST CSF 2.0 | 12 functions/categories | NIST |
+| OWASP Top 10 (Web, LLM, API) | 30 controls | OWASP |
+| EU AI Act use cases | 20 (Annex III + Art. 5 prohibited) | EUR-Lex |
+| Services | 67 curated processors with DPA links, data categories, deletion periods | provider trust pages, DPF list |
+
+ISO 27001, BSI C5 and BSI AIC4 are **bring-your-own-standard**: the content is
+license-gated, so the repo ships the seed slots but not the licensed texts.
+
+Every node and relationship carries source, license and last-verified provenance.
+
 
 ## Why open source
 
-Compliance should not depend on black boxes.  
+Compliance should not depend on black boxes.
 It should be inspectable, verifiable, and open.
 
-Regulation defines obligations — but how those obligations are derived should be transparent.
+Regulation defines obligations — but how those obligations are derived should be
+transparent.
 
 Lex-Orchestra is built as open compliance infrastructure:
 
@@ -169,46 +197,125 @@ Lex-Orchestra is built as open compliance infrastructure:
 - every decision is traceable
 - every component can be inspected
 
-AGPL-3.0 ensures that improvements remain open. Anyone who takes this code, modifies it, and offers it as a service must publish their changes. The compliance logic stays open.
+AGPL-3.0 ensures that improvements remain open. Anyone who takes this code, modifies
+it, and offers it as a service must publish their changes. The compliance logic stays
+open.
 
-Grounded in European regulation and aligned with global standards like ISO 27001, NIST, and OWASP.
+Grounded in European regulation and aligned with global standards like ISO 27001,
+NIST, and OWASP.
 
-The graph schema, scanner logic, document templates, and all architecture decision records are open source.  
-Curated control mappings, DPA registries, and jurisdiction layers are available under a commercial license.
+The graph schema, scanner logic, and document templates are open source.
+Curated control mappings, DPA registries, and jurisdiction layers are available under
+a commercial license.
 
----
 
-## Comparison
+## Quickstart
 
-|                     | Questionnaire tools | Cloud LLM tools  | Code upload tools | Lex-Orchestra                    |
-| ------------------- | ------------------- | ---------------- | ----------------- | -------------------------------- |
-| Source of truth     | Human memory        | Training data    | Uploaded code     | Live repository                  |
-| Reasoning           | Manual input        | Probabilistic    | Probabilistic     | Deterministic graph              |
-| Code leaves network | N/A                 | Yes              | Yes               | Never                            |
-| Auditability        | None                | None             | None              | Full — every finding traceable   |
-| Output              | Checklist           | Text suggestions | Text suggestions  | Pre-filled drafts with citations |
+Full setup guide: **[docs/setup/README.md](docs/setup/README.md)** · tested on
+x86_64 Linux with Docker; 16 GB RAM recommended. aarch64 is untested — the base
+images are multi-arch, so it should build, but there is no verified run yet.
 
----
+```bash
+git clone https://github.com/thomasbln/Lex-Orchestra.git
+cd Lex-Orchestra
 
-## Roadmap
+# Configure environment (fill in the __SET_ME__ values)
+cp docker/envs/.env.sovereign docker/envs/.env
 
-**Next:** Legal News Scanner — monitors regulatory updates and matches them against your specific stack. CI/CD hook for GitHub Actions. PDF output.
+# Create the shared network + start the stack (sovereign: local Neo4j + Ollama)
+docker network create docker_lex-net
+cd docker && docker compose --profile with-neo4j --profile with-ollama up -d && cd ..
 
-**Further ahead:** US law coverage, additional jurisdiction layers, content engine for verified legal updates.
+# Pull the local inference model — 9.6 GB, one-time.
+# Expect ~10–15 minutes on a typical connection; check progress with:
+#   docker exec ollama ollama list
+docker exec ollama ollama pull gemma4:e4b
 
----
+# Apply the database schema + seed the knowledge graph (host venv)
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+make db-migrate      # relational schema (projects, scans, documents)
+make seed-all        # knowledge graph (layer manifest + modules + validator)
+
+# Validate graph invariants
+make seed-validate
+```
+
+Then open `http://<your-host>:3000`, create a project, and run the first scan.
+
+**What to expect:** the first scan on CPU-only hardware takes a few minutes — measured
+4 min 02 s end-to-end on a 12-core mini PC (no GPU), including local LLM
+classification and rendering of all nine documents. The status page tracks each step
+live; nothing is hanging.
+
+### Uninstall
+
+Lex-Orchestra leaves nothing behind outside its clone directory — no configs in your
+home directory, no system services, no cron jobs (the optional systemd autostart unit
+is only installed if you copied it yourself — disable it first if you did).
+
+```bash
+cd docker && docker compose --profile with-neo4j --profile with-ollama down -v
+# removes containers, network, and ALL volumes — including the graph and the model
+docker rmi $(docker images -q 'docker-*' 'ollama/*' 'neo4j*')   # optional: images too
+cd .. && cd .. && sudo rm -rf Lex-Orchestra
+```
+
+The `sudo` is honest, not lazy: the database volume directory (`pgdata`) and generated
+`legal/` files are written by containers and end up root-owned on the host. If you
+prefer to avoid sudo, delete them from a throwaway container first.
+
+### Security posture (self-hosters)
+
+The backend API (`approve_api`, port **8001**) and the dashboard (port **3000**)
+are **unauthenticated by design** — Lex-Orchestra is built for a trusted
+private network (LAN/VPN). Anyone who can reach port 8001 can trigger scans,
+edit measures and re-render documents. Before deploying:
+
+- Bind the services to `localhost` or a private interface — **never expose
+  ports 8001/3000 directly to the internet.**
+- For remote access, put an authenticating reverse proxy (Basic Auth, OIDC,
+  Tailscale/VPN) in front.
+- The internal LangGraph engine (port 8000) is not published outside the
+  container at all; the only built-in guard is the internal `X-Scan-Secret`
+  header on the scan step endpoint.
+
+
+## Documentation
+
+| Section | Description |
+|---|---|
+| [docs/setup/](docs/setup/) | Hardware, credentials, Docker, troubleshooting |
+| [docs/architecture/context-graph.md](docs/architecture/context-graph.md) | Context Graph: RAG → GraphRAG → Context Graph |
+| [docs/architecture/data-sovereignty.md](docs/architecture/data-sovereignty.md) | Data sovereignty: what stays where |
+| [docs/architecture/trust.md](docs/architecture/trust.md) | Trust statement: verifiable claims, not promises |
+| [docs/reference/](docs/reference/) | Service registry, scan strategy |
+
+
+## Status and roadmap
+
+**Operational today:** full pipeline — repository scan, deterministic graph matching,
+nine document types (DPA/AVV, TOM, records of processing, DPIA, SCC assessment,
+AI policy, AI system documentation, AI Act manifest, scan report) in German and
+English, Markdown + PDF, per-document provenance logbook, editable measures
+catalogue, live scan status page.
+
+**Next:** a Legal News Scanner that alerts you when regulatory changes affect your
+specific stack, a CI/CD hook for GitHub Actions, and webhook notifications.
+
+**Further ahead:** US law coverage and additional jurisdiction layers.
+
+Status: Pre-release · License: AGPL-3.0 · Partner access available on request
+
 
 ## Learn more
 
-- [Context Graph deep dive](docs/architecture/context-graph.md)
-- [Data sovereignty — what stays where](docs/architecture/data-sovereignty.md)
-- [Interactive architecture preview](https://lex-orchestra.com)
-- [Graph visualizer](https://lex-orchestra.com/architecture/graph-visualizer)
+- [Context Graph deep dive](docs/architecture/context-graph.md) — from RAG to GraphRAG to Context Graph, and why it matters for compliance
+- [Data sovereignty — what stays where](docs/architecture/data-sovereignty.md) — the three zones, the UUID-only pattern, and the threat model it defeats
 
 ---
 
-> Lex-Orchestra automates compliance preparation — not legal judgement.  
-> Generated documents are structured drafts based on infrastructure analysis and a regulatory knowledge graph.  
-> They do not constitute legal advice and require review by a qualified legal professional before use or filing.
+> Generated documents are pre-filled drafts. Built directly from your infrastructure
+> scan and knowledge graph. Each document must be reviewed by a qualified legal
+> professional before use or filing.
 
-AGPL-3.0 · Built by [Thomas Rehmer](https://x.com/thomas_rehmer) · [awareo.io](https://awareo.io) · Neo4j · LangGraph · Presidio · Ollama
+AGPL-3.0 — Built by Thomas Rehmer — Neo4j — LangGraph — Ollama

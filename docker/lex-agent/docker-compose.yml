@@ -1,0 +1,41 @@
+# Lex-Orchestra Agent — LangGraph Server (ADR-002 + ADR-004)
+# Exposes the LangGraph workflow as a REST API on :8000.
+# Build context is repo root so Dockerfile can access requirements.txt.
+# Architecture is detected automatically (Pi → arm64, NucBox/x86 → amd64) per ADR-053.
+
+services:
+  lex-agent:
+    build:
+      context: ../..                              # repo root: Dockerfile can COPY requirements.txt
+      dockerfile: docker/lex-agent/Dockerfile
+    container_name: lex-agent
+    user: "1000:1000"                                 # run as pi user — prevents root-owned .git files
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ../envs/.env                              # ADR-053 — single canonical env path
+    ports:
+      # LangGraph (:8000) is deliberately NOT published: it has no auth and is
+      # only called in-container by approve_api. To expose it for debugging,
+      # add - "8000:8000" locally — never on a LAN-reachable install.
+      - "8001:8001"                               # Approve API (FastAPI sidecar)
+    volumes:
+      - ../../src:/app/src                        # live code reload during development
+      - ../../legal:/app/legal                    # generated docs (AVV, ToM, VVT)
+      - ../../legal/logs:/app/logs                # ADR-030: scan logs accessible on Pi
+      - ../../docs:/app/docs:ro                   # skills + prompts (read-only)
+      - ../../.git:/app/.git                      # git access for approve_api commit+push
+    command: >
+      sh -c "uvicorn src.interface.approve_api:app --host 0.0.0.0 --port 8001 &
+             langgraph dev --host 0.0.0.0 --port 8000 --no-browser --no-reload"
+    depends_on:
+      supabase-db:
+        condition: service_started
+    networks:
+      - lex-net
+
+networks:
+  lex-net:
+    external: true
+    name: docker_lex-net

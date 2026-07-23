@@ -1,0 +1,153 @@
+{
+  "company": {
+    "name": "Rand Industries Inc.",
+    "legal_form": "Inc.",
+    "address": "12 Alias Lane",
+    "zip_city": "10117 Berlin",
+    "contact_email": "legal@rand-industries.example.com",
+    "website_url": "https://rand-industries.example.com",
+    "responsible_name": "Misty Knight",
+    "responsible_title": "Managing Director",
+    "dpo_name": "Danny Rand",
+    "dpo_email": "dpo@rand-industries.example.com"
+  },
+  "generation_date": "2026-04-20",
+  "run_id": "0158d042",
+  "warn_header_gaps": [],
+  "zweck": "Bewerberauswahl",
+  "rechtsgrundlage": "Art. 6 Abs. 1 lit. b DSGVO (Vertragserf\u00fcllung)",
+  "data_subjects": "Kunden, Endnutzer, Website-Besucher",
+  "ai_services": [
+    {
+      "name": "OpenAI",
+      "category": "ai_llm",
+      "purpose": "KI-gest\u00fctzte Textgenerierung und -verarbeitung",
+      "country": "USA",
+      "gdpr_adequate": false
+    }
+  ],
+  "ai_usecase": {
+    "type": "hr_recruitment_screening",
+    "title_de": "HR-Recruiting",
+    "description_de": "Bewerberauswahl",
+    "risk_level": "High",
+    "article": "Annex III Nr. 4",
+    "annex_iii_nr": "4"
+  },
+  "pii_services": [
+    "Braintree",
+    "Elasticsearch",
+    "MongoDB",
+    "OpenAI",
+    "Postmark",
+    "Redis",
+    "Resend",
+    "Segment",
+    "Sentry",
+    "Stripe",
+    "Supabase"
+  ],
+  "risks": {
+    "pii_in_llm_context": true,
+    "rag_over_pii": false,
+    "pii_in_logs": true,
+    "no_ai_audit_trail": true,
+    "consent_management": false
+  },
+  "triggered_by_high_risk_usecase": true,
+  "step2": {
+    "notwendigkeit": "Die Verarbeitung ist erforderlich, um den Zweck 'HR-Recruiting' zu erreichen. Eine weniger eingriffsintensive Alternative wurde gepr\u00fcft und ist nicht gegeben.",
+    "verhaeltnismaessigkeit": "Der Eingriff in Rechte und Freiheiten der betroffenen Personen steht in einem angemessenen Verh\u00e4ltnis zum verfolgten Zweck. 1 KI-System und 11 PII-verarbeitende Dienste wurden auf Notwendigkeit gepr\u00fcft.",
+    "datenminimierung": "Es werden nur die f\u00fcr den Zweck erforderlichen Datenkategorien verarbeitet (Art. 5 Abs. 1 lit. c DSGVO). Pseudonymisierung und Anonymisierung werden eingesetzt, wo technisch m\u00f6glich."
+  },
+  "step4": [
+    {
+      "measure": "AVV mit allen Auftragsverarbeitern geschlossen",
+      "status": "Siehe AVV-Dokument",
+      "control_ref": "Art. 28 DSGVO"
+    },
+    {
+      "measure": "Technische und organisatorische Ma\u00dfnahmen (Art. 32 DSGVO)",
+      "status": "Siehe TOM-Dokument",
+      "control_ref": "u.a. OPS.1.1, 8.20, 8.24, OPS.1.1.3, APP.3.1, CON.3"
+    },
+    {
+      "measure": "PII-Scrubbing vor LLM-Aufruf (Presidio Pre-Filter / UUID-Only Pattern)",
+      "status": "zu implementieren",
+      "control_ref": "DSGVO Art. 25 (Privacy by Design)"
+    },
+    {
+      "measure": "Log-Scrubbing vor externem Monitoring-Versand",
+      "status": "zu implementieren",
+      "control_ref": "DSGVO Art. 32"
+    },
+    {
+      "measure": "KI-Audit-Trail (Langfuse o.\u00e4.)",
+      "status": "zu implementieren",
+      "control_ref": "EU AI Act Art. 12"
+    }
+  ],
+  "step5": {
+    "konsultation_erforderlich": true,
+    "begruendung": "Trotz technischer und organisatorischer Ma\u00dfnahmen verbleibt ein hohes Restrisiko f\u00fcr die Rechte und Freiheiten betroffener Personen (Hochrisiko-KI nach EU AI Act Anhang III + aktive PII-Risiken). Vorherige Konsultation der zust\u00e4ndigen Aufsichtsbeh\u00f6rde nach Art. 36 Abs. 1 DSGVO erforderlich."
+  },
+  "bfdi_citations": [],
+  "damage_scenarios": [
+    {
+      "gewaehrleistungsziel": "Vertraulichkeit (Vt)",
+      "risikoquelle": "Externer Angreifer / Drittland-Beh\u00f6rde / KI-Anbieter",
+      "schaden": "Unbefugte Kenntnisnahme personenbezogener Daten via LLM-Prompt oder API-Leak; Identit\u00e4tsdiebstahl, Reputationsschaden",
+      "wahrscheinlichkeit": "hoch",
+      "schwere": "hoch",
+      "measure_refs": [
+        "d1.3-verschluesselung-krypto",
+        "d1.7-datenmasken-pseudo",
+        "d1.4-pseudonyme-anon"
+      ]
+    },
+    {
+      "gewaehrleistungsziel": "Integrit\u00e4t (Ig) + Diskriminierungsfreiheit",
+      "risikoquelle": "Verzerrtes Modell / fehlerhafte Trainings-Daten",
+      "schaden": "Mittelbare Diskriminierung der betroffenen Personen (Geschlecht, Alter, Herkunft); rechtswidrige Entscheidung gegen AGG/DSGVO Art. 22",
+      "wahrscheinlichkeit": "mittel",
+      "schwere": "hoch",
+      "measure_refs": [
+        "d1.2-sollverhalten-tests",
+        "d1.2-sollverhalten-ablaeufe"
+      ]
+    },
+    {
+      "gewaehrleistungsziel": "Transparenz (Tp)",
+      "risikoquelle": "Black-Box-Modell ohne Erkl\u00e4rbarkeit",
+      "schaden": "Betroffene k\u00f6nnen die Verarbeitungslogik nicht nachvollziehen; Auskunftsrecht Art. 15 DSGVO faktisch ausgehebelt",
+      "wahrscheinlichkeit": "hoch",
+      "schwere": "mittel",
+      "measure_refs": [
+        "d1.5-dok-profiling",
+        "d1.5-info-betroffene"
+      ]
+    },
+    {
+      "gewaehrleistungsziel": "Verf\u00fcgbarkeit (Vf) + Vertraulichkeit (Vt)",
+      "risikoquelle": "Externes Monitoring-Tool (Sentry/Datadog) als Drittland-Auftragsverarbeiter",
+      "schaden": "PII in Error-Logs landen au\u00dferhalb des EU-Perimeters; Verlust der Datenherrschaft",
+      "wahrscheinlichkeit": "hoch",
+      "schwere": "mittel",
+      "measure_refs": [
+        "d1.3-verschluesselung-krypto",
+        "d1.7-datenmasken-pseudo"
+      ]
+    },
+    {
+      "gewaehrleistungsziel": "Intervenierbarkeit (Iv) + Transparenz (Tp)",
+      "risikoquelle": "Fehlender Audit-Trail bei KI-Entscheidungen",
+      "schaden": "Betroffenenrechte nach Art. 22 Abs. 3 DSGVO (Eingriffsrecht in automatisierte Entscheidung) nicht durchsetzbar; EU AI Act Art. 12 Versto\u00df",
+      "wahrscheinlichkeit": "hoch",
+      "schwere": "hoch",
+      "measure_refs": [
+        "d1.5-protokoll-konzept",
+        "d1.6-standard-abfrage-iface"
+      ]
+    }
+  ]
+}

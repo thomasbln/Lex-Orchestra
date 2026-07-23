@@ -1,0 +1,139 @@
+{% import '_marker.md.j2' as marker with context %}
+# Technische und Organisatorische Maßnahmen (TOM)
+## gem. Art. 32 DSGVO
+[[LEX_HEAD_END]]
+
+**Unternehmen:** {{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %}
+
+**Projekt:** {{ project_name }}
+**Adresse:** {{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %}
+
+**Kontakt:** {{ contact_email }}{% if website_url %} | {{ website_url }}{% endif %}
+
+**Datenschutzbeauftragter:** {% if dpo_name %}{{ dpo_name }}{% if dpo_email %} ({{ dpo_email }}){% endif %}{% else %}(nicht bestellt / nicht benennungspflichtig){% endif %}
+
+**Ausgefüllt durch:** {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+**Datum:** {{ generation_date }}
+**Run-ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Unternehmensdaten") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## TOM-Abschnitte gem. Art. 32 DSGVO
+
+| TOM-Abschnitt | Erkannte Controls / Delegation |
+|---|---|
+| 1.1 Zutrittskontrolle | {% if fields.hosting_delegation %}Delegiert an {{ fields.hosting_delegation.value.provider }}{% if fields.hosting_delegation.value.region %} ({{ fields.hosting_delegation.value.region }}){% endif %} — physische Kontrollen vom Provider verantwortet{% elif project.on_prem %}Eigenes Rechenzentrum — physische Kontrollen intern{% else %}—{% endif %} |
+{% for section in tom_section_order if section != "1.1 Zutrittskontrolle" %}
+{%- set ctrls = controls_by_section.get(section, []) %}
+{%- set seen = namespace(ids=[]) %}
+{%- set deduped = [] %}
+{%- for c in ctrls %}
+  {%- if c.control_id not in seen.ids %}
+    {%- set _ = seen.ids.append(c.control_id) %}
+    {%- set _ = deduped.append(c.control_id) %}
+  {%- endif %}
+{%- endfor %}
+| {{ section }} | {% if deduped %}{{ deduped | join(', ') }}{% elif model.sdm_defaults_by_section.get(section) %}_SDM-Default:_ {{ model.sdm_defaults_by_section[section] | join('; ') }}{% else %}—{% endif %} |
+{% endfor %}
+
+_Zuordnung automatisch aus dem Infrastruktur-Scan abgeleitet (erkannte Dienste → Service-Kategorie → zugeordnete Controls)._
+_SDM-Defaults aus [Standard-Datenschutzmodell v3.1, Teil D1](https://www.datenschutzkonferenz-online.de/standard-datenschutzmodell.html) wenn keine spezifischen Controls aus dem Scan._
+
+---
+
+## Erkannte Controls aus Infrastruktur-Scan
+
+_Sortiert nach TOM-Abschnitt (Art. 32 DSGVO Schutzziele 1.1 → 4.4)._
+
+| TOM-§ | Maßnahme | Anwendbar auf | Standard-Umsetzung (BSI) | Konkrete Umsetzung |
+|---|---|---|---|---|
+{% for ctrl in model.curated_controls %}| {{ ctrl.tom_section }} | {{ ctrl.measure }} | {% if ctrl.applicable_services %}{{ ctrl.applicable_services | join(", ") }}{% else %}_alle_{% endif %} | {{ ctrl.bsi_default or "—" }} | {{ inline_gap_marker('translation_pending') if ctrl.translation_pending else ctrl.concrete }} |
+{% endfor %}
+
+_Nur Controls mit dokumentierter konkreter Umsetzung werden aufgeführt._
+_Vollständige Control-Liste: siehe interne Security-Dokumentation._
+
+
+{% if priority_actions %}
+## Prioritäts-Maßnahmen aus Compliance-Analyse
+
+{% for action in priority_actions %}
+{{ loop.index }}. {{ action }}
+{% endfor %}
+{% endif %}
+
+{% if "RAG_OVER_PII" in active_risks %}
+
+## Erkannte Risiken — Pflichtmaßnahmen
+
+### Kritisch: RAG über personenbezogene Daten (DSGVO Art. 25)
+
+**Risiko:** Vektor-Datenbank + LLM-API im Stack erkannt.
+Bei RAG-Abfragen werden Embeddings mit personenbezogenen Inhalten
+direkt in den LLM-Prompt eingefügt — das LLM verarbeitet PII
+ohne Kenntnis des Nutzers.
+
+**Typische Fälle:**
+- Vektor-Datenbank mit personenbezogener Tabelle als Embedding-Quelle
+- RAG über Support-Tickets, Verträge oder Kundendaten
+- Semantic Search ohne vorherige PII-Filterung
+
+**Pflichtmaßnahmen:** UUID-Only Pattern (nur anonymisierte Chunks embedden),
+PII-Scrubbing vor Embedding-Generierung (z.B. Presidio), keine user.email / user.name
+in Embedding-Dokumenten, Zugriffskontrolle auf Vector-Store dokumentieren.
+
+**Rechtsgrundlage:** DSGVO Art. 25 (Privacy by Design),
+Art. 32 (technische Schutzmaßnahmen),
+Art. 5 (Datensparsamkeit), EU AI Act Art. 10
+
+{% elif "PII_IN_LLM_CONTEXT" in active_risks %}
+
+## Erkannte Risiken — Pflichtmaßnahmen
+
+### PII-Risiko: Datenbankdaten im LLM-Kontext (DSGVO Art. 25)
+
+**Risiko:** LLM-API und Datenbankzugriff im selben Stack.
+Personenbezogene Daten könnten ungefiltert in den LLM-Kontext gelangen.
+
+**Empfohlene Maßnahmen:** UUID-Only Pattern (Neo4j/LLM nur mit anonymisierten IDs),
+PII bleibt lokal (Post-Retrieval Join in der Anwendungsschicht),
+alternativ Presidio als PII-Pre-Filter vor LLM-Call.
+
+**Rechtsgrundlage:** DSGVO Art. 25, Art. 32, EU AI Act Art. 10
+
+{% endif %}
+
+{% if "PII_IN_LOGS" in active_risks %}
+
+### PII in Logs: Monitoring + LLM erkannt (DSGVO Art. 32)
+
+**Risiko:** Ohne explizite Maßnahmen landen PII in Error-Logs
+von Monitoring-Diensten (Sentry, Datadog) — oft persistent
+und außerhalb des EU-Perimeters.
+
+**Pflichtmaßnahmen:** Error-Logging nur mit UUID-Prefix (nie echte Namen/E-Mails),
+Log-Scrubbing vor externem Versand konfigurieren, Retention-Policies für Logs dokumentieren.
+
+{% endif %}
+
+---
+
+## Unterschrift
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ city or zip_city or "(Ort)" }}, {{ generation_date }}
+
+---
+_Generiert von Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Strukturbasis: a.s.k. Datenschutz Mustervorlage TOM i.S.d. Art. 32 DSGVO_

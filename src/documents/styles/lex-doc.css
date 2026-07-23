@@ -1,0 +1,104 @@
+/* Lex-Orchestra compliance-draft PDF stylesheet (pre-DSB sprint Schritt 2).
+   Sober, print-first, A4. Looks like a DSB working draft, not a marketing piece. */
+
+@page {
+    size: A4;
+    margin: 2cm 2cm 2.2cm 2cm;
+    @top-right {
+        content: string(doctitle);
+        font: 8pt 'DejaVu Sans', sans-serif;
+        color: #888;
+    }
+    @bottom-right {
+        content: "Seite " counter(page) " / " counter(pages);
+        font: 8pt 'DejaVu Sans', sans-serif;
+        color: #888;
+    }
+    @bottom-left {
+        content: "Lex-Orchestra — automatisch generierter Entwurf";
+        font: 8pt 'DejaVu Sans', sans-serif;
+        color: #aaa;
+    }
+}
+
+body {
+    font: 10.5pt/1.45 'DejaVu Sans', sans-serif;
+    color: #1a1a1a;
+    hyphens: none;
+}
+
+h1 {
+    string-set: doctitle content();
+    page-break-before: always;
+    font-size: 15pt;
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 0.2em;
+    margin: 0 0 0.8em 0;
+}
+/* The first heading must not force a leading blank page. */
+h1:first-of-type { page-break-before: avoid; }
+
+h2 { font-size: 12.5pt; margin: 1.3em 0 0.5em; }
+h3 { font-size: 11pt; margin: 1.1em 0 0.4em; }
+
+/* Keep headings glued to the content that follows — no orphaned heading at a
+   page foot. */
+h1, h2, h3 { page-break-after: avoid; }
+
+p { margin: 0.5em 0; orphans: 2; widows: 2; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+    margin: 0.6em 0;
+    /* 8.3pt (was 9.8) + tighter cell padding keeps the wide 5-column service
+       table within the A4 text width so its right column no longer overflows
+       the page margin. Narrow 2-column tables stay comfortably readable. */
+    font-size: 8.3pt;
+}
+th, td {
+    border: 1px solid #bbb;
+    padding: 3px 5px;
+    text-align: left;
+    vertical-align: top;
+    /* Break only genuinely over-long tokens (env-var names, file paths) that
+       would otherwise clip at the cell border. `break-word` does NOT lower the
+       column's min-content width, so auto table-layout keeps narrow label
+       columns wide enough for whole words (no "Zutrittsko ntrolle" mid-word
+       breaks). `anywhere`/`word-break` would shrink them — deliberately avoided. */
+    overflow-wrap: break-word;
+}
+th { background: #f2f2f2; font-weight: 700; }
+
+code, pre {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 9pt;
+    background: #f4f4f4;
+}
+code { padding: 0.1em 0.3em; }
+pre {
+    padding: 0.6em 0.8em;
+    border: 1px solid #e0e0e0;
+    page-break-inside: avoid;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+blockquote {
+    border-left: 3px solid #4a8fff;
+    padding: 0.2em 0 0.2em 0.9em;
+    margin: 0.6em 0;
+    color: #444;
+    page-break-inside: avoid;
+}
+
+a { color: #2a5db0; text-decoration: underline; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 1.2em 0; }
+
+/* Italic legends (e.g. the ≈ inferred-marker legend) read as quiet footnotes. */
+em { color: #555; }
+
+ul, ol { margin: 0.4em 0 0.4em 1.2em; padding: 0; }
+li { margin: 0.2em 0; }

@@ -1,0 +1,9 @@
+# Keep host artifacts out of the Docker build context (F19).
+# node_modules: platform-specific (darwin on the Mac) — the builder stage
+#   installs its own via npm ci; a stray COPY would overwrite it.
+# .next: stale host build output — the builder stage regenerates it.
+node_modules
+.next
+out
+npm-debug.log*
+.DS_Store

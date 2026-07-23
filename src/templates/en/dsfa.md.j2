@@ -1,0 +1,120 @@
+{% import '_marker.md.j2' as marker with context %}
+{% import '_bfdi_footer.md.j2' as bfdi with context %}
+# Data Protection Impact Assessment (DPIA)
+## pursuant to Art. 35 GDPR
+[[LEX_HEAD_END]]
+
+**Company:** {{ company_name }}
+**Project:** {{ project_name }}
+**Responsible:** {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+**DPO:** {% if dpo_name %}{{ dpo_name }}{% else %}(not appointed){% endif %}
+
+**Date:** {{ generation_date }} | **Run ID:** `{{ run_id }}`
+
+**Legal obligation:** Must be completed before the processing starts (Art. 35(10) GDPR)
+
+**DPIA obligation triggered by:**
+{% if model.triggered_by_high_risk_usecase %}- High-risk AI: {{ model.ai_usecase.title_de }} (EU AI Act Art. 6 + Annex III)
+{% endif %}{% if model.risks.rag_over_pii %}- Identified risk: RAG over personal data
+{% endif %}{% if model.risks.pii_in_llm_context %}- Identified risk: PII in LLM context
+{% endif %}
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Company data") }}
+{% endif %}
+
+{% set _lm = ["gap", "derived"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## Step 1: Description of the processing operations — from scan + your inputs (Art. 35(7)(a))
+
+| Field | Content |
+|---|---|
+| **Purpose** | {% if model.zweck is string %}{{ model.zweck }}{% else %}{{ inline_gap_marker(model.zweck.gap_id) }}{% endif %} |
+| **Legal basis** | {% if model.rechtsgrundlage is string %}{{ model.rechtsgrundlage }}{% else %}{{ inline_gap_marker(model.rechtsgrundlage.gap_id) }}{% endif %} |
+| **Data subjects** | {% if model.data_subjects is string %}{{ model.data_subjects }}{% else %}{{ inline_gap_marker(model.data_subjects.gap_id) }}{% endif %} |
+| **Services processing data** | {% if model.pii_services %}{{ model.pii_services | join(", ") }}{% endif %} |
+| **AI systems in use** | {% for s in model.ai_services %}{{ s.name }}{% if not loop.last %}, {% endif %}{% endfor %} |
+
+---
+
+## Step 2: Necessity and proportionality (Art. 35(7)(b))
+
+**Necessity of the processing:**
+{{ model.step2.notwendigkeit }}
+
+**Proportionality in relation to the purpose:**
+{{ model.step2.verhaeltnismaessigkeit }}
+
+**Data minimisation (Art. 5(1)(c) GDPR):**
+{{ model.step2.datenminimierung }}
+
+---
+
+## Step 3: Risks to the rights and freedoms of data subjects (Art. 35(7)(c))
+
+{% if model.damage_scenarios %}
+### Damage scenarios per protection goal _(Fraunhofer DPIA methodology §6.3)_
+
+| Protection goal | Risk source | Damage | Likelihood | Severity | Measure refs |
+|---|---|---|---|---|---|
+{% for s in model.damage_scenarios %}| {{ s.gewaehrleistungsziel }} | {{ s.risikoquelle }} | {{ s.schaden }} | {{ s.wahrscheinlichkeit }} | {{ s.schwere }} | {{ s.measure_refs | join(", ") }} |
+{% endfor %}
+
+_Measure IDs (`d1.x-...`) reference specific SDM D1 measures
+([Standard Data Protection Model v3.1, Part D1](https://www.datenschutzkonferenz-online.de/standard-datenschutzmodell.html))._
+
+{% else %}
+
+| Risk | Likelihood | Severity | Measure |
+|---|---|---|---|
+{% if has_signal("decision_logic") or model.triggered_by_high_risk_usecase %}| Discrimination by AI | high | high | Human oversight, bias audit |
+{% endif %}{% if model.ai_services | selectattr("gdpr_adequate", "equalto", false) | list %}| Data breach (third-country transfer) | medium | high | Encryption, access control, DPA |
+{% endif %}{% if has_signal("ai_usage") %}| Lack of transparency | medium | medium | Explanation obligation, right of access |
+{% endif %}{% if has_signal("personal_data") and has_signal("ai_usage") %}| PII in LLM context | high | high | UUID-only pattern, PII scrubbing, Presidio pre-filter |
+{% elif has_signal("personal_data") or has_signal("ai_usage") %}| PII in LLM context | medium | high | UUID-only pattern, PII scrubbing |
+{% elif model.risks.pii_in_llm_context or model.risks.rag_over_pii %}| PII in LLM context | high | high | UUID-only pattern, PII scrubbing, Presidio pre-filter |
+{% endif %}
+{% endif %}
+
+---
+
+## Step 4: Measures to address the risks (Art. 35(7)(d))
+
+| Measure | Status | Reference |
+|---|---|---|
+{% for row in model.step4 %}| {{ row.measure }} | {{ row.status }} | {{ row.control_ref or "—" }} |
+{% endfor %}
+
+---
+
+## Step 5: Consultation of the supervisory authority (Art. 36 GDPR)
+
+{% if model.step5.konsultation_erforderlich %}
+▸ **Automated preliminary assessment (to be evaluated by DPO/lawyer): indicates a possible obligation to consult the supervisory authority under Art. 36 GDPR.** {{ model.step5.begruendung }}
+
+_The competent supervisory authority must be determined manually from the
+company's registered seat (a federal-state selector in the project settings is
+planned — the field does not exist yet)._
+
+{% else %}
+▸ **Automated preliminary assessment (to be evaluated by DPO/lawyer): no obligation to consult the supervisory authority under Art. 36 GDPR identified.** {{ model.step5.begruendung }}
+{% endif %}
+
+---
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ zip_city or "(city)" }}, {{ generation_date }}
+
+{{ bfdi.render(model.bfdi_citations) }}
+
+---
+_Generated by Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Structural basis: DSK DPIA review scheme + Fraunhofer DPIA handbook + BfDI explanatory notes_
+_Legal basis: GDPR Art. 35_

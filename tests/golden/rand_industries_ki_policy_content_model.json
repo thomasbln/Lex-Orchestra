@@ -1,0 +1,31 @@
+{
+  "company": {
+    "name": "Rand Industries Inc.",
+    "legal_form": "Inc.",
+    "address": "12 Alias Lane",
+    "zip_city": "10117 Berlin",
+    "contact_email": "legal@rand-industries.example.com",
+    "website_url": "https://rand-industries.example.com",
+    "responsible_name": "Misty Knight",
+    "responsible_title": "Managing Director",
+    "dpo_name": "Danny Rand",
+    "dpo_email": "dpo@rand-industries.example.com"
+  },
+  "generation_date": "2026-04-20",
+  "run_id": "0158d042",
+  "warn_header_gaps": [],
+  "ai_services": [
+    {
+      "name": "OpenAI",
+      "category": "ai_llm",
+      "purpose": "KI-gest\u00fctzte Textgenerierung und -verarbeitung",
+      "data_categories": "API-Anfragen, Modell-Inputs und -Outputs, ggf. personenbezogene Inhalte in Prompts",
+      "country": "USA",
+      "gdpr_adequate": false
+    }
+  ],
+  "has_drittland": true,
+  "has_llm": true,
+  "ai_literacy_measures": null,
+  "ai_literacy_note": null
+}

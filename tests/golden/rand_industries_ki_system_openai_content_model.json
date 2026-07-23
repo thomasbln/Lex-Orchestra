@@ -1,0 +1,113 @@
+{
+  "company": {
+    "name": "Rand Industries Inc.",
+    "legal_form": "Inc.",
+    "address": "12 Alias Lane",
+    "zip_city": "10117 Berlin",
+    "contact_email": "legal@rand-industries.example.com",
+    "website_url": "https://rand-industries.example.com",
+    "responsible_name": "Misty Knight",
+    "responsible_title": "Managing Director",
+    "dpo_name": "Danny Rand",
+    "dpo_email": "dpo@rand-industries.example.com"
+  },
+  "generation_date": "2026-04-20",
+  "run_id": "0158d042",
+  "warn_header_gaps": [],
+  "service": {
+    "name": "OpenAI",
+    "category": "ai_llm",
+    "country": "USA",
+    "gdpr_adequate": false,
+    "dpa_url": "https://openai.com/policies/data-processing-addendum",
+    "risk_level": "GPAI",
+    "data_categories": "API-Anfragen, Modell-Inputs und -Outputs, ggf. personenbezogene Inhalte in Prompts",
+    "special_categories": false,
+    "processing_purpose": "KI-gest\u00fctzte Textgenerierung und -verarbeitung",
+    "deletion_period": "Gem\u00e4\u00df OpenAI DPA \u2014 kein Training auf API-Daten per default"
+  },
+  "ai_usecase": null,
+  "is_high_risk": false,
+  "requires_fundamental_rights_assessment": false,
+  "implemented_measures": [
+    {
+      "control_id": "LLM01",
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM01 \u2014 Prompt Injection",
+      "concrete": "Input-Validierung vor LLM-\u00dcbergabe: AssetTranslator anonymisiert alle Assets (ADR-001). Regex-Blocklist f\u00fcr bekannte Injection-Pattern (Rollen\u00fcbernahme, Jailbreak-Phrasen) als serverseitiger Pre-Filter."
+    },
+    {
+      "control_id": "LLM02",
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM02 \u2014 Sensitive Information Disclosure",
+      "concrete": "System-Prompt enth\u00e4lt explizite Datenschutz-Instruktion. PII-Detection scannt alle API-Responses vor Weiterleitung an Client."
+    },
+    {
+      "control_id": "LLM06",
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM06 \u2014 Excessive Agency",
+      "concrete": "Tool-Use-Whitelist im System-Prompt. Serverseitige Allowlist f\u00fcr erlaubte Tool-Calls. Kein autonomer Datenbankschreibzugriff ohne explizite Nutzerbest\u00e4tigung."
+    },
+    {
+      "control_id": "LLM08",
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM08 \u2014 Vector and Embedding Weaknesses",
+      "concrete": "Similarity-Threshold f\u00fcr RAG-Abrufe (Cosine > 0.75). Chunk-Validierung auf Injection-Muster. Keine direkten User-Inputs als Embedding-Query ohne Sanitisierung."
+    },
+    {
+      "control_id": "LLM09",
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM09 \u2014 Misinformation",
+      "concrete": "Sichtbarer Disclaimer bei KI-generierten Inhalten. Bei faktenrelevanten Use-Cases: RAG-Grounding mit Quellenangabe. Vier-Augen-Prinzip bei kritischen Entscheidungen."
+    },
+    {
+      "control_id": "API1",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API1 \u2014 Broken Object Level Authorization",
+      "concrete": "Session-zu-Konversations-ID-Bindung serverseitig. Nutzer A kann keine Konversationsdaten von Nutzer B abrufen \u2014 auch nicht durch conversation_id-Manipulation."
+    },
+    {
+      "control_id": "API2",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API2 \u2014 Broken Authentication",
+      "concrete": "API-Keys ausschlie\u00dflich als serverseitige Umgebungsvariablen. Kurzlebige JWTs (\u2264 1h) f\u00fcr Endnutzer-Authentifizierung."
+    },
+    {
+      "control_id": "API3",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API3 \u2014 Broken Object Property Level Authorization",
+      "concrete": "Response-Filterung im Backend: interne Metadaten (system prompt content, user_ids, Modellparameter) vor Client-Auslieferung entfernen."
+    },
+    {
+      "control_id": "API4",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API4 \u2014 Unrestricted Resource Consumption",
+      "concrete": "Kombiniertes Limit: max_tokens + RPM + t\u00e4gliches Token-Budget. Redis-Middleware. Separates restriktiveres Limit f\u00fcr sensible Gesch\u00e4ftsflows."
+    },
+    {
+      "control_id": "API5",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API5 \u2014 Broken Function Level Authorization",
+      "concrete": "RBAC: Admin-Rolle f\u00fcr System-Prompt-\u00c4nderungen, regul\u00e4re Nutzer nur Chat-Endpunkt. Middleware-Guard vor jedem Route-Handler."
+    },
+    {
+      "control_id": "API6",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API6 \u2014 Unrestricted Access to Sensitive Business Flows",
+      "concrete": "Sensible Flows (automatisierte Entscheidungen, Massengenerierungen) durch zus\u00e4tzliche Authentifizierung gesch\u00fctzt. Separates restriktiveres Rate-Limit."
+    },
+    {
+      "control_id": "API7",
+      "framework_label": "OWASP API Top 10",
+      "measure": "API7 \u2014 Server Side Request Forgery",
+      "concrete": "URL-Allowlist f\u00fcr externe Inhalte. Blockierung interner IP-Ranges (RFC 1918) und Cloud-Metadaten-Endpunkte (169.254.169.254)."
+    }
+  ],
+  "model_name": null,
+  "purpose": null,
+  "user_groups": null,
+  "usage_limits": null,
+  "training_data": null,
+  "logging": null,
+  "project_risk_level": null
+}

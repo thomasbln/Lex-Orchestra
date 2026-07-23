@@ -1,0 +1,138 @@
+{% import '_marker.md.j2' as marker with context %}
+# Standardvertragsklauseln (SCC) — Modul 2 (Controller → Processor)
+
+**gem. EU-Durchführungsbeschluss 2021/914 vom 04.06.2021**
+[[LEX_HEAD_END]]
+
+**Projekt:** {{ project_name }}
+**Verantwortlicher (Datenexporteur):** {{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %}
+{{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %}
+
+**Datum:** {{ generation_date }}
+**Run-ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Unternehmensdaten") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{% if model.services_with_transfer | selectattr('processing_purpose_inferred') | list %}{% set _lm = _lm + ["inferred"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## Klauseln (Verweis auf Volltext)
+
+Die Vertragsparteien vereinbaren die Anwendung der **Standardvertragsklauseln Modul 2**
+gemäß Durchführungsbeschluss (EU) 2021/914 der Kommission vom 04.06.2021. Der
+Volltext der Klauseln 1–18 ist Bestandteil dieser Vereinbarung und wird per
+Verweis einbezogen: [EUR-Lex CELEX:32021D0914](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021D0914)
+
+Die nachfolgenden Anhänge konkretisieren die in den Klauseln offenen Felder.
+
+---
+
+## Anhang I.A — Liste der Parteien
+
+**Datenexporteur (Verantwortlicher):**
+
+| Angabe | Wert |
+|---|---|
+| Name | {{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %} |
+| Anschrift | {{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %} |
+| Kontaktperson | {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %} |
+| E-Mail | {{ contact_email }} |
+| Datenschutzbeauftragte/r | {% if dpo_name %}{{ dpo_name }}{% if dpo_email %} ({{ dpo_email }}){% endif %}{% else %}(nicht bestellt / nicht benennungspflichtig){% endif %} |
+| Rolle | Controller (Verantwortlicher) |
+
+**Datenimporteure (Auftragsverarbeiter in Drittländern):**
+
+| Anbieter | Land | DPF-Status | DPA |
+|---|---|---|---|
+{% for row in model.services_with_transfer %}| {{ row.name }} | {{ row.country }} | {{ row.dpf_status or "n/a" }} | {% if row.dpa_url %}[DPA]({{ row.dpa_url }}){% else %}—{% endif %} |
+{% endfor %}
+
+---
+
+## Anhang I.B — Beschreibung der Datenübermittlung
+
+{% for row in model.services_with_transfer %}
+### {{ row.name }} ({{ row.country }})
+
+| Feld | Inhalt |
+|---|---|
+| **Zweck der Verarbeitung** | {% if row.processing_purpose_inferred %}{{ marker.inferred_mark() }} {% endif %}{{ row.processing_purpose or "—" }} |
+| **Kategorien betroffener Personen** | {{ row.data_subjects or "—" }} |
+| **Kategorien personenbezogener Daten** | {% if row.data_categories_gap %}{{ inline_gap_marker('payment_integration_mode_unknown') }}{% elif row.data_categories %}{{ row.data_categories | join(", ") }}{% else %}—{% endif %} |
+| **Häufigkeit der Übermittlung** | fortlaufend (technische Integration) |
+| **Aufbewahrungsdauer** | siehe `avv_{{ run_id[:8] }}.md` § 7 |
+| **Übertragungsweg** | TLS-verschlüsselte API-Verbindung |
+
+{% endfor %}
+---
+
+## Anhang I.C — Zuständige Aufsichtsbehörde
+
+🔴 **Aufsichtsbehörde nicht ermittelt.** Zuständige Aufsichtsbehörde anhand des
+Unternehmenssitzes manuell eintragen (eine Bundesland-Auswahl in den
+Projekteinstellungen folgt — das Feld existiert noch nicht).
+Bei Bundesbehörden oder öffentlich-rechtlichen Stellen gilt
+**BfDI** (Bundesbeauftragte für den Datenschutz und die Informationsfreiheit).
+
+---
+
+## Anhang II — Technische und organisatorische Maßnahmen (Art. 32 DSGVO)
+
+Die vom Datenimporteur umzusetzenden technischen und organisatorischen Maßnahmen
+sind in der beigefügten TOM dokumentiert: **`tom_{{ run_id[:8] }}.md`**
+
+Mindeststandards je Schutzziel (Art. 32 Abs. 1 lit. b DSGVO):
+
+- **Vertraulichkeit:** Verschlüsselung at-rest und in-transit (AES-256, TLS 1.2+), Zugriffskontrolle nach Rollenkonzept
+- **Integrität:** Signaturen/Prüfsummen, dokumentierte Berechtigungen
+- **Verfügbarkeit:** Backup-Konzept, Notfallplan
+- **Belastbarkeit:** Redundanz, Vertretungsregelungen
+- **Wiederherstellbarkeit:** getestetes Wiederanlauf-Verfahren
+- **Pseudonymisierung:** wo technisch möglich, vor Übermittlung
+- **Evaluierbarkeit:** Audit-Logging, regelmäßige Überprüfung
+
+---
+
+## Anhang III — Liste der Sub-Auftragsverarbeiter
+
+Die in Anhang I.A gelisteten Datenimporteure dürfen folgende Unter-Auftragsverarbeiter
+einsetzen, sofern in deren jeweiligem DPA dokumentiert (siehe Spalte „DPA"):
+
+| Datenimporteur | DPA-Link mit Sub-Processor-Liste |
+|---|---|
+{% for row in model.services_with_transfer %}| {{ row.name }} | {% if row.dpa_url %}[{{ row.dpa_url }}]({{ row.dpa_url }}){% else %}— (Sub-Processor-Liste vom Anbieter erfragen) {% endif %} |
+{% endfor %}
+
+Änderungen in dieser Sub-Processor-Liste sind dem Verantwortlichen mit angemessener
+Vorankündigung (üblicherweise 30 Tage) gemäß DSGVO Art. 28 Abs. 2 mitzuteilen.
+
+{% if model.has_us_transfers %}
+
+---
+
+## Transfer Impact Assessment (TIA) — USA-Übermittlung
+
+Da Datenimporteure in den **USA** beteiligt sind, ist nach Schrems II
+(EuGH C-311/18) und der DSK-Bewertung „Datenübermittlung in die USA"
+(2023) ein **Transfer Impact Assessment** zu dokumentieren:
+
+1. **Rechtslage im Empfängerland:** US-Behördenzugriff via FISA 702 / EO 12333
+2. **Data Privacy Framework (DPF):** Pro Service prüfen, ob beim US Department
+   of Commerce als DPF-zertifiziert geführt (https://www.dataprivacyframework.gov/list)
+3. **Ergänzende Garantien:** Verschlüsselung in transit (TLS 1.2+) UND at-rest
+   mit Kundenkontrolle der Schlüssel; Pseudonymisierung vor Übertragung
+4. **Risikoeinschätzung:** Welche Datenkategorien gehen wohin — sensitive
+   Kategorien (Art. 9 DSGVO) brauchen strengere Bewertung
+
+TIA-Dokumentation: separater interner Bericht; bei Audits vorzulegen.
+{% endif %}
+
+---
+_Generiert von Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Strukturbasis: EU-Durchführungsbeschluss 2021/914 + DSK-Datenübermittlung-USA 2023_

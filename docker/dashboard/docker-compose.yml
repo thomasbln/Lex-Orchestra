@@ -1,0 +1,19 @@
+# docker/dashboard/docker-compose.yml
+# Lex-Dashboard — Next.js Node runtime (ADR-081)
+# Context points to src/dashboard/ so Dockerfile can COPY pre-built .next/.
+
+services:
+  lex-dashboard:
+    build:
+      context: ../../src/dashboard
+      dockerfile: ../../docker/dashboard/Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - lex-net
+
+networks:
+  lex-net:
+    external: true
+    name: docker_lex-net

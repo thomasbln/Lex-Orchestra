@@ -103,7 +103,7 @@
 
 <!-- Bottom bar -->
 <rect x="20" y="430" width="760" height="1" fill="rgba(255,255,255,0.06)"/>
-<text x="400" y="458" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.3)">→ anonymised UUIDs and abstract asset types only leave the local host to Neo4j + Anthropic API</text>
+<text x="400" y="458" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.3)">→ sovereign default: graph + LLM run locally — nothing leaves the host</text>
 
 <!-- Corner accents -->
 <path d="M20 48 L20 20 L48 20" stroke="rgba(83,74,183,0.3)" stroke-width="1" fill="none"/>

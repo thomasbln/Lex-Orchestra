@@ -1,0 +1,155 @@
+{% import '_marker.md.j2' as marker with context %}
+# KI-Nutzungsrichtlinie
+## Interne Policy gem. EU AI Act Art. 4 + Art. 26
+[[LEX_HEAD_END]]
+
+**Unternehmen:** {{ company_name }}
+**Projekt:** {{ project_name }}
+**Version:** 1.0 | **Gültig ab:** {{ generation_date }}
+**Verantwortlich:** {% if responsible_name %}{{ responsible_name }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+**Run-ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Unternehmensdaten") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## 1. Geltungsbereich und Zweck
+
+Diese Richtlinie gilt für alle Mitarbeitenden von {{ company_name }},
+die KI-gestützte Werkzeuge im Arbeitsalltag einsetzen.
+
+---
+
+## 2. Eingesetzte KI-Systeme (Stand: {{ generation_date }})
+
+| Tool / System | Zweck | Status | Freigabe |
+|---|---|---|---|
+{% for service in model.ai_services %}| {{ service.name }} | {{ service.purpose or "—" }} | ✅ im Einsatz | — |
+{% else %}| (keine KI-Dienste erkannt) | — | — | — |
+{% endfor %}
+
+---
+
+## 3. Erlaubte KI-Nutzung
+
+**Freigegebene KI-Dienste und Anwendungsfälle:**
+
+{% if model.ai_services %}
+{% for service in model.ai_services %}- ✅ **{{ service.name }}**{% if service.purpose %} — {{ service.purpose }}{% endif %}
+{% endfor %}
+{% else %}
+> ⚠️ Keine KI-Dienste aus Scan erkannt. Freigegebene Anwendungsfälle manuell ergänzen.
+{% endif %}
+
+### 3.1 Verbotene KI-Praktiken (Art. 5 EU AI Act)
+
+Folgende KI-Praktiken sind **rechtlich verboten** und dürfen unter keinen Umständen
+eingesetzt werden — unabhängig vom Geschäftszweck:
+
+1. **Manipulation durch unterschwellige Techniken** oder bewusste Ausnutzung
+   kognitiver Schwächen mit dem Ziel, das Verhalten von Personen wesentlich zu
+   beeinflussen — wenn dadurch ein erheblicher Schaden entsteht (Art. 5(1)(a)).
+2. **Ausbeutung vulnerabler Personengruppen** aufgrund von Alter, Behinderung
+   oder sozialer/wirtschaftlicher Situation (Art. 5(1)(b)).
+3. **Social Scoring** durch Behörden oder in deren Auftrag zur Bewertung der
+   sozialen Vertrauenswürdigkeit von natürlichen Personen (Art. 5(1)(c)).
+4. **Rein algorithmische Predictive Policing** (Risikobewertung künftiger
+   Straftaten ausschließlich auf Basis von Profiling) (Art. 5(1)(d)).
+5. **Untargeted Scraping** von Gesichtsbildern aus dem Internet oder von
+   CCTV-Aufnahmen zum Aufbau biometrischer Datenbanken (Art. 5(1)(e)).
+6. **Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen** — außer
+   aus medizinischen oder sicherheitsrelevanten Gründen (Art. 5(1)(f)).
+7. **Biometrische Kategorisierung** zur Ableitung von Rasse, politischer
+   Meinung, Gewerkschaftszugehörigkeit, religiösen/weltanschaulichen
+   Überzeugungen, Sexualleben oder sexueller Orientierung (Art. 5(1)(g)).
+8. **Real-Time-Fernidentifizierung** mit biometrischen Verfahren im öffentlichen
+   Raum für Strafverfolgungszwecke — außer in eng definierten Ausnahmen mit
+   richterlicher Genehmigung (Art. 5(1)(h)).
+
+_Verstöße können nach Art. 99 EU AI Act mit Bußgeldern bis **35 Mio. €** oder
+**7 % des weltweiten Jahresumsatzes** geahndet werden._
+
+### 3.2 Do / Don't für Mitarbeitende _(DSK OH KI 2024)_
+
+**✅ Do:**
+
+- **Keine PII in Prompts** — Kunden-, Mitarbeiter- und Bewerber-Daten vor LLM-Übergabe
+  pseudonymisieren oder anonymisieren (UUID-Only-Pattern, Presidio-Pre-Filter).
+- **Keine Mandanten- oder Kundendaten zu Cloud-LLMs ohne AVV** — Drittland-Verarbeitung
+  nur via SCCs + TIA. EU-hostende Alternativen bevorzugen (Mistral AI EU, Aleph Alpha).
+- **Output immer prüfen** — LLM-Antworten validieren, niemals ungeprüft für
+  Entscheidungen mit rechtlicher Wirkung übernehmen (Art. 22 DSGVO).
+- **Quellen verlangen** — bei RAG/faktenrelevanten Use-Cases auf Grounding +
+  Source-Citation bestehen. Keine Halluzinationen weitergeben.
+- **Vier-Augen-Prinzip** bei kritischen Entscheidungen, insbesondere im
+  Personalkontext, bei Kreditentscheidungen und im Kundenservice.
+
+**🔴 Don't:**
+
+- **Keine Bewerber-Bewertung allein durch KI** — verstößt gegen Art. 22 DSGVO
+  und § 26 BDSG; HR-Use-Cases sind Hochrisiko (Annex III Nr. 4).
+- **Keine sensiblen Daten** (Gesundheit, Religion, sexuelle Orientierung) in
+  KI-Workflows ohne Art. 9 DSGVO-Rechtsgrundlage und DSFA.
+- **Keine Modell-Tuning mit personenbezogenen Daten** ohne dokumentierte
+  Rechtsgrundlage und Möglichkeit der Löschung trainierter Modelle.
+- **Keine eigenmächtige KI-Tool-Einführung** ohne vorherige Freigabe — alle
+  neuen KI-Dienste müssen § 2-Eintrag und Datenschutz-Review durchlaufen.
+
+---
+
+## 4. Schulung und AI Literacy (Art. 4 EU AI Act)
+
+Mitarbeitende müssen eine Grundlagenschulung zu KI absolvieren, diese Richtlinie
+lesen und bestätigen sowie an jährlichen Auffrischungsschulungen teilnehmen (Art. 4 EU AI Act).
+
+**Stand der KI-Kompetenzmaßnahmen:** {% if model.ai_literacy_measures is not none %}{% if model.ai_literacy_measures %}Der Betreiber stellt gemäß Art. 4 EU AI Act ein ausreichendes KI-Kompetenzniveau sicher (Sensibilisierung/Schulung des betroffenen Personals){% if model.ai_literacy_note %} — {{ model.ai_literacy_note }}{% endif %}.{% else %}KI-Kompetenzmaßnahmen nach Art. 4 EU AI Act sind noch nicht umgesetzt.{% endif %}{% else %}{{ inline_gap_marker('ai_literacy_measures_missing') }}{% endif %}
+
+### 4.1 Privacy by Design — Gewährleistungsziele bei KI-Nutzung
+_(nach Standard-Datenschutzmodell v3.1, Teil D1.8)_
+
+KI-Systeme dürfen erst eingesetzt werden, nachdem die folgenden datenschutzrechtlichen
+Gewährleistungsziele bewusst adressiert wurden — als Design-Strategie, nicht
+nachträglich:
+
+- **Datenminimierung (Dm):** Nicht mehr und nicht andere Daten als zum Zweck nötig
+  in den KI-Kontext einbringen. Anonymisierung/Pseudonymisierung vor Prompt-Übergabe.
+- **Nichtverkettung (Nn):** Keine Verknüpfung von KI-Outputs mit zusätzlichen
+  Personenmerkmalen ohne Rechtsgrundlage. Zweckspezifische Pseudonyme.
+- **Transparenz (Tp):** KI-Nutzung gegenüber Betroffenen offenlegen (Art. 12-14
+  DSGVO + EU AI Act Art. 50). Audit-Trail aller KI-Entscheidungen (Art. 12 AI Act).
+- **Intervenierbarkeit (Iv):** Betroffene können Eingriffsrechte (Art. 22 Abs. 3
+  DSGVO) wahrnehmen; Single Point of Contact für KI-bezogene Auskunftsanfragen.
+- **Vertraulichkeit (Vt) + Integrität (Ig):** TOMs nach Art. 32 DSGVO; Output
+  validieren (Pydantic/Zod); LLM-Antworten nicht ungeprüft an Client durchreichen.
+
+---
+
+## 5. Meldepflichten
+
+Datenschutzvorfälle und KI-bezogene Fehler sind unverzüglich an {% if responsible_name %}{{ responsible_name }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %} zu melden (Art. 26 EU AI Act, Art. 28 DSGVO).
+
+---
+
+## 6. Review und Aktualisierung
+
+**Überprüfung:** Diese Richtlinie wird anlassbezogen überprüft — insbesondere bei Änderung der Rechtslage, der eingesetzten KI-Dienste oder der Verantwortlichkeiten.
+
+---
+
+Ich habe diese KI-Nutzungsrichtlinie gelesen:
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ city or zip_city or "(Ort)" }}, {{ generation_date }}
+
+---
+_Generiert von Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Rechtsgrundlage: EU AI Act Art. 4 (AI Literacy) + Art. 26 (Deployer-Pflichten)_

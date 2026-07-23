@@ -1,0 +1,67 @@
+# docker/ollama/docker-compose.yml
+# Ollama LLM inference server (ADR-040)
+# Profile: with-ollama — only active on sovereign targets (NucBox)
+#
+# Single-model strategy (ADR-059, supersedes ADR-050 split):
+#   - gemma4:e4b is the only warmed model — handles all LangGraph scans.
+#   - Single-model setup: qwen2.5:3b is gone (ADR-059); no second consumer left (ADR-058).
+#   - Dashboard chat (ADR-056, upcoming) will also target gemma4:e4b.
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    profiles: ["with-ollama"]
+    ports:
+      - "11434:11434"
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"             # keep model in RAM indefinitely
+      OLLAMA_MAX_LOADED_MODELS: "1"       # gemma4:e4b only (ADR-059)
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      # The ollama/ollama image ships neither curl nor wget — the ollama
+      # binary is the only available REST client. `ollama list` hits
+      # /api/tags with no side effects (no model load, no pull).
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - lex-net
+
+  ollama-warmup:
+    image: curlimages/curl:8.10.1
+    container_name: ollama-warmup
+    profiles: ["with-ollama"]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_URL: "http://ollama:11434"
+      LANGGRAPH_MODEL: "gemma4:e4b"       # scan-quality model for Dashboard
+      LANGGRAPH_NUM_CTX: "131072"         # gemma4's architectural context; matches LangGraph's runtime state
+    # $$VAR escapes docker-compose interpolation so the shell inside the
+    # container resolves env vars from the environment block above.
+    command:
+      - sh
+      - -c
+      - |
+        echo "Warming up $$LANGGRAPH_MODEL (num_ctx=$$LANGGRAPH_NUM_CTX)...";
+        curl -sf -X POST "$$OLLAMA_URL/api/generate" \
+          -H "Content-Type: application/json" \
+          -d "{\"model\":\"$$LANGGRAPH_MODEL\",\"prompt\":\"hi\",\"stream\":false,\"keep_alive\":-1,\"options\":{\"num_ctx\":$$LANGGRAPH_NUM_CTX}}" \
+          -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n"
+    restart: "no"
+    networks:
+      - lex-net
+
+volumes:
+  ollama_data:
+
+networks:
+  lex-net:
+    external: true
+    name: docker_lex-net

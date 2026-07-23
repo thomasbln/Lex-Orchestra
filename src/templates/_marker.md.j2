@@ -1,0 +1,154 @@
+{#-
+ADR-076 (+ 2026-06-08 addendum: Unified Provenance-Marker Vocabulary): renders
+the customer-header marker block + the shared, conditional legend used by all
+document templates. Imported with context so run_id / generation_date / lang /
+setup revision metadata are visible inside the macro body:
+
+    {% import '_marker.md.j2' as marker with context %}
+
+Context variables expected from document_architect:
+  lang                   — "de" (default) or "en"
+  run_id                 — scan UUID (always present)
+  generation_date        — ISO date string
+  setup_revision_short   — short form of UUID (8 chars), may be ""
+  setup_revision_date    — ISO date, may be ""
+  setup_author           — email or "" if no author tracked
+
+Field dict shape (from _field_with_source helper):
+  { "value": Any, "source": "CODE"|"PII"|"SVC"|"UC"|"Q"|"STD_DELEGATED",
+    "evidence": str|None, "confidence": float|None }
+For STD_DELEGATED the value is itself a dict:
+  { "provider": str, "region": str, "soc2": bool, "iso27001": bool }
+
+ADR-076 addendum — the 7-category vocabulary (one symbol, one meaning, all 9 docs):
+  ✓  scan      — value found in the scanned code/config
+  ◆  provided  — entered by you in the dashboard, NOT checked by Lex
+  ≈  inferred  — category default, no project-specific evidence
+  ⊘  delegated — not to be carried here; covered by processor/host
+  ☐  gap       — missing input, fillable in the project settings
+  ⚖️ duty      — legal obligation; not a Lex input field
+  ▸  derived   — machine pre-classification, to be assessed by the DPO/lawyer
+Glyph choice notes: "?"→◆ (a check mark would falsely imply "confirmed by
+Lex"; ◆ is source-neutral), pencil→☐ (one writing tool was ambiguous against
+the gap marker). 👤 was rejected — it renders as a colored emoji in WeasyPrint.
+-#}
+{%- set _MARKER_LABELS = {
+    "de": {
+        "derived":      "Im gescannten Code/in der Konfiguration gefunden",
+        "provided":     "Von Ihnen im Dashboard eingegeben — von Lex nicht geprüft, Richtigkeit vom Verantwortlichen zu prüfen",
+        "provided_short": "Von Ihnen angegeben",
+        "delegated_to": "In diesem Dokument nicht zu führen — durch Auftragsverarbeiter/Hoster abgedeckt (Verantwortlichkeit verbleibt beim Verantwortlichen); Anbieter:",
+        "run":          "Scan-Run",
+        "evidence":     "Nachweis",
+        "revision":     "Setup-Revision",
+        "soc2":         "SOC 2 Type II",
+        "iso27001":     "ISO 27001",
+    },
+    "en": {
+        "derived":      "Found in the scanned code/configuration",
+        "provided":     "Entered by you in the dashboard — not checked by Lex, accuracy to be verified by the controller",
+        "provided_short": "Provided by you",
+        "delegated_to": "Not to be carried in this document — covered by the processor/host (responsibility remains with the controller); provider:",
+        "run":          "Run",
+        "evidence":     "Evidence",
+        "revision":     "Setup revision",
+        "soc2":         "SOC 2 Type II",
+        "iso27001":     "ISO 27001",
+    },
+} -%}
+{#- ADR-076 addendum — unified legend: glyph + short label per marker key, plus the
+    legend header/intro. Two Sinnblöcke (Herkunft / Hinweise) for grouping at
+    >= 4 active markers. -#}
+{%- set _GLYPH = {
+    "scan": "✓", "provided": "◆", "inferred": "≈", "delegated": "⊘",
+    "gap": "☐", "duty": "⚖️", "derived": "▸",
+} -%}
+{%- set _HERKUNFT = ["scan", "provided", "inferred", "delegated"] -%}
+{%- set _HINWEISE = ["gap", "duty", "derived"] -%}
+{%- set _LEGEND = {
+    "de": {
+        "title": "Legende",
+        "intro": "Lex kennzeichnet Herkunft und Sicherheitsgrad jeder Angabe und macht offen, was noch zu tun ist. Die rechtliche Bewertung bleibt dem DSB/Anwalt. Diese Marker sind eine Lese- und Prüfhilfe, keine Rechtsberatung.",
+        "herkunft": "Herkunft der Werte",
+        "hinweise": "Hinweise",
+        "labels": {
+            "scan":      "im gescannten Code/in der Konfiguration gefunden",
+            "provided":  "von Ihnen im Dashboard eingegeben — von Lex nicht geprüft; Richtigkeit vom Verantwortlichen zu prüfen",
+            "inferred":  "aus der Dienst-Kategorie abgeleitet (Kategorie-Standardwert), kein Einzelnachweis; zu bestätigen",
+            "delegated": "in diesem Dokument nicht zu führen — durch Auftragsverarbeiter/Hoster abgedeckt (Verantwortlichkeit verbleibt beim Verantwortlichen)",
+            "gap":       "noch zu ergänzen — in den Projekteinstellungen ergänzbar",
+            "duty":      "gesetzliche Pflicht des Betreibers — durch Handeln/Nachweis zu erfüllen, nicht durch eine Eingabe in Lex erledigt",
+            "derived":   "maschinelle Vorab-Einordnung (durch DSB/Anwalt zu bewerten)",
+        },
+    },
+    "en": {
+        "title": "Legend",
+        "intro": "Lex marks the origin and certainty of each entry and surfaces what is still to be done. The legal assessment remains with the DPO/lawyer. These markers are a reading and review aid, not legal advice.",
+        "herkunft": "Origin of values",
+        "hinweise": "Pointers",
+        "labels": {
+            "scan":      "found in the scanned code/configuration",
+            "provided":  "entered by you in the dashboard — not checked by Lex; accuracy to be verified by the controller",
+            "inferred":  "derived from the service category (category default), no project-specific evidence; to be confirmed",
+            "delegated": "not to be carried in this document — covered by the processor/host (responsibility remains with the controller)",
+            "gap":       "to be completed — fillable in the project settings",
+            "duty":      "legal obligation of the operator — to be met by action/evidence, not settled by a Lex entry",
+            "derived":   "machine pre-classification (to be assessed by the DPO/lawyer)",
+        },
+    },
+} -%}
+{%- set _INFERRED_GLYPH = "≈" -%}
+{%- set _L = _MARKER_LABELS.get(lang|default("de"), _MARKER_LABELS["de"]) -%}
+{%- set _LG = _LEGEND.get(lang|default("de"), _LEGEND["de"]) -%}
+{%- macro render(field, label) -%}
+{%- if field.source in ("CODE", "PII", "SVC", "UC") -%}
+> ✓ **{{ _L.derived }} — {{ label }}.** {{ _L.run }} `{{ run_id }}` · {{ generation_date }}
+{%- if field.evidence %}
+> {{ _L.evidence }}: `{{ field.evidence }}`
+{%- endif %}
+{%- elif field.source == "Q" -%}
+> ◆ **{{ _L.provided_short }} — {{ label }}.** {{ _L.revision }} `{{ setup_revision_short }}` · {{ setup_revision_date }}
+{%- elif field.source == "STD_DELEGATED" -%}
+> ⊘ **{{ _L.delegated_to }} {{ field.value.provider }} ({{ field.value.region }}).**
+{%- if field.value.soc2 %} {{ _L.soc2 }}.{% endif %}
+{%- if field.value.iso27001 %} {{ _L.iso27001 }}.{% endif %}
+{%- endif -%}
+{%- endmacro -%}
+{#- Inline glyph for an inferred (category-default) cell value. Caller adds the
+    separating space: `{{ marker.inferred_mark() }} {{ value }}`. The matching
+    legend entry is rendered by legend(["inferred", ...]) — no separate macro. -#}
+{%- macro inferred_mark() -%}{{ _INFERRED_GLYPH }}{%- endmacro -%}
+{#- ADR-076 addendum — unified, conditional legend. `markers` is the list of marker keys
+    that actually occur in THIS document (e.g. ["provided", "gap", "inferred"]).
+    Renders only those, in canonical order. At >= 4 markers it groups into
+    "Herkunft der Werte" / "Hinweise"; below that, a flat list. Wortgleich über
+    alle 9 Docs (same macro, same labels). -#}
+{%- macro legend(markers) -%}
+{%- set ns = namespace(herk=[], hinw=[]) -%}
+{%- for k in _HERKUNFT if k in markers -%}{%- set ns.herk = ns.herk + [k] -%}{%- endfor -%}
+{%- for k in _HINWEISE if k in markers -%}{%- set ns.hinw = ns.hinw + [k] -%}{%- endfor -%}
+{%- if ns.herk or ns.hinw %}
+**{{ _LG.title }}**
+
+{{ _LG.intro }}
+
+{% if (ns.herk | length + ns.hinw | length) >= 4 %}
+{% if ns.herk %}
+_{{ _LG.herkunft }}_
+
+{% for k in ns.herk %}- {{ _GLYPH[k] }} {{ _LG.labels[k] }}
+{% endfor %}
+
+{% endif %}
+{% if ns.hinw %}
+_{{ _LG.hinweise }}_
+
+{% for k in ns.hinw %}- {{ _GLYPH[k] }} {{ _LG.labels[k] }}
+{% endfor %}
+{% endif %}
+{% else %}
+{% for k in ns.herk + ns.hinw %}- {{ _GLYPH[k] }} {{ _LG.labels[k] }}
+{% endfor %}
+{% endif %}
+{%- endif -%}
+{%- endmacro -%}

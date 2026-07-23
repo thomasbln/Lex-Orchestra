@@ -1,0 +1,8 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "lex_workflow":  "src/workflow/main.py:build_workflow",
+    "lex_assistant": "src/workflow/assistant.py:build_assistant_workflow"
+  },
+  "env": ".env"
+}

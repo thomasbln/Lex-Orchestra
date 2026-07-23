@@ -1,0 +1,189 @@
+---
+⚠️ AUTOMATISCH GENERIERTER ENTWURF – KEINE RECHTSBERATUNG
+
+Dieser Bericht wurde automatisiert durch Lex-Orchestra erstellt.
+Er dient als Orientierungshilfe und ersetzt keine rechtliche Beratung.
+
+Erstellt von Lex-Orchestra (AGPL-3.0)
+https://lex-orchestra.com
+---
+
+# Scan-Bericht — {{ model.project_name }}
+**Datum:** {{ model.run_date }} | **Run-ID:** `{{ model.run_id_short }}`
+
+---
+
+{% if model.ebene0 %}
+## Was wurde erkannt?
+
+Im Infrastruktur-Scan wurden **{{ model.ebene0.n }}** Komponenten erkannt:
+
+- **{{ model.ebene0.x }}** Dienste mit möglicher Verarbeitung personenbezogener Daten{{ (": " ~ (model.ebene0.processors | join(', '))) if model.ebene0.processors else "" }}
+- **{{ model.ebene0.differenz }}** Entwicklungswerkzeuge ohne eigenständige Datenverarbeitung{{ (": " ~ (model.ebene0.tooling | join(', '))) if model.ebene0.tooling else "" }}
+{% if model.ebene0.other_services %}
+- **{{ model.ebene0.other_services | length }}** weitere erkannte Dienste, noch keiner Datenverarbeitungs-Kategorie zugeordnet — bitte prüfen: {{ model.ebene0.other_services | join(', ') }}
+{% endif %}
+
+Davon übermitteln **{{ model.ebene0.x_drittland }}** in Drittländer ohne Angemessenheitsbeschluss{{ (": " ~ (model.ebene0.third_country | join(', '))) if model.ebene0.third_country else "" }} — Standardvertragsklauseln erforderlich (Art. 46 DSGVO).
+
+---
+{% endif %}
+
+{% if model.top_actions %}
+## Nächste Schritte (Top 3)
+
+Die wichtigsten Lücken um die Qualität deiner Dokumente zu verbessern:
+
+{% for action in model.top_actions %}
+**{{ action.index }}. {{ action.fix_label }}** {{ action.icon }}
+
+{{ action.gap_reason }}
+
+Betroffen: {{ action.affected_docs | join(', ') }} → [{{ action.fix_url }}]({{ action.fix_url }})
+
+{% endfor %}
+---
+
+{% endif %}
+## Was wurde gescannt?
+
+Repository und Infrastruktur von **{{ model.project_name }}** wurden automatisch analysiert.
+
+**Erkannte Dienste / Sub-Prozessoren:**
+{% for name in model.service_names %}
+- {{ name }}
+{% endfor %}
+
+---
+
+## Erkannte Signale
+
+Der Scanner hat folgende compliance-relevante Muster im Code gefunden:
+
+{% if model.top_signals %}
+{% for sig in model.top_signals %}
+- **{{ sig.label }}** (Konfidenz: {{ sig.confidence_pct }}%)
+{% endfor %}
+{% else %}
+- Keine spezifischen Signale erkannt
+{% endif %}
+
+{% if model.usecase_display %}
+
+**KI-Verwendungszweck (automatisch erkannt):** {{ model.usecase_display }}
+{% endif %}
+
+{% if model.repo_extractions %}
+---
+
+## Gefundene Legal-Dokumente im Repository
+
+Der Scanner hat **{{ model.repo_extractions.count_ok }} von {{ model.repo_extractions.count_total }}** Legal-Dokumente erfolgreich ausgelesen:
+
+{% for src in model.repo_extractions.source_files %}
+- ✅ `{{ src }}`
+{% endfor %}
+{% if model.repo_extractions.count_merged %}
+
+**{{ model.repo_extractions.count_merged }} Felder** wurden automatisch in die Projekt-Konfiguration übernommen:
+
+{% for f in model.repo_extractions.merged_fields %}
+- `{{ f }}`
+{% endfor %}
+{% endif %}
+{% if model.repo_extractions.count_skipped %}
+
+_{{ model.repo_extractions.count_skipped }} Felder übersprungen (bereits manuell befüllt)._
+{% endif %}
+{% endif %}
+
+---
+
+## Risikoeinstufung
+
+**Gesamtrisiko:** {{ model.risk_display }}
+**Erkannte Compliance-Risiken:** {{ model.active_risks_count }}
+**Verknüpfte Controls aus Wissensgraph:** {{ model.controls_count }}
+
+{% if model.active_risks %}
+**Offene Risiken:**
+{% for risk in model.active_risks %}
+- ⚠️ {{ risk.description }}
+{% endfor %}
+{% endif %}
+
+{% for uc in model.usecase_high_risk_blocks %}
+
+> ⚠️ **{{ uc.level_upper }} RISK** — EU AI Act {{ uc.article }}
+> Erkannter UseCase: **{{ uc.title }}** (Annex III Nr. {{ uc.annex_iii_nr }})
+{% if uc.deployer_action %}
+> Deployer-Pflicht: {{ uc.deployer_action }}
+{% endif %}
+{% endfor %}
+
+---
+
+## Generierte Dokumente ({{ model.generated_doc_count }})
+
+Folgende Entwürfe wurden automatisch erstellt und sind als Anlagen beigefügt:
+
+{% for label in model.generated_doc_labels %}
+- ✅ {{ label }}
+{% endfor %}
+{% if model.ki_docs_skipped_note %}
+> {{ model.ki_docs_skipped_note }}
+{% endif %}
+
+---
+
+## Was noch fehlt / Handlungsbedarf
+
+Die folgenden Punkte erfordern **manuelle Bearbeitung** durch eine
+qualifizierte Person (Datenschutzbeauftragter, Rechtsberater):
+
+{% if model.immediate_actions %}
+**Sofort:**
+{% for action in model.immediate_actions %}
+- [ ] {{ action }}
+{% endfor %}
+{% endif %}
+
+{% if model.short_term_actions %}
+**Kurzfristig:**
+{% for action in model.short_term_actions %}
+- [ ] {{ action }}
+{% endfor %}
+{% endif %}
+
+{% if model.long_term_actions %}
+**Langfristig:**
+{% for action in model.long_term_actions %}
+- [ ] {{ action }}
+{% endfor %}
+{% endif %}
+
+---
+
+{% if model.all_gaps %}
+## Alle erkannten Lücken ({{ model.all_gaps_count }})
+
+{% for gap in model.all_gaps %}
+### {{ gap.index }}. {{ gap.fix_label }} {{ gap.severity_label }}
+
+- **Lücke:** {{ gap.gap_reason }}
+- **Betroffene Dokumente:** {{ gap.affected_docs | join(', ') }}
+- **Fix:** [{{ gap.fix_url }}]({{ gap.fix_url }})
+
+{% endfor %}
+
+---
+
+{% endif %}
+## Hinweis zur Vertraulichkeit
+
+Dieser Bericht und alle Anlagen sind als internes Arbeitsdokument zu behandeln.
+Kein Code, keine personenbezogenen Daten und keine Geschäftsgeheimnisse wurden
+an externe Dienste übertragen. Die Analyse erfolgte vollständig lokal.
+
+---
+_Generiert von Lex-Orchestra · {{ model.run_date }} · {{ model.run_id_short }}_

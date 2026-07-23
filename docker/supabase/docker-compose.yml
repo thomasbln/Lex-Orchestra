@@ -1,0 +1,22 @@
+# Supabase DB (Self-hosted PostgreSQL 15 + pgvector)
+# Replaces docker/postgres/ — self-hosted Postgres for the stack host
+# Port 5432 is LAN-reachable so external MCP/psql clients can connect
+
+services:
+  supabase-db:
+    image: supabase/postgres:15.8.1.060
+    container_name: supabase-db
+    restart: unless-stopped
+    env_file:
+      - ../envs/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - lex-net
+
+networks:
+  lex-net:
+    external: true
+    name: docker_lex-net

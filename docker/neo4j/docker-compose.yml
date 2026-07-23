@@ -1,0 +1,38 @@
+# docker/neo4j/docker-compose.yml
+# Neo4j 5 local container (ADR-040)
+# Profile: with-neo4j — replaces Neo4j Aura on sovereign targets (NucBox)
+# APOC plugin enabled for advanced graph operations and cypher export/import.
+
+services:
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    profiles: ["with-neo4j"]
+    ports:
+      - "7474:7474"    # Browser UI
+      - "7687:7687"    # Bolt
+    env_file:
+      - ../envs/.env                              # ADR-053 — provides NEO4J_AUTH, NEO4J_PLUGINS, memory settings
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/var/lib/neo4j/import
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+    networks:
+      - lex-net
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_import:
+
+networks:
+  lex-net:
+    external: true
+    name: docker_lex-net

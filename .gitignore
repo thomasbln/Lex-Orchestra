@@ -1,8 +1,121 @@
-# Lex-Orchestra Public — .gitignore
+.env
 .DS_Store
-*.env
-*.local
+node_modules/
+.next/
+out/
+next-env.d.ts
+scripts/assets_dump.csv
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
 .venv/
-node_modules/
+venv/
+
+# ALL .env files in any subdirectory — never commit credentials
+**/.env
+
+# Claude Code runtime state
+.claude/scheduled_tasks.lock
+docker/**/.env
+
+# docker/envs/ — only the active .env (with secrets) is gitignored.
+# Profile templates are committed (see ADR-053).
+docker/envs/.env
+!docker/envs/.env.example
+!docker/envs/.env.minimal
+!docker/envs/.env.sovereign
+!docker/envs/.env.edge
+
+# Generated compliance documents — not committed, use legal/drafts/.samples/ for references
+legal/drafts/*.md
+legal/drafts/*.pdf
+legal/drafts/*.logbook.json
+legal/*.md
+legal/*.pdf
+
+# ADR-107 Source Material Tier-B/C — referenced or purchased, NOT redistributable
+# Tier C (purchased, proprietary): ISO, DIN, Beuth-Verlag content — user must license + place locally
+docs/sources/ISO*.pdf
+docs/sources/iso*.pdf
+docs/sources/DIN*.pdf
+docs/sources/din*.pdf
+# Tier B (publicly downloadable but not redistributable): aggregator compilations, restricted-license templates
+docs/sources/*Evlogiev*.pdf
+docs/sources/templates/04-TOM-Checkliste*.pdf
+# Sidecar metadata files are always tracked
+!docs/sources/**/*.meta.yaml
+
+# Neo4j local
+neo4j/data/
+
+# Docker state — never in repo
+docker/postgres/pgdata/
+
+# OpenClaw runtime state and concrete config (host-specific, gitignored).
+# Only the .example.json template is tracked — see ADR-053 pattern.
+# Files first, then subdirs — re-include only works when parent isn't excluded.
+docker/openclaw/config/*
+docker/openclaw/config/*/
+!docker/openclaw/config/openclaw.example.json
+docker/openclaw/workspace/*
+!docker/openclaw/workspace/skills/
+!docker/openclaw/workspace/SOUL.md
+docker/openclaw/plugins/**/node_modules/
+
+# Claude Code MCP Settings
+.claude/settings.local.json
+.mcp.json
+
+# Logs
+*.log
+!logs/cypher-writes.log
+!logs/doc-curator.log
+# legal/logs content stays untracked, but the DIRECTORY must exist in a fresh
+# clone: the lex-agent compose bind-mounts legal/logs, and Docker creates a
+# missing mount source as root:root — the container (user 1000) then cannot
+# write lex-scan.log and the /logs trust chain stays empty (cleanroom F20).
+# Dir-pattern 'legal/logs/' would ignore the whole dir incl. the .gitkeep, so
+# ignore the CONTENT and negate the keep-file.
+legal/logs/*
+!legal/logs/.gitkeep
+
+# Internal docs — never in public repo (Prompt Library, GTM, podcast transcripts,
+# session-continuity, learnings, architecture notes, server snapshots, social drafts).
+# Local-only working files. T-01 — Public release hygiene.
+docs/internal/
+
+# public repo
+lex-orchestra-public
+landingpage
+
+# Arduino sketches — local hardware, never tracked (flashed manually via IDE)
+scripts/arduino/
+# ADR-118 verify harness — generated/reproducible baselines (script stays tracked in scripts/)
+docs/verification/*.json
+
+# Build artifact (Next.js tsc incremental cache) — never commit
+src/dashboard/tsconfig.tsbuildinfo
+
+# Per-run graph retrieval traces (scan noise) — accumulate, do not commit
+legal/drafts/*.retrieval-trace.json
+legal/drafts/.retrieval-trace.json
+
+# Proprietary licensed sources (ISO etc.) — BYOS, never published
+docs/proprietär/
+
+# BSI full corpus — license-gated (unclear_legal_review), BYOS like ISO/AIC4; README kept as manifest
+docs/unseeded/bsi-it-grundschutz/**
+!docs/unseeded/bsi-it-grundschutz/README.md
+
+# DB dumps — real contact data, never tracked (Block 0 / K11)
+dumps/
+
+# License-gated local reference copies — sidecars (tracked) declare in_repo: false
+# (OWASP compilation: removed per ADR-107; a.s.k. TOM checklist: redistribution forbidden)
+docs/sources/provenance/202512 - OWASP Top 10 2025 by Miglen Evlogiev.pdf
+docs/sources/provenance/templates/04-TOM-Checkliste-technische-organisatorische-Massnahmen-V3_3-DSGVO (1).pdf

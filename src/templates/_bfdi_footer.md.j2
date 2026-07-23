@@ -1,0 +1,38 @@
+{# ADR-106 PR C5 — BfDI Citation Footer Macro
+   Renders bfdi_citations (list of BfDICitation) at the bottom of a doc
+   with mandatory dl-de/by-2-0 attribution. Empty list = no block.
+   Usage: {{ bfdi.render(model.bfdi_citations) }} #}
+
+{% macro render(citations) -%}
+{%- if citations %}
+
+---
+
+{% if lang == 'en' -%}
+## BfDI source references
+
+_The excerpts below are quoted verbatim from the German original — unofficial
+for EN readers (Class-C source, deliberately not translated)._
+
+{% for c in citations -%}
+**Section {{ c.source_section }}** ({{ c.source_pages }}){% if c.target_label %} — {{ c.target_label }}{% endif %}:
+> {{ c.excerpt }}
+
+{% endfor -%}
+> _Explanatory notes partly from: Die Bundesbeauftragte für den Datenschutz und die
+> Informationsfreiheit, "DSGVO – BDSG – Texte und Erläuterungen" (1st edition 2026,
+> German original). Licence: [dl-de/by-2-0](https://www.govdata.de/dl-de/by-2-0)._
+{%- else -%}
+## Quellenverweise BfDI
+
+{% for c in citations -%}
+**Abschnitt {{ c.source_section }}** ({{ c.source_pages }}){% if c.target_label %} — {{ c.target_label }}{% endif %}:
+> {{ c.excerpt }}
+
+{% endfor -%}
+> _Erläuterungen teilweise aus: Die Bundesbeauftragte für den Datenschutz und die
+> Informationsfreiheit, „DSGVO – BDSG – Texte und Erläuterungen" (1. Auflage 2026).
+> Lizenz: [dl-de/by-2-0](https://www.govdata.de/dl-de/by-2-0)._
+{%- endif %}
+{%- endif %}
+{%- endmacro %}

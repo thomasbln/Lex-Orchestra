@@ -1,0 +1,51 @@
+{
+  "id": "4edc0cae-cc47-4805-9eb9-014957cd2827",
+  "project_name": "rand-industries",
+  "company_name": "Rand Industries Inc.",
+  "legal_form": "Inc.",
+  "address": "12 Alias Lane",
+  "country": "Germany",
+  "contact_email": "legal@rand-industries.example.com",
+  "contact_phone": null,
+  "vat_id": "DE 778231042",
+  "website_url": "https://rand-industries.example.com",
+  "extra_urls": null,
+  "doc_language": "de",
+  "output_format": "pdf",
+  "created_at": "2026-04-20 13:16:10.322553+00:00",
+  "updated_at": "2026-04-20 13:16:10.322553+00:00",
+  "responsible_name": "Misty Knight",
+  "responsible_title": "Managing Director",
+  "dpo_name": "Danny Rand",
+  "dpo_email": "dpo@rand-industries.example.com",
+  "business_type": "saas_b2c",
+  "deletion_periods_custom": null,
+  "register_court": "Amtsgericht Berlin-Charlottenburg",
+  "register_number": "HRB 778231 B",
+  "tom_implementations": {},
+  "ai_usecase_type": "hr_recruitment_screening",
+  "zip_code": "10117",
+  "city": "Berlin",
+  "ai_usecase_verified": false,
+  "ai_usecase_source": "phi4_mini_classification",
+  "ai_usecase_confidence": 0.6,
+  "last_scan": "2026-04-20 16:39:50.528076+00:00",
+  "extraction_meta": {
+    "vat_id": {
+      "source": "src/app/imprint.html",
+      "confidence": 0.85,
+      "extracted_at": "2026-04-20T13:17:27.296035+00:00"
+    },
+    "register_court": {
+      "source": "src/app/imprint.html",
+      "confidence": 0.85,
+      "extracted_at": "2026-04-20T13:17:27.296006+00:00"
+    },
+    "register_number": {
+      "source": "src/app/imprint.html",
+      "confidence": 0.85,
+      "extracted_at": "2026-04-20T13:17:27.296031+00:00"
+    }
+  },
+  "instructing_persons": []
+}

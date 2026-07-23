@@ -1,0 +1,37 @@
+{% if lang == 'en' %}
+{% if variant == "service" -%}
+> **Why this document?**
+>
+> The infrastructure scan detected **{{ n }}** components — **{{ x }}** services potentially processing personal data{% if processors %} ({{ processors }}){% endif %}{% if differenz %} and **{{ differenz }}** development tools without independent data processing{% if tooling %} ({{ tooling }}){% endif %}{% endif %}. This draft is derived from these **{{ x }}** services.
+{%- if other %}
+>
+> Note: {{ other_count }} additional detected services ({{ other }}) are not yet assigned to a data-processing category — please review.
+{%- endif %}
+{% elif variant == "drittland" -%}
+> **Why this document?**
+>
+> Of the detected services, **{{ x_drittland }}** transfer data to third countries without an adequacy decision{% if third_country %} ({{ third_country }}){% endif %}. For these transfers, Standard Contractual Clauses are required (Art. 46 GDPR).
+{% elif variant == "usecase" -%}
+> **Why this document?**
+>
+> {{ usecase_text }}
+{%- endif %}
+{% else %}
+{% if variant == "service" -%}
+> **Warum dieses Dokument?**
+>
+> Im Infrastruktur-Scan wurden **{{ n }}** Komponenten erkannt — davon **{{ x }}** Dienste mit möglicher Verarbeitung personenbezogener Daten{% if processors %} ({{ processors }}){% endif %}{% if differenz %} und **{{ differenz }}** Entwicklungswerkzeuge ohne eigenständige Datenverarbeitung{% if tooling %} ({{ tooling }}){% endif %}{% endif %}. Aus diesen **{{ x }}** Diensten leitet sich dieser Entwurf ab.
+{%- if other %}
+>
+> Hinweis: {{ other_count }} weitere erkannte Dienste ({{ other }}) sind noch keiner Datenverarbeitungs-Kategorie zugeordnet — bitte prüfen.
+{%- endif %}
+{% elif variant == "drittland" -%}
+> **Warum dieses Dokument?**
+>
+> Von den erkannten Diensten übermitteln **{{ x_drittland }}** in Drittländer ohne Angemessenheitsbeschluss{% if third_country %} ({{ third_country }}){% endif %}. Für diese Übermittlungen sind Standardvertragsklauseln erforderlich (Art. 46 DSGVO).
+{% elif variant == "usecase" -%}
+> **Warum dieses Dokument?**
+>
+> {{ usecase_text }}
+{%- endif %}
+{% endif %}

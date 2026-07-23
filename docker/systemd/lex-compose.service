@@ -1,0 +1,23 @@
+[Unit]
+Description=Lex-Orchestra Docker Compose Stack
+# Optional autostart unit — copy to /etc/systemd/system/ and enable. Runs
+# once at boot, after docker.service, re-triggering the compose dependency
+# chain (incl. the ollama-warmup sidecar) so the model is warm before the
+# first request.
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Adjust to your clone path before installing this unit
+WorkingDirectory=__SET_ME__/Lex-Orchestra/docker
+ExecStart=/usr/bin/docker compose \
+  --profile with-ollama \
+  --profile with-neo4j \
+  up -d
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

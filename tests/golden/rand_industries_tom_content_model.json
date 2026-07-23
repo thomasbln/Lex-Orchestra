@@ -1,0 +1,487 @@
+{
+  "company": {
+    "name": "Rand Industries Inc.",
+    "legal_form": "Inc.",
+    "address": "12 Alias Lane",
+    "zip_city": "10117 Berlin",
+    "contact_email": "legal@rand-industries.example.com",
+    "website_url": "https://rand-industries.example.com",
+    "responsible_name": "Misty Knight",
+    "responsible_title": "Managing Director",
+    "dpo_name": "Danny Rand",
+    "dpo_email": "dpo@rand-industries.example.com"
+  },
+  "generation_date": "2026-04-20",
+  "run_id": "0158d042",
+  "warn_header_gaps": [
+    {
+      "id": "hosting_provider_missing",
+      "severity": "REQUIRED",
+      "article": "DSGVO Art. 32 Abs. 1 (TOM-Nachweispflicht)",
+      "doc_affected": [
+        "TOM"
+      ],
+      "description": "Prim\u00e4rer Hosting-Provider (TOM \u00a7 1.1 Zutrittskontrolle)",
+      "description_en": "",
+      "field": "hosting_provider",
+      "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+      "affected_docs": [
+        "TOM \u00a7 1.1"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/hosting",
+      "fix_label": "Select hosting provider",
+      "priority": 1
+    }
+  ],
+  "hosting_delegation": null,
+  "sections_overview": [
+    {
+      "section": "1.2 Zugangskontrolle",
+      "control_ids": [
+        "API2"
+      ]
+    },
+    {
+      "section": "1.3 Zugriffskontrolle",
+      "control_ids": [
+        "8.3",
+        "API1",
+        "API3",
+        "API5",
+        "API6",
+        "APP.3.1",
+        "APP.4.3",
+        "LLM06"
+      ]
+    },
+    {
+      "section": "1.5 Pseudonymisierung",
+      "control_ids": [
+        "LLM02",
+        "LLM07"
+      ]
+    },
+    {
+      "section": "2.1 Weitergabekontrolle",
+      "control_ids": [
+        "8.15",
+        "8.20",
+        "API7"
+      ]
+    },
+    {
+      "section": "3.1 Verf\u00fcgbarkeitskontrolle",
+      "control_ids": [
+        "8.13",
+        "API4",
+        "LLM10"
+      ]
+    },
+    {
+      "section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "control_ids": [
+        "8.24",
+        "API10",
+        "API8",
+        "API9",
+        "LLM01",
+        "LLM05",
+        "LLM09",
+        "ORP.3"
+      ]
+    },
+    {
+      "section": "4.2 Incident-Response-Management",
+      "control_ids": [
+        "DER.2.1"
+      ]
+    },
+    {
+      "section": "4.3 Privacy by Design",
+      "control_ids": [
+        "CON.1",
+        "CON.2",
+        "CON.3",
+        "LLM04",
+        "LLM08"
+      ]
+    },
+    {
+      "section": "4.4 Auftragskontrolle",
+      "control_ids": [
+        "5.14",
+        "5.23",
+        "5.33",
+        "LLM03",
+        "OPS.1.1",
+        "OPS.1.1.3",
+        "OPS.1.1.5",
+        "OPS.1.2.4",
+        "OPS.1.2.5"
+      ]
+    }
+  ],
+  "curated_controls": [
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API2 \u2014 Broken Authentication",
+      "bsi_default": "",
+      "concrete": "API-Keys ausschlie\u00dflich als serverseitige Umgebungsvariablen. Kurzlebige JWTs (\u2264 1h) f\u00fcr Endnutzer-Authentifizierung.",
+      "tom_section": "1.2 Zugangskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "ISO 27001",
+      "measure": "8.3 \u2014 Information access restriction",
+      "bsi_default": "",
+      "concrete": "Supabase Row Level Security f\u00fcr alle Tabellen mit Nutzerdaten aktivieren (auth.uid()-basierte Policies); MongoDB-Collections mit nutzerbezogenen Daten \u00fcber datenbankebenen Zugriffskontrolle (Role-Based Access) sch\u00fctzen; Segment-Daten nur pseudonymisiert \u00fcbermitteln und PII aus Event-Properties entfernen.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "MongoDB"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API1 \u2014 Broken Object Level Authorization",
+      "bsi_default": "",
+      "concrete": "Supabase RLS-Policies sicherstellen, dass jeder API-Endpunkt nur Objekte zur\u00fcckgibt, die dem authentifizierten Nutzer geh\u00f6ren (auth.uid() = user_id); MongoDB-Queries immer mit User-ID-Filter versehen und niemals rohe IDs aus Query-Parametern ohne Autorisierungspr\u00fcfung verwenden; Stripe-Kundenobjekte \u00fcber customer_id an Auth-Session binden.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API3 \u2014 Broken Object Property Level Authorization",
+      "bsi_default": "",
+      "concrete": "Response-Filterung im Backend: interne Metadaten (system prompt content, user_ids, Modellparameter) vor Client-Auslieferung entfernen.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API5 \u2014 Broken Function Level Authorization",
+      "bsi_default": "",
+      "concrete": "RBAC: Admin-Rolle f\u00fcr System-Prompt-\u00c4nderungen, regul\u00e4re Nutzer nur Chat-Endpunkt. Middleware-Guard vor jedem Route-Handler.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API6 \u2014 Unrestricted Access to Sensitive Business Flows",
+      "bsi_default": "",
+      "concrete": "Sensible Flows (automatisierte Entscheidungen, Massengenerierungen) durch zus\u00e4tzliche Authentifizierung gesch\u00fctzt. Separates restriktiveres Rate-Limit.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "APP.3.1 \u2014 Webanwendungen und Webservices",
+      "bsi_default": "",
+      "concrete": "Alle API-Endpunkte \u00fcber Supabase-Auth oder eigene JWT-Middleware absichern; Eingaben vor Weiterleitung an Elasticsearch (Query-Injection) und MongoDB (NoSQL-Injection) mittels Schema-Validierung (z.B. Zod, Joi) sanitisieren; Content-Security-Policy-Header setzen und CORS auf erlaubte Origins beschr\u00e4nken.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "MongoDB"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "APP.4.3 \u2014 Relationale Datenbanksysteme",
+      "bsi_default": "",
+      "concrete": "F\u00fcr Supabase (PostgreSQL) und MongoDB prepared Statements bzw. ODM-Parameterisierung (Mongoose) ausschlie\u00dflich verwenden; MongoDB-Verbindungen \u00fcber Connection-Pooling mit maximalen Pool-Limits absichern; Datenbankzugriffe \u00fcber Sentry-Performance-Monitoring \u00fcberwachen, um anomale Query-Muster zu erkennen.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "MongoDB"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM06 \u2014 Excessive Agency",
+      "bsi_default": "",
+      "concrete": "OpenAI-Funktionsaufrufe (Function Calling / Tool Use) auf eine Whitelist erlaubter Aktionen beschr\u00e4nken; jede durch das LLM ausgel\u00f6ste Aktion (z.B. Datenbankschreibzugriff, E-Mail-Versand \u00fcber Postmark/Resend) durch eine separate Autorisierungsebene mit Nutzerkontext validieren, bevor sie ausgef\u00fchrt wird.",
+      "tom_section": "1.3 Zugriffskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM02 \u2014 Sensitive Information Disclosure",
+      "bsi_default": "",
+      "concrete": "PII-Erkennung (Namen, E-Mail, IBAN) vor jedem OpenAI-API-Call implementieren und sensible Daten maskieren oder entfernen; OpenAI-API-Logs in Sentry nur ohne vollst\u00e4ndige Prompt-Inhalte speichern; sicherstellen, dass OpenAI-Responses keine aus dem Kontext extrahierten Nutzerdaten anderer User enthalten (Session-Isolation).",
+      "tom_section": "1.5 Pseudonymisierung",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM07 \u2014 System Prompt Leakage",
+      "bsi_default": "",
+      "concrete": "System-Prompt nicht an Client exponieren. API-Responses filtern: interne Metadaten (Modellparameter, system content) im Backend-Layer entfernen.",
+      "tom_section": "1.5 Pseudonymisierung",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "ISO 27001",
+      "measure": "8.20 \u2014 Networks security",
+      "bsi_default": "",
+      "concrete": "Netzwerkkommunikation zu Supabase, MongoDB Atlas und Elasticsearch ausschlie\u00dflich \u00fcber TLS 1.2+ erzwingen; Redis-Verbindungen mit TLS und AUTH-Token absichern; Stripe/Braintree-Webhooks nur \u00fcber verifizierte Signaturen (Stripe-Webhook-Secret, Braintree-Verification) akzeptieren.",
+      "tom_section": "2.1 Weitergabekontrolle",
+      "applicable_services": [
+        "Braintree"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API7 \u2014 Server Side Request Forgery",
+      "bsi_default": "",
+      "concrete": "URL-Allowlist f\u00fcr externe Inhalte. Blockierung interner IP-Ranges (RFC 1918) und Cloud-Metadaten-Endpunkte (169.254.169.254).",
+      "tom_section": "2.1 Weitergabekontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "ISO 27001",
+      "measure": "8.13 \u2014 Information backup",
+      "bsi_default": "",
+      "concrete": "Automatisierte Backup-Validierung einrichten: Nach jedem MongoDB-Atlas- und Supabase-Backup einen automatisierten Restore-Test in einer Staging-Umgebung durchf\u00fchren; Redis-Persistenz (AOF + RDB) aktivieren und Snapshots in externen Storage exportieren, sofern Redis persistente Session- oder Queue-Daten speichert.",
+      "tom_section": "3.1 Verf\u00fcgbarkeitskontrolle",
+      "applicable_services": [
+        "MongoDB"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API4 \u2014 Unrestricted Resource Consumption",
+      "bsi_default": "",
+      "concrete": "Kombiniertes Limit: max_tokens + RPM + t\u00e4gliches Token-Budget. Redis-Middleware. Separates restriktiveres Limit f\u00fcr sensible Gesch\u00e4ftsflows.",
+      "tom_section": "3.1 Verf\u00fcgbarkeitskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM10 \u2014 Unbounded Consumption",
+      "bsi_default": "",
+      "concrete": "Pro Session: max_tokens-Limit (4096), Requests-per-Minute (10 RPM), t\u00e4gliches Token-Budget (100k). Redis-basiertes Rate-Limiting-Middleware.",
+      "tom_section": "3.1 Verf\u00fcgbarkeitskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "ISO 27001",
+      "measure": "8.24 \u2014 Use of cryptography",
+      "bsi_default": "",
+      "concrete": "Alle Datenbankverbindungen (MongoDB, Supabase/PostgreSQL, Elasticsearch, Redis) mit TLS verschl\u00fcsseln; Stripe- und Braintree-Zahlungsdaten niemals selbst speichern, ausschlie\u00dflich Token verwenden; OpenAI-API-Calls \u00fcber HTTPS mit aktuellem TLS-Zertifikat; E-Mail-Versand \u00fcber Postmark/Resend mit DKIM/SPF/DMARC absichern.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "Braintree"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API10 \u2014 Unsafe Consumption of APIs",
+      "bsi_default": "",
+      "concrete": "Output-Schema-Validierung (Pydantic/Zod) f\u00fcr alle LLM-Outputs. Escaping vor SQL-Queries, HTML-Templates und Shell-Commands.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API8 \u2014 Security Misconfiguration",
+      "bsi_default": "",
+      "concrete": "HTTPS-only enforced. Explizite Timeouts (connect: 5s, read: 30s). Keine Debug-Informationen oder Stack-Traces in Produktions-Responses.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP API Top 10",
+      "measure": "API9 \u2014 Improper Inventory Management",
+      "bsi_default": "",
+      "concrete": "Service-Inventory mit eingesetzten Modellversionen. Alerting bei Deprecation-Notices. Geplante Review-Zyklen bei Modellwechsel.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM01 \u2014 Prompt Injection",
+      "bsi_default": "",
+      "concrete": "Alle Nutzereingaben vor dem OpenAI-API-Call durch einen Validierungs-Layer leiten, der bekannte Prompt-Injection-Muster (Rollen\u00fcbernahme, Delimiter-Angriffe) erkennt und blockiert; System-Prompt und User-Prompt strukturell trennen (separate message-Rollen) und niemals Nutzereingaben direkt in den System-Prompt interpolieren.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM05 \u2014 Improper Output Handling",
+      "bsi_default": "",
+      "concrete": "Output-Schema-Validierung (Pydantic) f\u00fcr alle LLM-Responses. HTML-Escaping vor Rendering. SQL-Parameterization vor Datenbankoperationen.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM09 \u2014 Misinformation",
+      "bsi_default": "",
+      "concrete": "KI-generierte Inhalte in der UI klar als solche kennzeichnen (EU AI Act Transparenzpflicht); kritische Ausgaben (z.B. medizinische, rechtliche, finanzielle Informationen) mit einem Disclaimer versehen; Mechanismus f\u00fcr Nutzer-Feedback zu falschen Antworten implementieren und Sentry-Logging f\u00fcr Halluzinationshinweise einrichten.",
+      "tom_section": "4.1 Datenschutz-Ma\u00dfnahmen",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "DER.2.1 \u2014 Behandlung von Sicherheitsvorf\u00e4llen",
+      "bsi_default": "",
+      "concrete": "Incident-Response-Plan dokumentiert. Meldekette definiert (DSGVO Art. 33: 72h). Post-Mortem nach jedem Sicherheitsvorfall.",
+      "tom_section": "4.2 Incident-Response-Management",
+      "applicable_services": [
+        "Sentry"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "CON.1 \u2014 Kryptokonzept",
+      "bsi_default": "",
+      "concrete": "TLS 1.2+ f\u00fcr alle Verbindungen erzwungen. AES-256 f\u00fcr ruhende Daten. Schl\u00fcsselrotation j\u00e4hrlich oder bei Verdacht auf Kompromittierung.",
+      "tom_section": "4.3 Privacy by Design",
+      "applicable_services": [
+        "Redis"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "CON.2 \u2014 Datenschutz",
+      "bsi_default": "",
+      "concrete": "Datenschutzkonzept dokumentiert. Datensparsamkeit implementiert: nur notwendige Felder gespeichert. Pseudonymisierung via UUID-Mapping (ADR-001).",
+      "tom_section": "4.3 Privacy by Design",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "CON.3 \u2014 Datensicherungskonzept",
+      "bsi_default": "",
+      "concrete": "MongoDB Atlas automatische Backups (Point-in-Time-Recovery) mit mindestens 7 Tagen Retention aktivieren; Supabase-Datenbank-Backups t\u00e4glich via pg_dump in separaten S3-Bucket exportieren; Elasticsearch-Snapshots in separates Repository (S3/GCS) t\u00e4glich schedulen und Wiederherstellung quartalsweise testen.",
+      "tom_section": "4.3 Privacy by Design",
+      "applicable_services": [
+        "MongoDB"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM04 \u2014 Data and Model Poisoning",
+      "bsi_default": "",
+      "concrete": "Trainingsdaten nur aus verifizierten Quellen. Embedding-Inputs vor Vektorspeicherung validieren. Similarity-Threshold (Cosine > 0.75) f\u00fcr RAG-Abrufe.",
+      "tom_section": "4.3 Privacy by Design",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM08 \u2014 Vector and Embedding Weaknesses",
+      "bsi_default": "",
+      "concrete": "Falls Elasticsearch f\u00fcr Vektor-Embeddings genutzt wird, Zugriff auf den Embedding-Index auf autorisierte Service-Accounts beschr\u00e4nken; Embedding-Inputs auf maximale L\u00e4nge und erlaubte Zeichens\u00e4tze validieren; regelm\u00e4\u00dfige \u00dcberpr\u00fcfung, ob gespeicherte Embeddings rekonstruierbare PII enthalten, und ggf. differenzielle Datenschutzverfahren einsetzen.",
+      "tom_section": "4.3 Privacy by Design",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "OWASP LLM Top 10",
+      "measure": "LLM03 \u2014 Supply Chain",
+      "bsi_default": "",
+      "concrete": "Dependency-Pinning in requirements.txt (==). Automatische Vulnerability-Scans per Dependabot oder pip-audit in CI/CD-Pipeline.",
+      "tom_section": "4.4 Auftragskontrolle",
+      "applicable_services": [
+        "OpenAI"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "OPS.1.1 \u2014 Ordnungsgem\u00e4\u00dfe IT-Administration",
+      "bsi_default": "",
+      "concrete": "F\u00fcr alle Services (Supabase, MongoDB Atlas, Elasticsearch, Redis) dedizierte Service-Accounts mit minimalen Berechtigungen anlegen; API-Keys und Credentials ausschlie\u00dflich \u00fcber Umgebungsvariablen oder einen Secret-Manager (z.B. Doppler, Vault) verwalten und niemals im Source-Code committen.",
+      "tom_section": "4.4 Auftragskontrolle",
+      "applicable_services": [
+        "Braintree"
+      ],
+      "translation_pending": false
+    },
+    {
+      "framework_label": "BSI IT-Grundschutz",
+      "measure": "OPS.1.1.3 \u2014 Patch- und \u00c4nderungsmanagement",
+      "bsi_default": "",
+      "concrete": "Dependency-Updates f\u00fcr alle npm/yarn-Pakete w\u00f6chentlich \u00fcber Dependabot oder Renovate Bot automatisieren; Sentry-Alerts bei veralteten Library-Versionen konfigurieren; OpenAI SDK, Stripe SDK und Supabase Client regelm\u00e4\u00dfig auf neue Versionen pr\u00fcfen, da Sicherheits-Patches kritisch sind.",
+      "tom_section": "4.4 Auftragskontrolle",
+      "applicable_services": [
+        "Braintree"
+      ],
+      "translation_pending": false
+    }
+  ],
+  "priority_actions": [
+    "AVV und SCC mit allen Drittanbieter-Services abschlie\u00dfen: Sofort AVV mit OpenAI (Data Processing Agreement \u00fcber api.openai.com), Supabase, Stripe, Braintree, Postmark/Resend, Segment und Sentry abschlie\u00dfen bzw. pr\u00fcfen, ob bestehende DPAs die EU-SCCs 2021 einschlie\u00dfen, da alle diese Anbieter US-basiert sind und personenbezogene Daten verarbeiten.",
+    "OpenAI-Integration absichern und AI Act Manifest erstellen: System-Prompts in einer zentralen Konfigurationsdatei (z.B. .env + Vault) speichern und niemals an den Client \u00fcbertragen, Input-Validierung vor jedem OpenAI-API-Call implementieren (max. Token-Limits, Regex-Filter f\u00fcr PII), und ein AI Act Manifest dokumentieren, das Zweck, Risikostufe (GPAI), Trainingsdaten-Herkunft und Human-Oversight-Mechanismen beschreibt.",
+    "Supabase Row Level Security (RLS) und MongoDB-Zugriffskontrollen aktivieren: In Supabase f\u00fcr alle Tabellen mit personenbezogenen Daten RLS-Policies aktivieren und testen, MongoDB-Benutzer mit minimalen Rollen (readWrite nur auf notwendige Collections) konfigurieren, Redis mit AUTH-Passwort und TLS absichern sowie Elasticsearch X-Pack Security mit rollenbasiertem Zugriff aktivieren."
+  ],
+  "pii_in_llm_risk": true,
+  "rag_over_pii_risk": false,
+  "pii_in_logs_risk": true,
+  "sdm_defaults_by_section": {}
+}

@@ -1,0 +1,138 @@
+{% import '_marker.md.j2' as marker with context %}
+# Standard Contractual Clauses (SCC) — Module 2 (Controller → Processor)
+
+**pursuant to Commission Implementing Decision (EU) 2021/914 of 4 June 2021**
+[[LEX_HEAD_END]]
+
+**Project:** {{ project_name }}
+**Controller (data exporter):** {{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %}
+{{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %}
+
+**Date:** {{ generation_date }}
+**Run ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Company data") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{% if model.services_with_transfer | selectattr('processing_purpose_inferred') | list %}{% set _lm = _lm + ["inferred"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## Clauses (reference to the full text)
+
+The contracting parties agree to apply the **Standard Contractual Clauses, Module 2**
+pursuant to Commission Implementing Decision (EU) 2021/914 of 4 June 2021. The
+full text of Clauses 1–18 forms an integral part of this agreement and is
+incorporated by reference: [EUR-Lex CELEX:32021D0914](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021D0914)
+
+The annexes below specify the fields left open in the clauses.
+
+---
+
+## Annex I.A — List of parties
+
+**Data exporter (Controller):**
+
+| Item | Value |
+|---|---|
+| Name | {{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %} |
+| Address | {{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %} |
+| Contact person | {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %} |
+| E-mail | {{ contact_email }} |
+| Data Protection Officer | {% if dpo_name %}{{ dpo_name }}{% if dpo_email %} ({{ dpo_email }}){% endif %}{% else %}(not appointed / not subject to mandatory appointment){% endif %} |
+| Role | Controller |
+
+**Data importers (processors in third countries):**
+
+| Provider | Country | DPF status | DPA |
+|---|---|---|---|
+{% for row in model.services_with_transfer %}| {{ row.name }} | {{ row.country }} | {{ row.dpf_status or "n/a" }} | {% if row.dpa_url %}[DPA]({{ row.dpa_url }}){% else %}—{% endif %} |
+{% endfor %}
+
+---
+
+## Annex I.B — Description of the transfer
+
+{% for row in model.services_with_transfer %}
+### {{ row.name }} ({{ row.country }})
+
+| Field | Content |
+|---|---|
+| **Purpose of processing** | {% if row.processing_purpose_inferred %}{{ marker.inferred_mark() }} {% endif %}{{ row.processing_purpose or "—" }} |
+| **Categories of data subjects** | {{ row.data_subjects or "—" }} |
+| **Categories of personal data** | {% if row.data_categories_gap %}{{ inline_gap_marker('payment_integration_mode_unknown') }}{% elif row.data_categories %}{{ row.data_categories | join(", ") }}{% else %}—{% endif %} |
+| **Frequency of the transfer** | continuous (technical integration) |
+| **Retention period** | see `avv_{{ run_id[:8] }}.md` § 7 |
+| **Transmission channel** | TLS-encrypted API connection |
+
+{% endfor %}
+---
+
+## Annex I.C — Competent supervisory authority
+
+🔴 **Supervisory authority not determined.** Enter the competent supervisory
+authority manually based on the company's registered seat (a federal-state
+selector in the project settings is planned — the field does not exist yet).
+For federal authorities or public-law bodies, the competent authority is the
+**BfDI** (Federal Commissioner for Data Protection and Freedom of Information).
+
+---
+
+## Annex II — Technical and organisational measures (Art. 32 GDPR)
+
+The technical and organisational measures to be implemented by the data importer
+are documented in the attached TOM: **`tom_{{ run_id[:8] }}.md`**
+
+Minimum standards per protection goal (Art. 32(1)(b) GDPR):
+
+- **Confidentiality:** encryption at rest and in transit (AES-256, TLS 1.2+), role-based access control
+- **Integrity:** signatures/checksums, documented authorisations
+- **Availability:** backup concept, contingency plan
+- **Resilience:** redundancy, deputisation arrangements
+- **Recoverability:** tested recovery procedure
+- **Pseudonymisation:** where technically feasible, prior to transfer
+- **Auditability:** audit logging, regular review
+
+---
+
+## Annex III — List of sub-processors
+
+The data importers listed in Annex I.A may engage the following sub-processors,
+provided this is documented in their respective DPA (see column "DPA"):
+
+| Data importer | DPA link with sub-processor list |
+|---|---|
+{% for row in model.services_with_transfer %}| {{ row.name }} | {% if row.dpa_url %}[{{ row.dpa_url }}]({{ row.dpa_url }}){% else %}— (request the sub-processor list from the provider) {% endif %} |
+{% endfor %}
+
+Changes to this sub-processor list must be notified to the Controller with
+reasonable prior notice (typically 30 days) pursuant to Art. 28(2) GDPR.
+
+{% if model.has_us_transfers %}
+
+---
+
+## Transfer Impact Assessment (TIA) — transfers to the USA
+
+Since data importers in the **USA** are involved, a **Transfer Impact
+Assessment** must be documented following Schrems II (CJEU C-311/18) and the
+DSK assessment "Data transfers to the USA" (2023):
+
+1. **Legal situation in the recipient country:** US government access via FISA 702 / EO 12333
+2. **Data Privacy Framework (DPF):** check per service whether it is listed as
+   DPF-certified with the US Department of Commerce (https://www.dataprivacyframework.gov/list)
+3. **Supplementary safeguards:** encryption in transit (TLS 1.2+) AND at rest
+   with customer control of the keys; pseudonymisation prior to transfer
+4. **Risk assessment:** which data categories go where — sensitive
+   categories (Art. 9 GDPR) require a stricter assessment
+
+TIA documentation: separate internal report; to be presented during audits.
+{% endif %}
+
+---
+_Generated by Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Structural basis: Commission Implementing Decision (EU) 2021/914 + DSK data transfers to the USA 2023_

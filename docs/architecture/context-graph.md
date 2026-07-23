@@ -1,9 +1,5 @@
 # Lex-Orchestra — Context Graph
 
-Lex-Orchestra builds a **Context Graph** — a system that maps your infrastructure directly to legal requirements.
-
-A Context Graph is not just a knowledge model — it is a situational, temporal system that reflects the current state of a specific project.
-
 > Lex-Orchestra is not a Knowledge Graph.
 > It is a **Context Graph** — a living knowledge model that not only stores
 > rules but understands what applies to *this* project, *right now*,
@@ -22,13 +18,13 @@ list of rules — but as the **network map of a large subway system**.
 
 **Stations** are the individual nodes. They can be:
 - Technical components (`postgres`, `stripe`, `aws-s3`)
-- Specific paragraphs from a law (`GDPR Art. 28`, `ISO 27001 A.12.3`)
+- Specific paragraphs from a law or framework (`GDPR Art. 28`, `BSI CON.3`)
 - Use cases (`customer_service_chatbot`, `hr_recruitment_screening`)
 - Your project's detected assets (`payment_service uuid-abc123`)
 
 **Lines connecting the stations** are the edges in the graph — they represent
-logical and legal dependencies. `Stripe → REQUIRES → DPA`,
-`aws-s3 → MAPS_TO → ISO 27001 A.12.3 (Backup)`.
+logical and legal dependencies. `Stripe → REQUIRES → AVV`,
+`postgres → HAS_CATEGORY → database → SUBJECT_TO_CONTROL → BSI CON.3 (Backup Concept)`.
 
 **Running a route** is what happens during a compliance scan:
 The Infrastructure Scout identifies a technical entity — say, a Postgres database
@@ -38,8 +34,7 @@ from your detected component to the relevant regulatory nodes.
 
 The result is not "this *might* be relevant" (probabilistic LLM guessing),
 but a **mathematically precise path**: *because you use component X, you
-necessarily trigger requirement Y from ISO A.12.3 on backup concepts —
-traceable to an official source, not inferred from statistical patterns.*
+necessarily trigger requirement Y from BSI CON.3 on backup concepts.*
 
 This is the difference between a classic legal AI tool — which acts like a
 doctor diagnosing by SMS questionnaire, guessing based on statistical patterns —
@@ -48,9 +43,9 @@ architecture, it **measures** it.
 
 ```
 Traditional LLM tool:   "Your setup might have compliance implications..."
-Lex-Orchestra:          "Postgres + personal_data → GDPR Art. 32 + ISO A.12.3
-                          DPA required with: Stripe (dpa_url: stripe.com/de/legal/dpa)
-                          Confidence: 1.0 — verified 2026-03-21"
+Lex-Orchestra:          "Postgres + personal_data → GDPR Art. 32 + BSI CON.3
+                          AVV required with: Stripe (dpa_url: stripe.com/de/legal/dpa)
+                          source: EUR-Lex / BSI — last_verified on every node"
 ```
 
 The law is not a text pasted over the top of your technology.
@@ -59,7 +54,7 @@ you import. Deterministic. Traceable. Auditable.
 
 ---
 
-## RAG → GraphRAG → Context Graph (Why this matters)
+## RAG → GraphRAG → Context Graph: The Progression
 
 Most legal AI tools stop at step one. Lex-Orchestra is at step three.
 Understanding the difference explains exactly *why* determinism matters in compliance.
@@ -108,23 +103,25 @@ WHERE NOT EXISTS {
 }
 RETURN c.name
 ```
-Result: mathematically precise, 100% recall, fully traceable.
+Result: mathematically precise, 100% recall, no hallucinations.
 
 **GraphRAG is correct about *what* is in the documents.**
 But it is still static — it stores facts, not context.
 
-`Stripe → REQUIRES → DPA` — true for everyone, always, everywhere.
+`Stripe → REQUIRES → AVV` — true for everyone, always, everywhere.
 
-It does not know: *Does this DPA requirement apply to YOUR project? Are you in the EU?
+It does not know: *Does this AVV requirement apply to YOUR project? Are you in the EU?
 Did you already sign it? Is the regulation still current? What is the confidence level?*
 
 ### Step 3 — Context Graph (what Lex-Orchestra builds)
 
 A Context Graph is GraphRAG made *situational and temporal*.
 
-It does not just store that `Stripe requires a DPA`.
+It does not just store that `Stripe requires an AVV`.
 It stores that **this specific project**, **scanned on this date**, **in this jurisdiction**,
-**with this confidence level**, requires a DPA — and here is the DPA signing URL.
+**with this confidence level**, requires an AVV — and here is the DPA signing URL.
+
+The differences in concrete terms:
 
 | Dimension | Standard RAG | GraphRAG | Context Graph |
 |---|---|---|---|
@@ -138,11 +135,11 @@ It stores that **this specific project**, **scanned on this date**, **in this ju
 | Auditability | ❌ black box | ⚠️ partial | ✅ every finding fully traceable |
 
 ```
-GraphRAG:       "Stripe → REQUIRES → DPA"
+GraphRAG:       "Stripe → REQUIRES → AVV"
                 (correct, but generic — applies to everyone)
 
 Context Graph:  "Project uuid-abc, scanned 2026-03-22, jurisdiction DE:
-                 Stripe detected (confidence: 1.0, verified) → REQUIRES → DPA
+                 Stripe detected (confidence: 1.0, verified) → REQUIRES → AVV
                  DPA: https://stripe.com/de/legal/dpa
                  GDPR Art. 28 applies_from: 2018-05-25, confidence: 1.0
                  Previous scan: same finding (stable)"
@@ -161,7 +158,7 @@ one specific project's legal reality at one specific point in time.
 ## What is the difference between Knowledge Graph and Context Graph?
 
 A **Knowledge Graph** stores facts:
-`Stripe → REQUIRES → DPA`
+`Stripe → REQUIRES → AVV`
 
 A **Context Graph** knows the context of those facts:
 - *Why* does it apply? (Legal basis as a node, not a string)
@@ -185,27 +182,26 @@ the real jurisdiction, the real point in time.
 Service → REQUIRES → DocumentType → BASED_ON → Law
 ```
 
-Deterministic. Global-first, not EU-first.
+~470 nodes on a fresh seed. Deterministic. Global-first, not EU-first.
 
 The graph is structured as independent seed layers (ADR-009).
 EU is one jurisdiction among many — not the universal default:
 
 ```
-00_global/       ISO 27001, OWASP, NIST    → applies worldwide
-10_eu_primary/   GDPR, AI Act, CRA         → applies in the EU
-10_de/           DDG, TTDSG, BGB           → applies in Germany
-10_us/           FTC, CCPA                 → applies in the US
-20_frameworks/   HIPAA, SOC2, PCI DSS      → opt-in, industry-specific
+00_global/        OWASP, NIST CSF, BSI IT-Grundschutz   → applies worldwide
+10_jurisdiction/  GDPR, AI Act, NIS2, CRA, DORA + German national law
+20_frameworks/    BYOS slots: ISO 27001, BSI C5, AIC4   → license-gated, bring your own
 ```
 
-Each deployment loads only the layers relevant to its jurisdiction.
-Details: [ADR-009](../decisions/ADR-009-seed-layers.md).
+A layer manifest controls what a deployment seeds; license-gated layers stay
+empty until you bring the source yourself (BYOS).
+Full catalogue: [../reference/graph-layers.md](../reference/graph-layers.md)
 
 ---
 
-### Layer 2 — Temporal Graph + Confidence ✅
+### Layer 2 — Temporal Graph + Confidence ✅ complete
 
-Every `Law` node has a time dimension — all Law nodes fully populated,
+Every `Law` node has a time dimension — all 55 Law nodes fully populated,
 verified against official PDFs or EUR-Lex:
 
 ```cypher
@@ -223,20 +219,21 @@ verified against official PDFs or EUR-Lex:
 What this enables:
 
 ```python
+# graph_client.py
 def get_upcoming_deadlines(self, days: int = 90) -> list[dict]:
     """Return laws whose applies_from is within N days from today."""
 ```
 
 Output: `"CRA Art. 14 applies in 174 days — vulnerability reporting obligations"`
 
-The graph knows not just *what* applies — but *when* and *for whom*.
+The graph now knows not just *what* applies — but *when* and *for whom*.
 
 **Confidence scale:**
 
 | Value | Meaning |
 |---|---|
 | `1.0` | Primary law — read directly from official PDF or EUR-Lex |
-| `0.9` | Established secondary source — `note_unverified` set |
+| `0.9` | Established secondary source or preliminary — `note_unverified` set |
 | `0.7` | Partially superseded or uncertain (e.g. TMG replaced by DDG) |
 | `0.5` | Training knowledge only — **not allowed in any layer file** |
 
@@ -258,9 +255,10 @@ MERGE (p)-[:HAS_ASSET {scanned_at: datetime()}]->(a)
 MERGE (a)-[:MAPS_TO]->(s:Service {name: "Stripe"})
 ```
 
-Neo4j never receives real file names or code — only UUIDs and
-anonymised asset types. The mapping UUID → real service name
-lives in Supabase (local).
+Neo4j never receives real file names or code. In the current release the
+per-project scan state lives in local Postgres (scan signals) and is joined
+with the graph at render time; `Project`/`ProjectAsset` nodes in the graph
+itself are on the roadmap (see the table below).
 
 **UseCase nodes — deployer risk classification (ADR-010):**
 
@@ -291,17 +289,20 @@ What Layer 3 enables:
 
 ---
 
-### Layer 4 — Self-Describing Context Graph (ADR-011)
+### Layer 4 — Self-Describing Context Graph (ADR-011) 🔲 planned
 
-The graph knows what it does not know — and detects when knowledge becomes stale.
+The design goal: the graph knows what it does not know — and detects when
+knowledge becomes stale. Today every node carries source / license /
+last_verified provenance; the gap and news nodes below are the next step.
 
 ```cypher
+// Gap detection
 MERGE (k:KnowledgeSource {name: "ISO 42001"})
 SET k.status = "missing", k.priority = "high",
     k.reason = "AI Management System — relevant for EU AI Act Art. 9"
 ```
 
-Legal News Scanner writes `NewsEvent` nodes (ADR-011):
+The Legal News Scanner (roadmap) will write `NewsEvent` nodes (ADR-011):
 
 ```cypher
 MERGE (n:NewsEvent {source: "EUR-Lex", url: "...", date: date("2026-04-15")})
@@ -312,11 +313,16 @@ SET n.verified = false
 When a `NewsEvent -[:AMENDS]→ Law` is created:
 - Law node confidence drops: `1.0 → 0.7`
 - Affected generated documents get `staleness_flag: true`
-- User notified via Telegram: *"EU AI Act changed — your docs may be outdated"*
+- The dashboard flags it: *"EU AI Act changed — your docs may be outdated"*
 
-After human verification via `/verify`:
+After human verification:
 - `confidence` returns to `1.0`, `note_unverified` cleared
-- Documents can be regenerated with `/scan`
+- Documents can be regenerated with a re-scan
+
+What this enables:
+- **Gap detection as query**: `MATCH (k:KnowledgeSource {status: "missing"}) RETURN k`
+- **Staleness detection**: `MATCH (n) WHERE n.note_unverified IS NOT NULL RETURN n`
+- **Dynamic retrieval**: LLM in Node 3 queries graph structure, not just data
 
 ---
 
@@ -329,17 +335,26 @@ All four layers are **additive**. No existing node or relationship needs to chan
 | `applies_from`, `confidence`, `jurisdictions` on Law nodes | Extension | ✅ done |
 | Seed layer architecture (ADR-009) | Refactoring | ✅ done |
 | UseCase nodes — deployer risk (ADR-010) | Extension | ✅ done |
+| `get_upcoming_deadlines()` in graph_client | Extension | 🔲 next |
 | `KnowledgeSource` nodes | Extension | 🔲 next |
 | `ProjectAsset` nodes (Scanner output) | Extension | 🔲 v1 |
 | `NewsEvent` nodes + confidence decay (ADR-011) | Extension | 🔲 v1 |
+| `DataCategory` as real nodes (ontology) | **Refactoring** | optional |
+
+The ontology layer (DataCategory, ProcessingBasis as nodes instead of strings)
+is the only real refactoring — relevant only for the eRecht24 Delta Engine.
 
 ---
 
 ## Context Graph as prerequisite for the self-learning orchestrator
 
+This is not a separate feature — it is the logical consequence.
+
 An agent can only learn if it has a personalised, temporal context.
 A static knowledge graph gives it no basis for change — no deltas,
 no development, no user feedback.
+
+The Context Graph is the infrastructure that makes self-learning possible:
 
 ```
 Rescan → new ProjectAsset edge
@@ -348,11 +363,11 @@ Rescan → new ProjectAsset edge
          ↓
          compliance_task generated
          ↓
-         user confirms or rejects via Telegram /approve
+         user confirms or rejects in the dashboard
          ↓
          feedback signal: what was relevant, what was not?
          ↓
-         Preference node per user_id (Telegram permanent ID)
+         Preference node per user
          ↓
          next scan weights findings by learned preferences
 ```
@@ -361,25 +376,35 @@ Without Layer 3 (ProjectAsset nodes from scanner) there is no delta.
 Without delta there is no learning signal.
 Without a learning signal the orchestrator remains static.
 
+The self-learning orchestrator is the logical consequence of a complete
+Context Graph — not a separate system.
+
 ---
 
 ## Where we are in the GraphRAG+ progression
 
-| Stage | Description | Lex-Orchestra |
+Daniel Davis describes an 8-stage progression in the
+[Context Graph Manifesto](https://trustgraph.ai/news/context-graph-manifesto/).
+The stages from GraphRAG onwards are directly relevant to Lex-Orchestra:
+
+| Stage | Davis | Lex-Orchestra |
 |---|---|---|
 | 3 — GraphRAG | Graph relationships replace text chunks | ✅ Neo4j property graph, Cypher traversal |
 | 4 — Ontology RAG | Structured ontologies for precision retrieval | ✅ Law/Control/UseCase as typed node hierarchy |
-| 5 — Specialised retrieval | Temporal, accuracy-sensitive, anomaly retrieval | ✅ `applies_from`, `confidence`, deadline queries |
-| 6 — Self-describing stores | Graph carries metadata about its own structure | ✅ `KnowledgeSource {status: "missing"}`, confidence decay |
-| 7 — Dynamic retrieval | LLM derives retrieval logic from schema at runtime | 🔲 planned |
-| 8 — Closing the loop | System reingests outputs to adjust future retrieval | 🔲 planned |
+| 5 — Specialised retrieval for data types | Temporal, accuracy-sensitive, anomaly retrieval | ✅ `applies_from`, `confidence`, deadline queries |
+| 6 — Self-describing stores | Graph carries metadata about its own structure | ⚠️ partial: source/license/last_verified provenance on every node; `KnowledgeSource` gap nodes planned |
+| 7 — Dynamic retrieval strategies | LLM derives retrieval logic it has never seen before | 🔲 planned: LLM generates Cypher from schema, not fixed methods |
+| 8 — Closing the loop | System reingests its outputs to adjust future retrieval | 🔲 planned: ADR-013 Preference Notes + scan delta feedback |
 
-Stages 3–6 are implemented. Stages 7–8 are the explicit next evolution.
+Stages 3–5 are implemented, stage 6 partially (provenance metadata everywhere,
+self-describing gap nodes planned). Stages 7–8 are the explicit next evolution.
 
 **One architectural constraint shapes everything:** data sovereignty.
-No user data, code, or infrastructure details leave the local network.
-The graph receives only anonymised UUIDs and asset types (ADR-001).
-This makes the system deployable in compliance-sensitive environments
+Lex-Orchestra's Context Graph operates under a hard constraint that most
+GraphRAG implementations do not have — no user data, code, or infrastructure
+details leave the local network. The graph receives only anonymised UUIDs
+and asset types (ADR-001). This rules out cloud-based graph enrichment
+approaches but makes the system deployable in compliance-sensitive environments
 where sending proprietary code to an external service is not an option.
 
 This is not a limitation of ambition — it is a deliberate design choice.
@@ -391,10 +416,10 @@ infrastructure without ever seeing it.
 ## Summary
 
 ```
-Layer 1 — Seed Layer Architecture    Handbook    deterministic, global + jurisdictions
-Layer 2 — Temporal Graph             Calendar    what applies, when, for whom, how certain
-Layer 3 — Context Graph              Mirror      what applies to THIS project
-Layer 4 — Self-Describing            Compass     what is missing or stale
+Layer 1 — Seed Layer Architecture    Handbook    (deterministic, global + jurisdictions)
+Layer 2 — Temporal Graph             Calendar    (what applies, when, for whom, how certain)
+Layer 3 — Context Graph              Mirror      (what applies to THIS project)
+Layer 4 — Self-Describing            Compass     (what is missing or stale)
                                                           ↓
                                            Self-Learning Orchestrator
                                       (feedback via /approve + Preference nodes)
@@ -404,8 +429,10 @@ Layer 4 — Self-Describing            Compass     what is missing or stale
 
 ## Further reading
 
-- [data-sovereignty.md](data-sovereignty.md) — What stays where
-- [Context Graph Manifesto](https://trustgraph.ai/news/context-graph-manifesto/) — TrustGraph, Dec 2025
-- [GraphRAG for Legal AI: Why Knowledge Graphs Beat Vector Search](https://medium.com/@thomasrehmer/graphrag-for-legal-ai-why-knowledge-graphs-beat-vector-search-01436abfe095) — Thomas Rehmer, Dec 2025
-- [Claude + Neo4j with MCP: Turning Your Knowledge Graph into an AI Interface](https://medium.com/@thomasrehmer/claude-neo4j-with-mcp-turning-your-knowledge-graph-into-an-ai-interface-910ca04e9942) — Thomas Rehmer, Jan 2026
-- [Privacy by Architecture: Why Your Knowledge Graph Should Only Store UUIDs](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — Thomas Rehmer, Feb 2026
+- [graph.md](graph.md) — Node types, schema, seed queries
+- [../reference/graph-layers.md](../reference/graph-layers.md) — Layer catalogue, global structure, contribution guide
+- [data-sovereignty.md](data-sovereignty.md) — What stays where (ADR-001)
+- [Context Graph Manifesto](https://trustgraph.ai/news/context-graph-manifesto/) — TrustGraph, Dec 2025 — industry framing of the Context Graph concept
+- [GraphRAG for Legal AI: Why Knowledge Graphs Beat Vector Search](https://medium.com/@thomasrehmer/graphrag-for-legal-ai-why-knowledge-graphs-beat-vector-search-01436abfe095) — Thomas Rehmer, Dec 2025 — GraphRAG foundations + CUAD proof-of-concept
+- [Claude + Neo4j with MCP: Turning Your Knowledge Graph into an AI Interface](https://medium.com/@thomasrehmer/claude-neo4j-with-mcp-turning-your-knowledge-graph-into-an-ai-interface-910ca04e9942) — Thomas Rehmer, Jan 2026 — MCP as natural language interface to the graph
+- [Privacy by Architecture: Why Your Knowledge Graph Should Only Store UUIDs](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — Thomas Rehmer, Feb 2026 — UUID-Only Pattern and PII separation (ADR-001)

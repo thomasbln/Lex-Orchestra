@@ -1,0 +1,22 @@
+# docker/docker-compose.yml
+# Central compose — starts all production services.
+#
+# Usage:
+#   cd docker && docker compose up -d          # start everything
+#   cd docker && docker compose down           # stop everything
+#   cd docker && docker compose logs -f        # all logs
+#   cd docker && docker compose restart lex-dashboard  # restart a single service
+#
+# Individual services remain directly controllable:
+#   cd docker/lex-agent && docker compose down
+#
+# Order: supabase-db must be up before lex-agent (DB dependency).
+#
+# The former chat-UI layer was removed from the stack (ADR-057/058).
+
+include:
+  - path: ./supabase/docker-compose.yml
+  - path: ./lex-agent/docker-compose.yml
+  - path: ./dashboard/docker-compose.yml
+  - path: ./ollama/docker-compose.yml      # ADR-040 / ADR-050 — profile: with-ollama
+  - path: ./neo4j/docker-compose.yml       # ADR-040 — profile: with-neo4j

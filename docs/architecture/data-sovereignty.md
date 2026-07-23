@@ -1,9 +1,5 @@
 # Data Sovereignty — What stays where
 
-**No customer-specific data ever leaves your system** — enforced by architecture, not policy.
-
-**This is not a policy — it is architecture.** The LLM structurally has no access to customer-specific data.
-
 > **"Your infrastructure stays your infrastructure."**
 > No external service ever sees what runs in your stack,
 > which keys you use, or which documents were generated.
@@ -11,28 +7,30 @@
 ## The three zones
 
 ```
-ZONE 1 — YOUR NETWORK (Pi / VPS)                      [private]
+ZONE 1 — YOUR NETWORK (your host)                     [private]
   Supabase (self-hosted)
   ├── Scout findings: "Stripe in package.json"
-  ├── Generated documents: ToM, DPA, SCC (Markdown)
+  ├── Generated documents: ToM, AVV, VVT (Markdown)
   ├── Compliance status per project
   ├── Agent memory: learned preferences
   └── LangGraph checkpoints: workflow state
   → NEVER leaves the network
 
-ZONE 2 — CLOUD BRAIN (Neo4j Aura)             [abstract knowledge]
+ZONE 2 — GRAPH BRAIN (Neo4j — local container by default)  [abstract knowledge]
   Knowledge graph
-  ├── Laws: GDPR Art. 28, EU AI Act, NIS2, ISO 27001, BSI
+  ├── Laws: GDPR Art. 28, EU AI Act, NIS2, CRA, BSI
   ├── Services: "Stripe" as a generic service type
   ├── UseCase nodes: deployer risk classification
-  ├── DocumentTypes: DPA, SCC, ToM
+  ├── DocumentTypes: AVV, SCC, ToM, VVT
   └── Relationships: REQUIRES, BASED_ON, IMPLEMENTS, CLASSIFIED_BY
   → Contains NOT ONE customer-specific data point
+  → Optional managed cloud graph: same abstract content — nothing project-specific
 
-ZONE 3 — LLM API (Claude / Anthropic)          [language layer]
-  Input:  "Service: Stripe (USA). Requires: DPA, SCC. GDPR Art. 28."
-  Output: Finished DPA contract text
-  → Sees ONLY abstract structural knowledge from Neo4j
+ZONE 3 — LLM (Gemma 4 via Ollama — local by default)   [classification layer]
+  Input:  "unknown dependency: 'stripe-php'"
+  Output: canonical service name + category
+  → Classifies unknown components — it does NOT write legal text
+  → Documents are assembled deterministically from the graph
   → NEVER sees: customer, key, file, configuration, domain
 ```
 
@@ -47,11 +45,14 @@ ZONE 3 — LLM API (Claude / Anthropic)          [language layer]
     - Finished compliance documents
 
 ✅  LLM sees ONLY:
-    - "Service type: payment (USA)"
-    - "Requires: DPA, SCC"
-    - "Legal basis: GDPR Art. 28, Art. 46"
-    - "UseCase indicator: customer_service_chatbot → Limited risk"
+    - dependency names it must classify ("stripe-php" → Stripe, payment)
+    - abstract service types ("payment provider, USA")
 ```
+
+**This is not a policy — it is architecture.**
+The LLM structurally has no access to customer-specific data — and in the
+default sovereign profile it runs on your own hardware, so nothing reaches
+any LLM API at all.
 
 ## The UUID-Only Pattern
 
@@ -60,19 +61,28 @@ Every sensitive entity the Scout detects is immediately translated into
 an anonymised UUID before anything leaves the local network:
 
 ```
-Scout finds:           Local PostgreSQL:          Neo4j Cloud:
+Scout finds:           Local PostgreSQL:          Graph:
 "STRIPE_SECRET_KEY"  → uuid: abc-123          →  {id: "abc-123",
  in checkout.js:42     name: "stripe_key"         type: "api_key",
                        file: "checkout.js"         encrypted: false}
                        line: 42
 
 Neo4j returns:       → UUID lookup            → Document Architect:
-Controls for           PostgreSQL fetches          assembles DPA/ToM
+Controls for           PostgreSQL fetches          assembles ToM/AVV
 "abc-123"              full context               with real details
 ```
 
 The LLM reasons about `abc-123`. The document is assembled locally with
 real names. The LLM never sees the real names.
+
+(In the current release the graph receives only canonical service names and
+categories — the per-project asset detail, including any UUID mapping, stays
+entirely in local Postgres.)
+
+This is the same principle described as "Identity-Agnostic AI" in the
+[Privacy by Architecture article](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908)
+(Thomas Rehmer, Feb 2026) — written before Lex-Orchestra existed, now
+implemented as the core architectural constraint of the system.
 
 **The threat model this defeats:**
 
@@ -86,14 +96,14 @@ real names. The LLM never sees the real names.
 
 ## Data table
 
-| Data category | Location | Leaves network? |
+| Data category | Location | Reason |
 |---|---|---|
-| Source code | Local (Pi / VPS) | ❌ Never |
-| Secrets / API keys (values) | Not stored | ❌ Only presence detected |
-| Tech entities (anonymised) | Neo4j Cloud | ✔ Generic types only |
-| Regulatory logic (laws) | Neo4j Cloud | ✔ Public knowledge |
-| Project state | Supabase local | ❌ Never |
-| Generated documents | Local + Telegram | ❌ On user device |
+| Source code | 100% local (your host) | Never in cloud |
+| Secrets / API keys (values) | NOT stored | Only presence is detected |
+| Tech entities (anonymised) | Neo4j (local by default) | Generic types only: "Stripe", "Postgres" |
+| Regulatory logic (laws) | Neo4j (local by default) | Public knowledge |
+| Project state | Supabase local | Proprietary infrastructure details |
+| Generated documents | Local (`legal/drafts/` + dashboard) | Never leave the host |
 
 ## GDPR-compliant by design
 
@@ -105,28 +115,31 @@ real names. The LLM never sees the real names.
 | Integrity & confidentiality | Art. 5 Para. 1 lit. f | Infrastructure details never leave the network |
 | No third-country transfer | Art. 44 ff. | Neo4j: no customer reference. LLM: no customer reference |
 
-## Source verification (graph seeds)
+## Source Verification Rule
 
-All regulatory content written into the graph must come from a verified source:
+All regulatory content written into the graph must come from a verified source
+(the project's source verification rule):
 
-- `confidence: 1.0` = read directly from official PDF or EUR-Lex
+- `confidence: 1.0` = read directly from the official source — EUR-Lex or the
+  official PDF (registry: `docs/sources/SOURCES.md`)
 - `confidence: 0.9` = preliminary, `note_unverified` property set
 - `confidence: 0.5` = training knowledge only — **never written to the graph**
 
+Query to find all nodes that need verification:
 ```cypher
 MATCH (n)
 WHERE n.note_unverified IS NOT NULL
 RETURN labels(n)[0] AS type, n.confidence, n.note_unverified
 ```
 
----
+## ADR-001: PII separation
+
+The technical implementation is documented in ADR-001 (PII separation,
+internal decision record).
+
+**Core rule:** Neo4j and the LLM receive only UUIDs and anonymised asset types —
+never file names, variable names, paths, or code snippets.
 
 ## Further reading
 
-- [context-graph.md](context-graph.md) — The Context Graph: RAG → GraphRAG → Context Graph (Why this matters)
-- [ADR-001](../decisions/ADR-001-pii-separation.md) — PII separation, technical spec
-- [Context Graph Manifesto](https://trustgraph.ai/news/context-graph-manifesto/) — TrustGraph, Dec 2025
-
-  *Special thanks to [Mark Adams](https://x.com/cybermaggedon) and [Daniel Davis](https://x.com/TrustSpooky) for the manifesto — it helped frame how we describe context, auditability, and situation-aware systems.*
-
-- [Privacy by Architecture: Why Your Knowledge Graph Should Only Store UUIDs](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — Thomas Rehmer, Feb 2026
+- [Privacy by Architecture: Why Your Knowledge Graph Should Only Store UUIDs](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — Thomas Rehmer, Feb 2026 — the UUID-Only Pattern and Identity-Agnostic AI as published concept

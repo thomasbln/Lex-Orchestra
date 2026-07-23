@@ -1,0 +1,190 @@
+{
+  "company": {
+    "name": "Rand Industries Inc.",
+    "legal_form": "Inc.",
+    "address": "12 Alias Lane",
+    "zip_city": "10117 Berlin",
+    "contact_email": "legal@rand-industries.example.com",
+    "website_url": "https://rand-industries.example.com",
+    "responsible_name": "Misty Knight",
+    "responsible_title": "Managing Director",
+    "dpo_name": "Danny Rand",
+    "dpo_email": "dpo@rand-industries.example.com"
+  },
+  "generation_date": "2026-04-20",
+  "run_id": "0158d042",
+  "warn_header_gaps": [],
+  "services_with_transfer": [
+    {
+      "name": "Braintree",
+      "country": "USA",
+      "dpa_url": null,
+      "data_categories": [
+        "Zahlungsdaten",
+        "Kreditkartendaten (tokenisiert)",
+        "Rechnungsadressen",
+        "Transaktionsdaten"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Kunden",
+      "processing_purpose": "Zahlungsabwicklung und Transaktionsverarbeitung",
+      "processing_purpose_inferred": true,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Elasticsearch",
+      "country": "USA",
+      "dpa_url": "https://www.elastic.co/legal/elastic-dpa",
+      "data_categories": [
+        "Indizierte Dokumente",
+        "Suchanfragen",
+        "ggf. personenbezogene Inhalte"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Endnutzer",
+      "processing_purpose": "Volltextsuche, Log-Analyse, Vector Search",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "MongoDB",
+      "country": "USA",
+      "dpa_url": null,
+      "data_categories": [],
+      "data_categories_gap": false,
+      "data_subjects": "Endnutzer",
+      "processing_purpose": "NoSQL-Datenspeicherung und -verwaltung",
+      "processing_purpose_inferred": true,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "OpenAI",
+      "country": "USA",
+      "dpa_url": "https://openai.com/policies/data-processing-addendum",
+      "data_categories": [
+        "API-Anfragen",
+        "Modell-Inputs und -Outputs",
+        "ggf. personenbezogene Inhalte in Prompts"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Endnutzer",
+      "processing_purpose": "KI-gest\u00fctzte Textgenerierung und -verarbeitung",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Postmark",
+      "country": "USA",
+      "dpa_url": "https://wildbit.com/dpa",
+      "data_categories": [
+        "E-Mail-Adressen",
+        "E-Mail-Inhalte",
+        "Versand-Metadaten",
+        "Delivery-Logs"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Kunden",
+      "processing_purpose": "Transaktionale E-Mails, E-Mail-Zustellung",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Redis",
+      "country": "USA",
+      "dpa_url": "https://redis.com/legal/redis-enterprise-cloud-dpa/",
+      "data_categories": [
+        "Cache-Daten",
+        "Session-Daten",
+        "ggf. personenbezogene Inhalte"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Endnutzer",
+      "processing_purpose": "Caching, Session-Management, Message-Queue",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Resend",
+      "country": "USA",
+      "dpa_url": "https://resend.com/legal/dpa",
+      "data_categories": [
+        "E-Mail-Adressen",
+        "E-Mail-Inhalte",
+        "Versand-Metadaten",
+        "Delivery-Logs"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Kunden",
+      "processing_purpose": "Transaktionale E-Mails, E-Mail-Zustellung",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Segment",
+      "country": "USA",
+      "dpa_url": null,
+      "data_categories": [
+        "Event-Daten",
+        "Nutzer-IDs",
+        "Session-Daten",
+        "Nutzungsverhalten",
+        "Ger\u00e4tedaten"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Website-Besucher, Endnutzer",
+      "processing_purpose": "Nutzungsanalyse, Tracking und Monitoring",
+      "processing_purpose_inferred": true,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Sentry",
+      "country": "USA",
+      "dpa_url": "https://sentry.io/legal/dpa/",
+      "data_categories": [
+        "Error-Logs",
+        "Stack-Traces",
+        "ggf. personenbezogene Daten in Fehlerberichten",
+        "IP-Adressen"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Endnutzer",
+      "processing_purpose": "Error-Tracking, Performance-Monitoring, Debugging",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Stripe",
+      "country": "USA",
+      "dpa_url": "https://stripe.com/de/legal/dpa",
+      "data_categories": [
+        "Zahlungsdaten",
+        "Kreditkartendaten (tokenisiert)",
+        "Rechnungsadressen",
+        "Transaktionsdaten"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Kunden",
+      "processing_purpose": "Zahlungsabwicklung, Betrugspr\u00e4vention, Rechnungsstellung",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    },
+    {
+      "name": "Supabase",
+      "country": "USA",
+      "dpa_url": "https://supabase.com/legal/dpa",
+      "data_categories": [
+        "Anwendungsdaten",
+        "Nutzerdaten",
+        "Authentifizierungsdaten",
+        "Logs",
+        "Datenbankinhalt"
+      ],
+      "data_categories_gap": false,
+      "data_subjects": "Kunden, Endnutzer",
+      "processing_purpose": "Datenbankhosting, Authentifizierung, Storage, Realtime-Funktionen",
+      "processing_purpose_inferred": false,
+      "dpf_status": "zu pr\u00fcfen"
+    }
+  ],
+  "has_us_transfers": true
+}

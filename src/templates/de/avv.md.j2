@@ -1,0 +1,210 @@
+{% import '_marker.md.j2' as marker with context %}
+{% import '_bfdi_footer.md.j2' as bfdi with context %}
+# Vereinbarung zur Auftragsverarbeitung (AVV)
+## gem. Art. 28 DSGVO
+[[LEX_HEAD_END]]
+
+**Projekt:** {{ project_name }}
+
+**Verantwortlicher:**
+{{ company_name }}{% if legal_form %} ({{ legal_form }}){% endif %}
+
+{{ address }}{% if zip_code %}, {{ zip_code }} {{ city }}{% elif zip_city %}, {{ zip_city }}{% endif %}
+
+**Kontakt:** {{ contact_email }}{% if website_url %} | {{ website_url }}{% endif %}
+
+vertreten durch: {% if responsible_name %}{{ responsible_name }}{% if responsible_title %}, {{ responsible_title }}{% endif %}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+— nachfolgend „Verantwortlicher" —
+
+**Datum:** {{ generation_date }}
+**Run-ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Unternehmensdaten") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## Präambel
+
+Die Vertragsparteien sind mit der Leistungsvereinbarung ein Auftragsverarbeitungsverhältnis
+eingegangen. Um die Rechte und Pflichten gemäß DSGVO zu konkretisieren, schließen
+die Vertragsparteien die nachfolgende Vereinbarung.
+
+---
+
+{% if model.services_summary and model.services_summary | length > 1 %}
+> **Meta-AVV (Lex-Orchestra-Konvention).** Diese AVV deckt die in § 1 gelisteten
+> {{ model.services_summary | length }} Auftragsverarbeiter gemeinsam ab. Das Vorliegen einer
+> anbieter-spezifischen Detail-DPA ist in der Spalte „DPA" gekennzeichnet; bei Abweichungen
+> oder zusätzlichen Klauseln gelten die anbieter-spezifischen DPAs vorrangig.
+
+---
+
+{% endif %}
+## § 1 Anwendungsbereich
+
+Diese Vereinbarung gilt für die Verarbeitung personenbezogener Daten im Rahmen der
+Leistungserbringung durch folgende Auftragsverarbeiter:
+
+{% if model.services_summary %}
+| Dienst | Land | DSGVO-Status | AVV-Pflicht | DPA |
+|---|---|---|---|---|
+{% for row in model.services_summary %}| {{ row.name }} | {{ row.country or "⚠️ TBD" }} | {{ row.gdpr_status }} | {% if row.acts_as_role == 'controller' %}— eigenverantwortlich (§ 1.1){% elif row.avv_required %}✅{% else %}—{% endif %} | {% if row.dpa_url %}✓{% else %}—{% endif %} |
+{% endfor %}
+
+_Datenkategorien und Löschfristen pro Dienst siehe § 7 (Löschung) und
+`tom_{{ run_id[:8] }}.md` (Technische Maßnahmen)._
+{% else %}
+_(keine Auftragsverarbeiter erkannt)_
+{% endif %}
+{% if model.psp_roles %}
+### § 1.1 Datenschutzrechtliche Rolle der Zahlungsdienstleister
+
+Nicht jeder gelistete Dienst ist Auftragsverarbeiter i.S.v. Art. 28 DSGVO. Die Rolle
+eines Zahlungsdienstleisters wird je Verarbeitungstätigkeit bestimmt (EDPB 07/2020):
+
+{% for r in model.psp_roles %}{% if r.role == 'special_case' %}- **{{ r.service_name }}:** 🔴 Gesonderte rechtliche Prüfung erforderlich — {{ r.role_source }}
+{% else %}- **{{ r.service_name }} — {{ r.role_label }} (eigene Verantwortlichkeit).** Kein Auftragsverarbeiter i.S.v. Art. 28 DSGVO; die Rolle wird je Verarbeitungstätigkeit bestimmt. Belegt durch {{ r.role_source }}.
+{% endif %}{% endfor %}
+{% endif %}
+
+### § 1.5 Vertragsdauer
+
+Diese Auftragsverarbeitungsvereinbarung gilt für die Dauer des zugrundeliegenden
+Hauptvertrags bzw. so lange, wie der Auftragsverarbeiter personenbezogene Daten des
+Verantwortlichen verarbeitet. Sie endet automatisch mit Beendigung des Hauptvertrags
+und der vollständigen Rückgabe oder Löschung der Daten gemäß § 7. Eine separate
+Kündigung der AVV ist nicht erforderlich.
+
+---
+
+## § 2 Konkretisierung des Auftragsinhalts
+
+(1) Folgende Arten personenbezogener Daten sind Gegenstand der Verarbeitung — gruppiert pro Auftragsverarbeiter:
+
+{% if model.service_data_blocks %}{% for block in model.service_data_blocks %}
+**{{ block.service_name }}:**
+{% if block.data_categories_gap %}{{ inline_gap_marker('payment_integration_mode_unknown') }}
+{% else %}{% for cat in block.data_categories %}- {{ cat }}
+{% endfor %}{% endif %}{% endfor %}{% elif model.data_categories %}{% for cat in model.data_categories %}- {{ cat }}
+{% endfor %}{% else %}{{ inline_gap_marker('avv_data_categories_missing') }}
+{% endif %}
+
+(2) Der Kreis der betroffenen Personen umfasst: {% if model.data_subjects is string %}{{ model.data_subjects }}{% else %}{{ inline_gap_marker('avv_data_subjects_missing') }}{% endif %}
+
+(3) Besondere Kategorien von Daten werden **{% if model.special_categories %}ja{% else %}nicht{% endif %}** verarbeitet.
+
+---
+
+## § 3 Verpflichtungen und Weisungsbefugnis
+
+Weisungsberechtigte Personen auf Seiten des Verantwortlichen:
+{% if instructing_persons %}{% for wb in instructing_persons %}- {{ wb.name }}{% if wb.title %}, {{ wb.title }}{% endif %}
+{% endfor %}{% else %}{{ inline_gap_marker('avv_instructing_persons_missing') }}
+{% endif %}
+
+Der Auftragsverarbeiter darf Daten ausschließlich im Rahmen der Weisungen des
+Verantwortlichen verarbeiten (Art. 28 Abs. 3 S. 2 lit. a DSGVO).
+
+---
+
+## § 4 Technisch-organisatorische Maßnahmen
+
+Die technischen und organisatorischen Maßnahmen sind in der beigefügten TOM
+dokumentiert (tom_{{ run_id[:8] }}.md).
+
+---
+
+## § 5 Drittlandtransfer
+
+{% if transfer_mechanism %}
+Übermittlungen in Drittländer erfolgen auf Basis von: **{{ transfer_mechanism }}**.
+
+Betroffene Dienste sind in § 1 (Spalte „DSGVO-Status") gekennzeichnet.
+Transfer Impact Assessment und anbieter-spezifische DPAs: siehe `scc_{{ run_id[:8] }}.md`.
+{% else %}
+Kein Drittlandtransfer identifiziert.
+{% endif %}
+
+---
+
+## § 6 Mitteilung bei Verstößen
+
+Der Auftragsverarbeiter unterrichtet den Verantwortlichen umgehend bei Verstößen gegen
+Datenschutzbestimmungen (Art. 33 Abs. 2 DSGVO Meldepflicht binnen 72 Stunden).
+
+---
+
+## § 7 Löschung und Rückgabe von Daten
+
+{% if deletion_periods %}{% for item in deletion_periods %}- **{{ item.service }}**: {{ item.period if item.period else inline_gap_marker('retention_missing') }}
+{% endfor %}{% else %}{{ inline_gap_marker('retention_missing') }}
+{% endif %}
+{% if model.owner_retention %}
+_Aufbewahrungsfristen (Angaben des Verantwortlichen, je Datenart):_
+
+{% for r in model.owner_retention %}- **{{ r.category }}**: {{ r.duration }} _(Quelle: {{ r.source }})_
+{% endfor %}
+{% endif %}
+
+Nach Beendigung des Hauptvertrages sind alle personenbezogenen Daten zu löschen
+oder zurückzugeben (Art. 28 Abs. 3 lit. g DSGVO).
+
+---
+
+## § 8 Subunternehmen
+
+Die Sub-Prozessoren der gelisteten Auftragsverarbeiter sind in deren jeweiligen DPAs
+geregelt; eine konsolidierte Liste liegt nicht vor.
+
+---
+
+## § 9 Datenschutzkontrolle
+
+Der Auftragsverarbeiter verpflichtet sich, der/dem Datenschutzbeauftragten des
+Verantwortlichen zur Erfüllung ihrer/seiner gesetzlich zugewiesenen Aufgaben
+Zugang zu gewähren. Er duldet insbesondere Betretungs-, Einsichts- und
+Fragerechte. Er wird seine Mitarbeitenden anweisen, mit der/dem
+Datenschutzbeauftragten zu kooperieren.
+
+Der Verantwortliche kann Überprüfungen selbst durchführen oder durch
+einen beauftragten Prüfer durchführen lassen. Der Auftragsverarbeiter
+stellt alle erforderlichen Informationen zur Verfügung und ermöglicht
+die Durchführung von Inspektionen (Art. 28 Abs. 3 lit. h DSGVO).
+
+Nachweis der Einhaltung kann erbracht werden durch Zertifizierung nach Art. 42 DSGVO,
+Testate unabhängiger Prüfer oder Einhaltung genehmigter Verhaltensregeln nach Art. 40 DSGVO.
+
+---
+
+## § 10 Haftung und Schadenersatz
+
+Es wird auf Art. 82 DSGVO verwiesen.
+
+---
+
+## § 11 Schlussbestimmungen
+
+Änderungen und Ergänzungen dieser Vereinbarung bedürfen der Schriftform.
+Sollten einzelne Regelungen unwirksam sein, bleibt die Wirksamkeit der
+übrigen Regelungen unberührt.
+
+---
+
+## Unterschriften
+
+{% if responsible_name %}**{{ responsible_name }}**
+{{ responsible_title or "" }}{% else %}{{ inline_gap_marker('responsible_name_missing') }}{% endif %}
+
+{{ city or zip_city or "(Ort)" }}, {{ generation_date }}
+
+{{ bfdi.render(model.bfdi_citations) }}
+
+---
+_Generiert von Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Strukturbasis: BayLDA + DSK Muster-AVV + BfDI-Erläuterungen_

@@ -1,0 +1,171 @@
+{
+  "project_name": "rand-industries",
+  "run_id_short": "0158d042",
+  "run_date": "2026-04-21",
+  "top_actions": [
+    {
+      "index": 1,
+      "fix_label": "Weisungsberechtigte erg\u00e4nzen",
+      "icon": "\ud83d\udd34",
+      "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+      "affected_docs": [
+        "AVV"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/instructing_persons"
+    },
+    {
+      "index": 2,
+      "fix_label": "Select hosting provider",
+      "icon": "\ud83d\udd34",
+      "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+      "affected_docs": [
+        "TOM \u00a7 1.1"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/hosting"
+    },
+    {
+      "index": 3,
+      "fix_label": "Add retention policies",
+      "icon": "\ud83d\udd34",
+      "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+      "affected_docs": [
+        "AVV",
+        "VVT",
+        "Datenschutzerkl\u00e4rung"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/retention"
+    }
+  ],
+  "service_names": [
+    "Braintree",
+    "Elasticsearch",
+    "MongoDB",
+    "OpenAI",
+    "Postmark",
+    "Redis",
+    "Resend",
+    "Segment",
+    "Sentry",
+    "Stripe",
+    "Supabase"
+  ],
+  "top_signals": [],
+  "usecase_display": "HR-Recruiting / Bewerbungsauswahl \u2014 HIGH RISK (Annex III Nr. 4) (Konfidenz: 60%)",
+  "repo_extractions": null,
+  "risk_display": "MINIMAL RISK",
+  "active_risks_count": 3,
+  "controls_count": 40,
+  "active_risks": [
+    {
+      "id": "PII_IN_LLM_CONTEXT",
+      "description": "Personenbezogene Daten k\u00f6nnten in den KI-Kontext gelangen (DSGVO Art. 25)"
+    },
+    {
+      "id": "PII_IN_LOGS",
+      "description": "PII in Monitoring-Logs erkannt \u2014 Log-Scrubbing empfohlen (DSGVO Art. 32)"
+    },
+    {
+      "id": "NO_AI_AUDIT_TRAIL",
+      "description": "Kein Audit Trail f\u00fcr KI-Entscheidungen \u2014 Langfuse empfohlen (EU AI Act Art. 12)"
+    }
+  ],
+  "usecase_high_risk_blocks": [],
+  "generated_doc_labels": [
+    "AVV \u2014 Auftragsverarbeitungsvertrag (Art. 28 DSGVO)",
+    "TOM \u2014 Technische und Organisatorische Ma\u00dfnahmen (Art. 32 DSGVO)",
+    "VVT \u2014 Verzeichnis von Verarbeitungst\u00e4tigkeiten (Art. 30 DSGVO)",
+    "EU AI Act Risiko-Manifest",
+    "KI-Nutzungsrichtlinie (EU AI Act Art. 4 + 26)"
+  ],
+  "generated_doc_count": 5,
+  "immediate_actions": [
+    "Alle generierten Entw\u00fcrfe durch Rechtsberater pr\u00fcfen lassen",
+    "Weisungsberechtigte erg\u00e4nzen",
+    "Select hosting provider",
+    "Add retention policies"
+  ],
+  "short_term_actions": [
+    "HR-KI-System bei EU-Datenbank registrieren (AI Act Annex III)",
+    "Konformit\u00e4tsbewertung durch benannte Stelle durchf\u00fchren",
+    "Grundrechte-Folgenabsch\u00e4tzung dokumentieren",
+    "DSFA vor Inbetriebnahme abschlie\u00dfen",
+    "Langfuse (oder gleichwertiges Tool) f\u00fcr AI Act Art. 12 Audit Trail integrieren",
+    "UUID-Only Pattern implementieren \u2014 PII nie direkt in LLM-Kontext",
+    "TOM-Implementierungen erg\u00e4nzen",
+    "Enter details manually",
+    "Service-Rechtsgrundlagen erg\u00e4nzen"
+  ],
+  "long_term_actions": [
+    "KI-Nutzungsrichtlinie intern kommunizieren und schulen (AI Act Art. 4)",
+    "Regelm\u00e4\u00dfigen Review-Zyklus f\u00fcr alle Dokumente einplanen (mind. j\u00e4hrlich)",
+    "Datenschutzerkl\u00e4rung auf Website aktualisieren"
+  ],
+  "all_gaps": [
+    {
+      "index": 1,
+      "fix_label": "Weisungsberechtigte erg\u00e4nzen",
+      "severity_label": "\ud83d\udd34 erforderlich",
+      "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+      "affected_docs": [
+        "AVV"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/instructing_persons"
+    },
+    {
+      "index": 2,
+      "fix_label": "Select hosting provider",
+      "severity_label": "\ud83d\udd34 erforderlich",
+      "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+      "affected_docs": [
+        "TOM \u00a7 1.1"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/hosting"
+    },
+    {
+      "index": 3,
+      "fix_label": "Add retention policies",
+      "severity_label": "\ud83d\udd34 erforderlich",
+      "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+      "affected_docs": [
+        "AVV",
+        "VVT",
+        "Datenschutzerkl\u00e4rung"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/retention"
+    },
+    {
+      "index": 4,
+      "fix_label": "TOM-Implementierungen erg\u00e4nzen",
+      "severity_label": "\ud83d\udfe1 empfohlen",
+      "gap_reason": "tom_implementations not configured \u2014 AVV cannot reference concrete TOM measures.",
+      "affected_docs": [
+        "TOM"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/hosting"
+    },
+    {
+      "index": 5,
+      "fix_label": "Enter details manually",
+      "severity_label": "\ud83d\udfe1 empfohlen",
+      "gap_reason": "No legal artifacts found in repo (privacy.html, impressum.*, DPA.*). Fields must be entered manually.",
+      "affected_docs": [
+        "Impressum",
+        "Datenschutzerkl\u00e4rung"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/company"
+    },
+    {
+      "index": 6,
+      "fix_label": "Service-Rechtsgrundlagen erg\u00e4nzen",
+      "severity_label": "\ud83d\udfe1 empfohlen",
+      "gap_reason": "Services without legal_basis in graph \u2014 VVT cannot state legal ground: Braintree, MongoDB, Segment.",
+      "affected_docs": [
+        "VVT"
+      ],
+      "fix_url": "http://localhost:3000/project/rand-industries/integrations"
+    }
+  ],
+  "all_gaps_count": 6,
+  "ki_docs_skipped_note": null,
+  "ebene0": null
+}

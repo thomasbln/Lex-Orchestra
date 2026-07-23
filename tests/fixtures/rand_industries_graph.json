@@ -1,0 +1,752 @@
+{
+  "services": [
+    {
+      "name": "Braintree",
+      "category": "payment",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": null,
+      "data_categories": "Zahlungsdaten, Kreditkartendaten (tokenisiert), Rechnungsadressen, Transaktionsdaten",
+      "data_subjects": [
+        "customers"
+      ],
+      "processing_purpose": null,
+      "deletion_period": null,
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    },
+    {
+      "name": "Elasticsearch",
+      "category": "search_db",
+      "dpa_required": true,
+      "ai_act_relevant": null,
+      "gdpr_adequate": false,
+      "dpa_url": "https://www.elastic.co/legal/elastic-dpa",
+      "data_categories": "Indizierte Dokumente, Suchanfragen, ggf. personenbezogene Inhalte",
+      "data_subjects": [
+        "end_users"
+      ],
+      "processing_purpose": "Volltextsuche, Log-Analyse, Vector Search",
+      "deletion_period": "Bei Index-L\u00f6schung",
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    },
+    {
+      "name": "MongoDB",
+      "category": "nosql_db",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": null,
+      "data_categories": null,
+      "data_subjects": [
+        "end_users"
+      ],
+      "processing_purpose": null,
+      "deletion_period": null,
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    },
+    {
+      "name": "OpenAI",
+      "category": "ai_llm",
+      "dpa_required": true,
+      "ai_act_relevant": true,
+      "gdpr_adequate": false,
+      "dpa_url": "https://openai.com/policies/data-processing-addendum",
+      "data_categories": "API-Anfragen, Modell-Inputs und -Outputs, ggf. personenbezogene Inhalte in Prompts",
+      "data_subjects": [
+        "end_users"
+      ],
+      "processing_purpose": "KI-gest\u00fctzte Textgenerierung und -verarbeitung",
+      "deletion_period": "Gem\u00e4\u00df OpenAI DPA \u2014 kein Training auf API-Daten per default",
+      "country": "USA",
+      "legal_basis": "art_6_1_f_legitimate_interests"
+    },
+    {
+      "name": "Postmark",
+      "category": "email",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": "https://wildbit.com/dpa",
+      "data_categories": "E-Mail-Adressen, E-Mail-Inhalte, Versand-Metadaten, Delivery-Logs",
+      "data_subjects": [
+        "customers"
+      ],
+      "processing_purpose": "Transaktionale E-Mails, E-Mail-Zustellung",
+      "deletion_period": "Event-Logs 30-90 Tage \u2014 gem\u00e4\u00df DPA",
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    },
+    {
+      "name": "Redis",
+      "category": "cache_db",
+      "dpa_required": true,
+      "ai_act_relevant": null,
+      "gdpr_adequate": false,
+      "dpa_url": "https://redis.com/legal/redis-enterprise-cloud-dpa/",
+      "data_categories": "Cache-Daten, Session-Daten, ggf. personenbezogene Inhalte",
+      "data_subjects": [
+        "end_users"
+      ],
+      "processing_purpose": "Caching, Session-Management, Message-Queue",
+      "deletion_period": "TTL-basiert \u2014 konfigurierbar",
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    },
+    {
+      "name": "Resend",
+      "category": "email",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": "https://resend.com/legal/dpa",
+      "data_categories": "E-Mail-Adressen, E-Mail-Inhalte, Versand-Metadaten, Delivery-Logs",
+      "data_subjects": [
+        "customers"
+      ],
+      "processing_purpose": "Transaktionale E-Mails, E-Mail-Zustellung",
+      "deletion_period": "Event-Logs 30-90 Tage \u2014 gem\u00e4\u00df DPA",
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    },
+    {
+      "name": "Segment",
+      "category": "analytics",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": null,
+      "data_categories": "Event-Daten, Nutzer-IDs, Session-Daten, Nutzungsverhalten, Ger\u00e4tedaten",
+      "data_subjects": [
+        "website_visitors",
+        "end_users"
+      ],
+      "processing_purpose": null,
+      "deletion_period": null,
+      "country": "USA",
+      "legal_basis": "art_6_1_a_consent"
+    },
+    {
+      "name": "Sentry",
+      "category": "monitoring",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": "https://sentry.io/legal/dpa/",
+      "data_categories": "Error-Logs, Stack-Traces, ggf. personenbezogene Daten in Fehlerberichten, IP-Adressen",
+      "data_subjects": [
+        "end_users"
+      ],
+      "processing_purpose": "Error-Tracking, Performance-Monitoring, Debugging",
+      "deletion_period": "Standard 90 Tage \u2014 konfigurierbar bis 365 Tage",
+      "country": "USA",
+      "legal_basis": "art_6_1_f_legitimate_interests"
+    },
+    {
+      "name": "Stripe",
+      "category": "payment",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": "https://stripe.com/de/legal/dpa",
+      "data_categories": "Zahlungsdaten, Kreditkartendaten (tokenisiert), Rechnungsadressen, Transaktionsdaten",
+      "data_subjects": [
+        "customers"
+      ],
+      "processing_purpose": "Zahlungsabwicklung, Betrugspr\u00e4vention, Rechnungsstellung",
+      "deletion_period": "Gem\u00e4\u00df Stripe DPA \u2014 Finanzdaten bis 7 Jahre (gesetzliche Aufbewahrungspflicht)",
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract",
+      "acts_as_role": "controller",
+      "acts_as_role_source": "EDPB 07/2020 Rn. 26 + Rn. 82 + Bank payments example (under Rn. 40, p. 15)"
+    },
+    {
+      "name": "Supabase",
+      "category": "baas",
+      "dpa_required": true,
+      "ai_act_relevant": false,
+      "gdpr_adequate": false,
+      "dpa_url": "https://supabase.com/legal/dpa",
+      "data_categories": "Anwendungsdaten, Nutzerdaten, Authentifizierungsdaten, Logs, Datenbankinhalt",
+      "data_subjects": [
+        "customers",
+        "end_users"
+      ],
+      "processing_purpose": "Datenbankhosting, Authentifizierung, Storage, Realtime-Funktionen",
+      "deletion_period": "Auf Anfrage des Verantwortlichen \u2014 konfigurierbar",
+      "country": "USA",
+      "legal_basis": "art_6_1_b_contract"
+    }
+  ],
+  "docs_required": [
+    {
+      "service": "Elasticsearch",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "OpenAI",
+      "doc_type": "SCC",
+      "doc_name_de": "Standardvertragsklauseln (EU-US)",
+      "law": "DSGVO Art. 46",
+      "law_text": "Artikel 46 im Zusammenhang mit der \u00dcbermittlung unterrichtet zu werden. (3) Der Verantwortliche stellt eine Kopie der personenbezogenen Daten, die Gegenstand der Verarbeitung sind, zur Verf\u00fcgung. F\u00fcr alle weiteren Kopien, die die betroffene Person beantragt, kann der Verantwortliche ein angemessenes Entgelt auf der Grundlage der Verwaltungskosten verlangen. Stellt die betroffene Person den Antrag elektronisch, so sind die Informationen in einem g\u00e4ngigen elektronischen Format zur Verf\u00fcgung zu stellen, sofern sie nichts anderes angibt. (4) Das Recht auf Erhalt einer Kopie gem\u00e4\u00df Absatz 1b darf die Rechte und Freiheiten anderer Personen nicht beeintr\u00e4chtigen. Abschnitt 3 Berichtigung und L\u00f6schung Artikel 16 Recht auf Berichtigung Die betroffene Person hat das Recht, von dem Verantwortlichen unverz\u00fcglich die Berichtigung sie betreffender unrichtiger personenbezogener Daten zu verlangen. Unter Ber\u00fccksichtigung der Zwecke der Verarbeitung hat die betroffene Person das Recht, die Vervollst\u00e4ndigung unvollst\u00e4ndiger personenbezogener Daten \u2014 auch mittels einer erg\u00e4nzenden Erkl\u00e4rung \u2014 zu verlangen. Artikel 17 Recht auf L\u00f6schung (\u201eRecht auf Vergessenwerden\u201c) (1) Die betroffene Person hat das Recht, von dem Verantwortlichen zu verlangen, dass sie betreffende personen\u00ad bezogene Daten unverz\u00fcglich gel\u00f6scht werden, und der Verantwortliche ist verpflichtet, personenbezogene Daten unverz\u00fcglich zu l\u00f6schen, sofern einer der folgenden Gr\u00fcnde zutrifft: a) Die personenbezogenen Daten sind f\u00fcr die Zwecke, f\u00fcr die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig. L 119/44 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 b) Die betroffene Person widerruft ihre Einwilligung, auf die sich die Verarbeitung gem\u00e4\u00df Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a st\u00fctzte, und es fehlt an einer anderweitigen Rechtsgrundlage f\u00fcr die Verarbeitung.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "OpenAI",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "OpenAI",
+      "doc_type": "AI_Act_Manifest",
+      "doc_name_de": "EU AI Act Risiko-Manifest",
+      "law": "EU AI Act Art. 6",
+      "law_text": "Article 6 TEU, the Charter. As a prerequisite, AI should be a human-centric technology. It should serve as a tool for people, with the ultimate aim of increasing human well-being. (7) In order to ensure a consistent and high level of protection of public interests as regards health, safety and fundamental rights, common rules for high-risk AI systems should be established. Those rules should be consistent with the Charter, non-discriminatory and in line with the Union\u2019s international trade commitments. They should also take into account the European Declaration on Digital Rights and Principles for the Digital Decade and the Ethics guidelines for trustworthy AI of the High-Level Expert Group on Artificial Intelligence (AI HLEG). (8) A Union legal framework laying down harmonised rules on AI is therefore needed to foster the development, use and uptake of AI in the internal market that at the same time meets a high level of protection of public interests, such as health and safety and the protection of fundamental rights, including democracy, the rule of law and environmental protection as recognised and protected by Union law. To achieve that objective, rules regulating the placing on the market, the putting into service and the use of certain AI systems should be laid down, thus ensuring the smooth functioning of the internal market and allowing those systems to benefit from the principle of free movement of goods and services. Those rules should be clear and robust in protecting fundamental rights, supportive of new innovative solutions, enabling a European ecosystem of public and private actors creating AI systems in line with Union values and unlocking the potential of the digital transformation across all regions of the Union.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "OpenAI",
+      "doc_type": "AI_Act_Manifest",
+      "doc_name_de": "EU AI Act Risiko-Manifest",
+      "law": "EU AI Act Art. 52",
+      "law_text": "Article 52 Procedure 1. Where a general-purpose AI model meets the condition referred to in Article 51(1), point (a), the relevant provider shall notify the Commission without delay and in any event within two weeks after that requirement is met or it becomes known that it will be met. That notification shall include the information necessary to demonstrate that the relevant requirement has been met. If the Commission becomes aware of a general-purpose AI model presenting systemic risks of which it has not been notified, it may decide to designate it as a model with systemic risk. 2. The provider of a general-purpose AI model that meets the condition referred to in Article 51(1), point (a), may present, with its notification, sufficiently substantiated arguments to demonstrate that, exceptionally, although it meets that requirement, the general-purpose AI model does not present, due to its specific characteristics, systemic risks and therefore should not be classified as a general-purpose AI model with systemic risk. ELI: http://data.europa.eu/eli/reg/2024/1689/oj 83/144 EN OJ L, 12.7.2024 3. Where the Commission concludes that the arguments submitted pursuant to paragraph 2 are not sufficiently substantiated and the relevant provider was not able to demonstrate that the general-purpose AI model does not present, due to its specific characteristics, systemic risks, it shall reject those arguments, and the general-purpose AI model shall be considered to be a general-purpose AI model with systemic risk. 4. The Commission may designate a general-purpose AI model as presenting systemic risks, ex officio or following a qualified alert from the scientific panel pursuant to Article 90(1), point (a), on the basis of criteria set out in Annex XIII. The Commission is empowered to adopt delegated acts in accordance with Article 97 in order to amend Annex XIII by specifying and updating the criteria set out in that Annex. 5.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "OpenAI",
+      "doc_type": "AI_Act_Manifest",
+      "doc_name_de": "EU AI Act Risiko-Manifest",
+      "law": "EU AI Act Art. 50",
+      "law_text": "",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "OpenAI",
+      "doc_type": "AVV",
+      "doc_name_de": "Auftragsverarbeitungsvertrag",
+      "law": "DSGVO Art. 28",
+      "law_text": "Artikel 28 Absatz 2 der Verordnung (EG) Nr. 45/2001 konsultiert und hat am 7. M\u00e4rz 2012 (1) eine Stellungnahme abgegeben. (173) Diese Verordnung sollte auf alle Fragen des Schutzes der Grundrechte und Grundfreiheiten bei der Verarbeitung personenbezogener Daten Anwendung finden, die nicht den in der Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates (2) bestimmte Pflichten, die dasselbe Ziel verfolgen, unterliegen, einschlie\u00dflich der Pflichten des Verantwortlichen und der Rechte nat\u00fcrlicher Personen. Um das Verh\u00e4ltnis zwischen der vorliegenden Verordnung und der Richtlinie 2002/58/EG klarzustellen, sollte die Richtlinie entsprechend ge\u00e4ndert werden. Sobald diese Verordnung angenommen ist, sollte die Richtlinie 2002/58/EG einer \u00dcberpr\u00fcfung unterzogen werden, um insbesondere die Koh\u00e4renz mit dieser Verordnung zu gew\u00e4hrleisten \u2014 (1) ABl. C 192 vom 30.6.2012, S. 7. (2) Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates vom 12. Juli 2002 \u00fcber die Verarbeitung personenbezogener Daten und den Schutz der Privatsph\u00e4re in der elektronischen Kommunikation (Datenschutzrichtlinie f\u00fcr elektronische Kommunikation) (ABl. L 201 vom 31.7.2002, S. 37). L 119/32 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 HABEN FOLGENDE VERORDNUNG ERLASSEN: KAPITEL I Allgemeine Bestimmungen Artikel 1 Gegenstand und Ziele (1) Diese Verordnung enth\u00e4lt Vorschriften zum Schutz nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten und zum freien Verkehr solcher Daten. (2) Diese Verordnung sch\u00fctzt die Grundrechte und Grundfreiheiten nat\u00fcrlicher Personen und insbesondere deren Recht auf Schutz personenbezogener Daten. (3) Der freie Verkehr personenbezogener Daten in der Union darf aus Gr\u00fcnden des Schutzes nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten weder eingeschr\u00e4nkt noch verboten werden.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Postmark",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Redis",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Resend",
+      "doc_type": "SCC",
+      "doc_name_de": "Standardvertragsklauseln (EU-US)",
+      "law": "DSGVO Art. 46",
+      "law_text": "Artikel 46 im Zusammenhang mit der \u00dcbermittlung unterrichtet zu werden. (3) Der Verantwortliche stellt eine Kopie der personenbezogenen Daten, die Gegenstand der Verarbeitung sind, zur Verf\u00fcgung. F\u00fcr alle weiteren Kopien, die die betroffene Person beantragt, kann der Verantwortliche ein angemessenes Entgelt auf der Grundlage der Verwaltungskosten verlangen. Stellt die betroffene Person den Antrag elektronisch, so sind die Informationen in einem g\u00e4ngigen elektronischen Format zur Verf\u00fcgung zu stellen, sofern sie nichts anderes angibt. (4) Das Recht auf Erhalt einer Kopie gem\u00e4\u00df Absatz 1b darf die Rechte und Freiheiten anderer Personen nicht beeintr\u00e4chtigen. Abschnitt 3 Berichtigung und L\u00f6schung Artikel 16 Recht auf Berichtigung Die betroffene Person hat das Recht, von dem Verantwortlichen unverz\u00fcglich die Berichtigung sie betreffender unrichtiger personenbezogener Daten zu verlangen. Unter Ber\u00fccksichtigung der Zwecke der Verarbeitung hat die betroffene Person das Recht, die Vervollst\u00e4ndigung unvollst\u00e4ndiger personenbezogener Daten \u2014 auch mittels einer erg\u00e4nzenden Erkl\u00e4rung \u2014 zu verlangen. Artikel 17 Recht auf L\u00f6schung (\u201eRecht auf Vergessenwerden\u201c) (1) Die betroffene Person hat das Recht, von dem Verantwortlichen zu verlangen, dass sie betreffende personen\u00ad bezogene Daten unverz\u00fcglich gel\u00f6scht werden, und der Verantwortliche ist verpflichtet, personenbezogene Daten unverz\u00fcglich zu l\u00f6schen, sofern einer der folgenden Gr\u00fcnde zutrifft: a) Die personenbezogenen Daten sind f\u00fcr die Zwecke, f\u00fcr die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig. L 119/44 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 b) Die betroffene Person widerruft ihre Einwilligung, auf die sich die Verarbeitung gem\u00e4\u00df Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a st\u00fctzte, und es fehlt an einer anderweitigen Rechtsgrundlage f\u00fcr die Verarbeitung.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Resend",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Resend",
+      "doc_type": "AVV",
+      "doc_name_de": "Auftragsverarbeitungsvertrag",
+      "law": "DSGVO Art. 28",
+      "law_text": "Artikel 28 Absatz 2 der Verordnung (EG) Nr. 45/2001 konsultiert und hat am 7. M\u00e4rz 2012 (1) eine Stellungnahme abgegeben. (173) Diese Verordnung sollte auf alle Fragen des Schutzes der Grundrechte und Grundfreiheiten bei der Verarbeitung personenbezogener Daten Anwendung finden, die nicht den in der Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates (2) bestimmte Pflichten, die dasselbe Ziel verfolgen, unterliegen, einschlie\u00dflich der Pflichten des Verantwortlichen und der Rechte nat\u00fcrlicher Personen. Um das Verh\u00e4ltnis zwischen der vorliegenden Verordnung und der Richtlinie 2002/58/EG klarzustellen, sollte die Richtlinie entsprechend ge\u00e4ndert werden. Sobald diese Verordnung angenommen ist, sollte die Richtlinie 2002/58/EG einer \u00dcberpr\u00fcfung unterzogen werden, um insbesondere die Koh\u00e4renz mit dieser Verordnung zu gew\u00e4hrleisten \u2014 (1) ABl. C 192 vom 30.6.2012, S. 7. (2) Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates vom 12. Juli 2002 \u00fcber die Verarbeitung personenbezogener Daten und den Schutz der Privatsph\u00e4re in der elektronischen Kommunikation (Datenschutzrichtlinie f\u00fcr elektronische Kommunikation) (ABl. L 201 vom 31.7.2002, S. 37). L 119/32 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 HABEN FOLGENDE VERORDNUNG ERLASSEN: KAPITEL I Allgemeine Bestimmungen Artikel 1 Gegenstand und Ziele (1) Diese Verordnung enth\u00e4lt Vorschriften zum Schutz nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten und zum freien Verkehr solcher Daten. (2) Diese Verordnung sch\u00fctzt die Grundrechte und Grundfreiheiten nat\u00fcrlicher Personen und insbesondere deren Recht auf Schutz personenbezogener Daten. (3) Der freie Verkehr personenbezogener Daten in der Union darf aus Gr\u00fcnden des Schutzes nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten weder eingeschr\u00e4nkt noch verboten werden.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Sentry",
+      "doc_type": "SCC",
+      "doc_name_de": "Standardvertragsklauseln (EU-US)",
+      "law": "DSGVO Art. 46",
+      "law_text": "Artikel 46 im Zusammenhang mit der \u00dcbermittlung unterrichtet zu werden. (3) Der Verantwortliche stellt eine Kopie der personenbezogenen Daten, die Gegenstand der Verarbeitung sind, zur Verf\u00fcgung. F\u00fcr alle weiteren Kopien, die die betroffene Person beantragt, kann der Verantwortliche ein angemessenes Entgelt auf der Grundlage der Verwaltungskosten verlangen. Stellt die betroffene Person den Antrag elektronisch, so sind die Informationen in einem g\u00e4ngigen elektronischen Format zur Verf\u00fcgung zu stellen, sofern sie nichts anderes angibt. (4) Das Recht auf Erhalt einer Kopie gem\u00e4\u00df Absatz 1b darf die Rechte und Freiheiten anderer Personen nicht beeintr\u00e4chtigen. Abschnitt 3 Berichtigung und L\u00f6schung Artikel 16 Recht auf Berichtigung Die betroffene Person hat das Recht, von dem Verantwortlichen unverz\u00fcglich die Berichtigung sie betreffender unrichtiger personenbezogener Daten zu verlangen. Unter Ber\u00fccksichtigung der Zwecke der Verarbeitung hat die betroffene Person das Recht, die Vervollst\u00e4ndigung unvollst\u00e4ndiger personenbezogener Daten \u2014 auch mittels einer erg\u00e4nzenden Erkl\u00e4rung \u2014 zu verlangen. Artikel 17 Recht auf L\u00f6schung (\u201eRecht auf Vergessenwerden\u201c) (1) Die betroffene Person hat das Recht, von dem Verantwortlichen zu verlangen, dass sie betreffende personen\u00ad bezogene Daten unverz\u00fcglich gel\u00f6scht werden, und der Verantwortliche ist verpflichtet, personenbezogene Daten unverz\u00fcglich zu l\u00f6schen, sofern einer der folgenden Gr\u00fcnde zutrifft: a) Die personenbezogenen Daten sind f\u00fcr die Zwecke, f\u00fcr die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig. L 119/44 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 b) Die betroffene Person widerruft ihre Einwilligung, auf die sich die Verarbeitung gem\u00e4\u00df Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a st\u00fctzte, und es fehlt an einer anderweitigen Rechtsgrundlage f\u00fcr die Verarbeitung.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Sentry",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Sentry",
+      "doc_type": "AVV",
+      "doc_name_de": "Auftragsverarbeitungsvertrag",
+      "law": "DSGVO Art. 28",
+      "law_text": "Artikel 28 Absatz 2 der Verordnung (EG) Nr. 45/2001 konsultiert und hat am 7. M\u00e4rz 2012 (1) eine Stellungnahme abgegeben. (173) Diese Verordnung sollte auf alle Fragen des Schutzes der Grundrechte und Grundfreiheiten bei der Verarbeitung personenbezogener Daten Anwendung finden, die nicht den in der Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates (2) bestimmte Pflichten, die dasselbe Ziel verfolgen, unterliegen, einschlie\u00dflich der Pflichten des Verantwortlichen und der Rechte nat\u00fcrlicher Personen. Um das Verh\u00e4ltnis zwischen der vorliegenden Verordnung und der Richtlinie 2002/58/EG klarzustellen, sollte die Richtlinie entsprechend ge\u00e4ndert werden. Sobald diese Verordnung angenommen ist, sollte die Richtlinie 2002/58/EG einer \u00dcberpr\u00fcfung unterzogen werden, um insbesondere die Koh\u00e4renz mit dieser Verordnung zu gew\u00e4hrleisten \u2014 (1) ABl. C 192 vom 30.6.2012, S. 7. (2) Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates vom 12. Juli 2002 \u00fcber die Verarbeitung personenbezogener Daten und den Schutz der Privatsph\u00e4re in der elektronischen Kommunikation (Datenschutzrichtlinie f\u00fcr elektronische Kommunikation) (ABl. L 201 vom 31.7.2002, S. 37). L 119/32 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 HABEN FOLGENDE VERORDNUNG ERLASSEN: KAPITEL I Allgemeine Bestimmungen Artikel 1 Gegenstand und Ziele (1) Diese Verordnung enth\u00e4lt Vorschriften zum Schutz nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten und zum freien Verkehr solcher Daten. (2) Diese Verordnung sch\u00fctzt die Grundrechte und Grundfreiheiten nat\u00fcrlicher Personen und insbesondere deren Recht auf Schutz personenbezogener Daten. (3) Der freie Verkehr personenbezogener Daten in der Union darf aus Gr\u00fcnden des Schutzes nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten weder eingeschr\u00e4nkt noch verboten werden.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Stripe",
+      "doc_type": "SCC",
+      "doc_name_de": "Standardvertragsklauseln (EU-US)",
+      "law": "DSGVO Art. 46",
+      "law_text": "Artikel 46 im Zusammenhang mit der \u00dcbermittlung unterrichtet zu werden. (3) Der Verantwortliche stellt eine Kopie der personenbezogenen Daten, die Gegenstand der Verarbeitung sind, zur Verf\u00fcgung. F\u00fcr alle weiteren Kopien, die die betroffene Person beantragt, kann der Verantwortliche ein angemessenes Entgelt auf der Grundlage der Verwaltungskosten verlangen. Stellt die betroffene Person den Antrag elektronisch, so sind die Informationen in einem g\u00e4ngigen elektronischen Format zur Verf\u00fcgung zu stellen, sofern sie nichts anderes angibt. (4) Das Recht auf Erhalt einer Kopie gem\u00e4\u00df Absatz 1b darf die Rechte und Freiheiten anderer Personen nicht beeintr\u00e4chtigen. Abschnitt 3 Berichtigung und L\u00f6schung Artikel 16 Recht auf Berichtigung Die betroffene Person hat das Recht, von dem Verantwortlichen unverz\u00fcglich die Berichtigung sie betreffender unrichtiger personenbezogener Daten zu verlangen. Unter Ber\u00fccksichtigung der Zwecke der Verarbeitung hat die betroffene Person das Recht, die Vervollst\u00e4ndigung unvollst\u00e4ndiger personenbezogener Daten \u2014 auch mittels einer erg\u00e4nzenden Erkl\u00e4rung \u2014 zu verlangen. Artikel 17 Recht auf L\u00f6schung (\u201eRecht auf Vergessenwerden\u201c) (1) Die betroffene Person hat das Recht, von dem Verantwortlichen zu verlangen, dass sie betreffende personen\u00ad bezogene Daten unverz\u00fcglich gel\u00f6scht werden, und der Verantwortliche ist verpflichtet, personenbezogene Daten unverz\u00fcglich zu l\u00f6schen, sofern einer der folgenden Gr\u00fcnde zutrifft: a) Die personenbezogenen Daten sind f\u00fcr die Zwecke, f\u00fcr die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig. L 119/44 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 b) Die betroffene Person widerruft ihre Einwilligung, auf die sich die Verarbeitung gem\u00e4\u00df Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a st\u00fctzte, und es fehlt an einer anderweitigen Rechtsgrundlage f\u00fcr die Verarbeitung.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Stripe",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Stripe",
+      "doc_type": "AVV",
+      "doc_name_de": "Auftragsverarbeitungsvertrag",
+      "law": "DSGVO Art. 28",
+      "law_text": "Artikel 28 Absatz 2 der Verordnung (EG) Nr. 45/2001 konsultiert und hat am 7. M\u00e4rz 2012 (1) eine Stellungnahme abgegeben. (173) Diese Verordnung sollte auf alle Fragen des Schutzes der Grundrechte und Grundfreiheiten bei der Verarbeitung personenbezogener Daten Anwendung finden, die nicht den in der Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates (2) bestimmte Pflichten, die dasselbe Ziel verfolgen, unterliegen, einschlie\u00dflich der Pflichten des Verantwortlichen und der Rechte nat\u00fcrlicher Personen. Um das Verh\u00e4ltnis zwischen der vorliegenden Verordnung und der Richtlinie 2002/58/EG klarzustellen, sollte die Richtlinie entsprechend ge\u00e4ndert werden. Sobald diese Verordnung angenommen ist, sollte die Richtlinie 2002/58/EG einer \u00dcberpr\u00fcfung unterzogen werden, um insbesondere die Koh\u00e4renz mit dieser Verordnung zu gew\u00e4hrleisten \u2014 (1) ABl. C 192 vom 30.6.2012, S. 7. (2) Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates vom 12. Juli 2002 \u00fcber die Verarbeitung personenbezogener Daten und den Schutz der Privatsph\u00e4re in der elektronischen Kommunikation (Datenschutzrichtlinie f\u00fcr elektronische Kommunikation) (ABl. L 201 vom 31.7.2002, S. 37). L 119/32 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 HABEN FOLGENDE VERORDNUNG ERLASSEN: KAPITEL I Allgemeine Bestimmungen Artikel 1 Gegenstand und Ziele (1) Diese Verordnung enth\u00e4lt Vorschriften zum Schutz nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten und zum freien Verkehr solcher Daten. (2) Diese Verordnung sch\u00fctzt die Grundrechte und Grundfreiheiten nat\u00fcrlicher Personen und insbesondere deren Recht auf Schutz personenbezogener Daten. (3) Der freie Verkehr personenbezogener Daten in der Union darf aus Gr\u00fcnden des Schutzes nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten weder eingeschr\u00e4nkt noch verboten werden.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Supabase",
+      "doc_type": "SCC",
+      "doc_name_de": "Standardvertragsklauseln (EU-US)",
+      "law": "DSGVO Art. 46",
+      "law_text": "Artikel 46 im Zusammenhang mit der \u00dcbermittlung unterrichtet zu werden. (3) Der Verantwortliche stellt eine Kopie der personenbezogenen Daten, die Gegenstand der Verarbeitung sind, zur Verf\u00fcgung. F\u00fcr alle weiteren Kopien, die die betroffene Person beantragt, kann der Verantwortliche ein angemessenes Entgelt auf der Grundlage der Verwaltungskosten verlangen. Stellt die betroffene Person den Antrag elektronisch, so sind die Informationen in einem g\u00e4ngigen elektronischen Format zur Verf\u00fcgung zu stellen, sofern sie nichts anderes angibt. (4) Das Recht auf Erhalt einer Kopie gem\u00e4\u00df Absatz 1b darf die Rechte und Freiheiten anderer Personen nicht beeintr\u00e4chtigen. Abschnitt 3 Berichtigung und L\u00f6schung Artikel 16 Recht auf Berichtigung Die betroffene Person hat das Recht, von dem Verantwortlichen unverz\u00fcglich die Berichtigung sie betreffender unrichtiger personenbezogener Daten zu verlangen. Unter Ber\u00fccksichtigung der Zwecke der Verarbeitung hat die betroffene Person das Recht, die Vervollst\u00e4ndigung unvollst\u00e4ndiger personenbezogener Daten \u2014 auch mittels einer erg\u00e4nzenden Erkl\u00e4rung \u2014 zu verlangen. Artikel 17 Recht auf L\u00f6schung (\u201eRecht auf Vergessenwerden\u201c) (1) Die betroffene Person hat das Recht, von dem Verantwortlichen zu verlangen, dass sie betreffende personen\u00ad bezogene Daten unverz\u00fcglich gel\u00f6scht werden, und der Verantwortliche ist verpflichtet, personenbezogene Daten unverz\u00fcglich zu l\u00f6schen, sofern einer der folgenden Gr\u00fcnde zutrifft: a) Die personenbezogenen Daten sind f\u00fcr die Zwecke, f\u00fcr die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig. L 119/44 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 b) Die betroffene Person widerruft ihre Einwilligung, auf die sich die Verarbeitung gem\u00e4\u00df Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a st\u00fctzte, und es fehlt an einer anderweitigen Rechtsgrundlage f\u00fcr die Verarbeitung.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Supabase",
+      "doc_type": "TOM",
+      "doc_name_de": "Technisch-organisatorische Ma\u00dfnahmen",
+      "law": "DSGVO Art. 32",
+      "law_text": "Artikel 32 erforderlichen Ma\u00dfnahmen ergreift; d) die in den Abs\u00e4tzen 2 und 4 genannten Bedingungen f\u00fcr die Inanspruchnahme der Dienste eines weiteren Auftrags\u00ad verarbeiters einh\u00e4lt; e) angesichts der Art der Verarbeitung den Verantwortlichen nach M\u00f6glichkeit mit geeigneten technischen und organisa\u00ad torischen Ma\u00dfnahmen dabei unterst\u00fctzt, seiner Pflicht zur Beantwortung von Antr\u00e4gen auf Wahrnehmung der in Kapitel III genannten Rechte der betroffenen Person nachzukommen; f) unter Ber\u00fccksichtigung der Art der Verarbeitung und der ihm zur Verf\u00fcgung stehenden Informationen den Verantwortlichen bei der Einhaltung der in den Artikeln 32 bis 36 genannten Pflichten unterst\u00fctzt; g) nach Abschluss der Erbringung der Verarbeitungsleistungen alle personenbezogenen Daten nach Wahl des Verantwortlichen entweder l\u00f6scht oder zur\u00fcckgibt, sofern nicht nach dem Unionsrecht oder dem Recht der Mitgliedstaaten eine Verpflichtung zur Speicherung der personenbezogenen Daten besteht; h) dem Verantwortlichen alle erforderlichen Informationen zum Nachweis der Einhaltung der in diesem Artikel niedergelegten Pflichten zur Verf\u00fcgung stellt und \u00dcberpr\u00fcfungen \u2014 einschlie\u00dflich Inspektionen \u2013, die vom Verantwortlichen oder einem anderen von diesem beauftragten Pr\u00fcfer durchgef\u00fchrt werden, erm\u00f6glicht und dazu beitr\u00e4gt. L 119/50 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 Mit Blick auf Unterabsatz 1 Buchstabe h informiert der Auftragsverarbeiter den Verantwortlichen unverz\u00fcglich, falls er der Auffassung ist, dass eine Weisung gegen diese Verordnung oder gegen andere Datenschutzbestimmungen der Union oder der Mitgliedstaaten verst\u00f6\u00dft.",
+      "transfer_mechanism": "SCCs"
+    },
+    {
+      "service": "Supabase",
+      "doc_type": "AVV",
+      "doc_name_de": "Auftragsverarbeitungsvertrag",
+      "law": "DSGVO Art. 28",
+      "law_text": "Artikel 28 Absatz 2 der Verordnung (EG) Nr. 45/2001 konsultiert und hat am 7. M\u00e4rz 2012 (1) eine Stellungnahme abgegeben. (173) Diese Verordnung sollte auf alle Fragen des Schutzes der Grundrechte und Grundfreiheiten bei der Verarbeitung personenbezogener Daten Anwendung finden, die nicht den in der Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates (2) bestimmte Pflichten, die dasselbe Ziel verfolgen, unterliegen, einschlie\u00dflich der Pflichten des Verantwortlichen und der Rechte nat\u00fcrlicher Personen. Um das Verh\u00e4ltnis zwischen der vorliegenden Verordnung und der Richtlinie 2002/58/EG klarzustellen, sollte die Richtlinie entsprechend ge\u00e4ndert werden. Sobald diese Verordnung angenommen ist, sollte die Richtlinie 2002/58/EG einer \u00dcberpr\u00fcfung unterzogen werden, um insbesondere die Koh\u00e4renz mit dieser Verordnung zu gew\u00e4hrleisten \u2014 (1) ABl. C 192 vom 30.6.2012, S. 7. (2) Richtlinie 2002/58/EG des Europ\u00e4ischen Parlaments und des Rates vom 12. Juli 2002 \u00fcber die Verarbeitung personenbezogener Daten und den Schutz der Privatsph\u00e4re in der elektronischen Kommunikation (Datenschutzrichtlinie f\u00fcr elektronische Kommunikation) (ABl. L 201 vom 31.7.2002, S. 37). L 119/32 DE Amtsblatt der Europ\u00e4ischen Union 4.5.2016 HABEN FOLGENDE VERORDNUNG ERLASSEN: KAPITEL I Allgemeine Bestimmungen Artikel 1 Gegenstand und Ziele (1) Diese Verordnung enth\u00e4lt Vorschriften zum Schutz nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten und zum freien Verkehr solcher Daten. (2) Diese Verordnung sch\u00fctzt die Grundrechte und Grundfreiheiten nat\u00fcrlicher Personen und insbesondere deren Recht auf Schutz personenbezogener Daten. (3) Der freie Verkehr personenbezogener Daten in der Union darf aus Gr\u00fcnden des Schutzes nat\u00fcrlicher Personen bei der Verarbeitung personenbezogener Daten weder eingeschr\u00e4nkt noch verboten werden.",
+      "transfer_mechanism": "SCCs"
+    }
+  ],
+  "doc_types": [
+    "AI_Act_Manifest",
+    "AVV",
+    "SCC",
+    "TOM"
+  ],
+  "controls": [
+    {
+      "service": "Braintree",
+      "control_id": "OPS.1.1",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Ordnungsgem\u00e4\u00dfe IT-Administration",
+      "text": "OPS.1.1.1AllgemeinerIT-Betrieb \u2022 OPS.1.1.2Ordnungsgem\u00e4\u00dfeIT-Administration \u2022 OPS.1.1.3Patch-und\u00c4nderungsmanagement \u2022 OPS.1.1.4SchutzvorSchadprogrammen \u2022 OPS.1.1.5Protokollierung \u2022 OPS.1.1.6Software-Testsund-Freigaben \u2022 OPS.1.1.7Systemmanagement OPS.1.2Weiterf\u00fchrendeAufgaben \u2022 OPS.1.2.2Archivierung \u2022 OPS.1.2.4Telearbeit \u2022 OPS.1.2.5Fernwartung \u2022 OPS.1.2.6NTP-Zeitsynchronisation OPS.2BetriebvonDritten \u2022 OPS.2.2Cloud-Nutzung \u2022 OPS.2.3NutzungvonOutsourcing OPS.3Betriebf\u00fcrDritte \u2022 OPS.3.2AnbietenvonOutsourcing 2 IT-Grundschutz-Kompendium: Stand Februar 2023 Gesamtinhaltsverzeichnis DER:DetektionundReaktion \u2022 DER.1DetektionvonsicherheitsrelevantenEreignissen DER.2SecurityIncidentManagement \u2022 DER.2.1BehandlungvonSicherheitsvorf\u00e4llen \u2022 DER.2.2Vorsorgef\u00fcrdieIT-Forensik \u2022 DER.2.3BereinigungweitreichenderSicherheitsvorf\u00e4lle DER.3Sicherheitspr\u00fcfungen \u2022 DER.3.1AuditsundRevisionen \u2022 DER.3.2RevisionenaufBasisdesLeitfadensIS-Revision \u2022 DER.4Notfallmanagement System-Bausteine APP:Anwendungen APP.1Client-Anwendungen \u2022 APP.1.1Office-Produkte \u2022 APP.1.2Webbrowser \u2022 APP.1.4MobileAnwendungen(Apps) APP.2Verzeichnisdienst \u2022 APP.2.1AllgemeinerVerzeichnisdienst \u2022 APP.2.2ActiveDirectoryDomainServices \u2022 APP.2.3OpenLDAP APP.3NetzbasierteDienste \u2022 APP.3.1WebanwendungenundWebservices \u2022 APP.3.2Webserver \u2022 APP.3.3Fileserver \u2022 APP.3.4Samba \u2022 APP.3.6DNS-Server APP.4Business-Anwendungen \u2022 APP.4.2SAP-ERP-System \u2022 APP.4.3RelationaleDatenbanken \u2022 APP.4.4Kubernetes \u2022 APP.4.6SAPABAP-Programmierung APP.5E-Mail/Groupware/Kommunikation \u2022 APP.5.2MicrosoftExchangeundOutlook \u2022 APP.5.3AllgemeinerE-Mail-Clientund-Server \u2022 APP.5.4UnifiedCommunicationsundCollaboration(UCC) \u2022 APP.6AllgemeineSoftware \u2022 APP.7EntwicklungvonIndividualsoftware SYS:IT-Systeme SYS.1Server \u2022 SYS.1.1AllgemeinerServer \u2022 SYS.1.2WindowsServer \u25e6 SYS.1.2.2WindowsServer2012 \u25e6 SYS.1.2.3WindowsServer \u2022 SYS.1.3ServerunterLinuxundUnix \u2022 SYS.1.5Virtualisierung \u2022 SYS.1.6Containerisierung \u2022 SYS.1.7IBMZ \u2022 SYS.1.8Speicherl\u00f6sungen \u2022 SYS.1.9Terminalserver IT-Gru",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Braintree",
+      "control_id": "8.20",
+      "framework": "ISO_27001",
+      "title_de": "Networks security",
+      "text": "8.20 Networks security Networks and network devices shall be secured, managed and controlled to protect information in systems and applications.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Braintree",
+      "control_id": "8.24",
+      "framework": "ISO_27001",
+      "title_de": "Use of cryptography",
+      "text": "8.24 Use of cryptography Rules for the effective use of cryptography, including cryptographic key management, shall be defined and implemented.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Braintree",
+      "control_id": "OPS.1.1.3",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Patch- und \u00c4nderungsmanagement",
+      "text": null,
+      "default_tom_measure": null,
+      "title_en": "Patch and Change Management"
+    },
+    {
+      "service": "MongoDB",
+      "control_id": "APP.3.1",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Webanwendungen und Webservices",
+      "text": null,
+      "default_tom_measure": "Input-Validierung f\u00fcr alle API-Endpunkte. OWASP Top 10 als Entwicklungsrichtlinie. Dependency-Updates automatisiert.",
+      "title_en": "Web Applications and Web Services",
+      "default_tom_measure_en": "Input validation on all API endpoints. OWASP Top 10 as development guideline. Dependency updates automated."
+    },
+    {
+      "service": "MongoDB",
+      "control_id": "CON.3",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Datensicherungskonzept",
+      "text": null,
+      "default_tom_measure": "Automatische t\u00e4gliche Backups (Supabase/PostgreSQL). AES-256 verschl\u00fcsselt. Backup-Test monatlich. Retention: 30 Tage.",
+      "title_en": "Backup Concept",
+      "default_tom_measure_en": "Automated daily backups, AES-256-encrypted. Backup restore tested monthly. Retention: 30 days."
+    },
+    {
+      "service": "MongoDB",
+      "control_id": "8.3",
+      "framework": "ISO_27001",
+      "title_de": "Information access restriction",
+      "text": "8.3 Information access restriction Access to information and other associated assets shall be restricted in accordance with the established topic-specific policy on access control.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "MongoDB",
+      "control_id": "8.13",
+      "framework": "ISO_27001",
+      "title_de": "Information backup",
+      "text": "8.13 Information backup Backup copies of information, software and systems shall be maintained and regularly tested in accordance with the agreed topic-specific policy on backup.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "MongoDB",
+      "control_id": "APP.4.3",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Relationale Datenbanksysteme",
+      "text": null,
+      "default_tom_measure": null,
+      "title_en": "Relational Database Systems"
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM01",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Prompt Injection",
+      "text": "LLM01:2025 Prompt Injection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 Description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 Types of Prompt Injection Vulnerabilities . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 Prevention and Mitigation Strategies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4 Example Attack Scenarios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5 Reference Links . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6 Related Frameworks and Taxonomies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6",
+      "default_tom_measure": "Input-Validierung vor LLM-\u00dcbergabe: AssetTranslator anonymisiert alle Assets (ADR-001). Regex-Blocklist f\u00fcr bekannte Injection-Pattern (Rollen\u00fcbernahme, Jailbreak-Phrasen) als serverseitiger Pre-Filter.",
+      "title_en": "Prompt Injection",
+      "default_tom_measure_en": "Input validation before LLM handover: server-side anonymisation/pseudonymisation of all assets. Regex blocklist for known injection patterns (role takeover, jailbreak phrases) as a server-side pre-filter."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM02",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Sensitive Information Disclosure",
+      "text": "LLM02:2025 Sensitive Information Disclosure . . . . . . . . . . . . . . . . . . . . . . . . . . 7 Description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7 Common Examples of Vulnerability . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7 Prevention and Mitigation Strategies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8 Example Attack Scenarios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9 Reference Links . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9 Related Frameworks and Taxonomies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9",
+      "default_tom_measure": "System-Prompt enth\u00e4lt explizite Datenschutz-Instruktion. PII-Detection scannt alle API-Responses vor Weiterleitung an Client.",
+      "title_en": "Sensitive Information Disclosure",
+      "default_tom_measure_en": "System prompt contains an explicit data protection instruction. PII detection scans all API responses before forwarding to the client."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM06",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Excessive Agency",
+      "text": "LLM06:2025 Excessive Agency . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 Description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 Common Examples of Risks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 Prevention and Mitigation Strategies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23 Example Attack Scenarios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25 Reference Links . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25",
+      "default_tom_measure": "Tool-Use-Whitelist im System-Prompt. Serverseitige Allowlist f\u00fcr erlaubte Tool-Calls. Kein autonomer Datenbankschreibzugriff ohne explizite Nutzerbest\u00e4tigung.",
+      "title_en": "Excessive Agency",
+      "default_tom_measure_en": "Tool-use whitelist in the system prompt. Server-side allowlist for permitted tool calls. No autonomous database write access without explicit user confirmation."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM08",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Vector and Embedding Weaknesses",
+      "text": "LLM08:2025 Vector and Embedding Weaknesses . . . . . . . . . . . . . . . . . . . . . . . 29 Description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29 Common Examples of Risks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29 Prevention and Mitigation Strategies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30 Example Attack Scenarios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30 Reference Links . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31",
+      "default_tom_measure": "Similarity-Threshold f\u00fcr RAG-Abrufe (Cosine > 0.75). Chunk-Validierung auf Injection-Muster. Keine direkten User-Inputs als Embedding-Query ohne Sanitisierung.",
+      "title_en": "Vector and Embedding Weaknesses",
+      "default_tom_measure_en": "Similarity threshold for RAG retrievals (cosine > 0.75). Chunk validation against injection patterns. No direct user inputs as embedding queries without sanitisation."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM09",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Misinformation",
+      "text": "LLM09:2025 Misinformation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32 Description . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32 Common Examples of Risk . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32 Prevention and Mitigation Strategies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33 Example Attack Scenarios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34 Reference Links . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34 Related Frameworks and Taxonomies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34",
+      "default_tom_measure": "Sichtbarer Disclaimer bei KI-generierten Inhalten. Bei faktenrelevanten Use-Cases: RAG-Grounding mit Quellenangabe. Vier-Augen-Prinzip bei kritischen Entscheidungen.",
+      "title_en": "Misinformation",
+      "default_tom_measure_en": "Visible disclaimer on AI-generated content. For fact-sensitive use cases: RAG grounding with source attribution. Four-eyes principle for critical decisions."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API1",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Broken Object Level Authorization",
+      "text": "API1:2019 - Broken Object Level Authorization APIs tend to expose endpoints that handle object identifiers, creating a wide attack surface Level Access Control issue. Object level authorization checks should be considered in every function that accesses a data source using an input from the user.",
+      "default_tom_measure": "Session-zu-Konversations-ID-Bindung serverseitig. Nutzer A kann keine Konversationsdaten von Nutzer B abrufen \u2014 auch nicht durch conversation_id-Manipulation.",
+      "title_en": "Broken Object Level Authorization",
+      "default_tom_measure_en": "Server-side binding of session to conversation ID. User A cannot retrieve user B's conversation data \u2014 not even via conversation_id manipulation."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API2",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Broken Authentication",
+      "text": "API2:2019 - Broken User Authentication Authentication mechanisms are often implemented incorrectly, allowing attackers to compromise authentication tokens or to exploit implementation flaws to assume other user's identities temporarily or permanently. Compromising system's ability to identify the client/user, compromises API security overall.",
+      "default_tom_measure": "API-Keys ausschlie\u00dflich als serverseitige Umgebungsvariablen. Kurzlebige JWTs (\u2264 1h) f\u00fcr Endnutzer-Authentifizierung.",
+      "title_en": "Broken Authentication",
+      "default_tom_measure_en": "API keys exclusively as server-side environment variables. Short-lived JWTs (<= 1h) for end-user authentication."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API3",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Broken Object Property Level Authorization",
+      "text": "API3:2019 - Excessive Data Exposure Looking forward to generic implementations, developers tend to expose all object properties without considering their individual sensitivity, relying on clients to perform the data filtering before displaying it to the user.",
+      "default_tom_measure": "Response-Filterung im Backend: interne Metadaten (system prompt content, user_ids, Modellparameter) vor Client-Auslieferung entfernen.",
+      "title_en": "Broken Object Property Level Authorization",
+      "default_tom_measure_en": "Response filtering in the backend: internal metadata (system prompt content, user_ids, model parameters) removed before client delivery."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API4",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Unrestricted Resource Consumption",
+      "text": "API4:2019 - Lack of Resources & Rate Limiting Quite often, APIs do not impose any restrictions on the size or number of resources that can be requested by the client/user. Not only can this impact the API server performance, leading to Denial of Service (DoS), but also leaves the door open to authentication flaws such as brute force.",
+      "default_tom_measure": "Kombiniertes Limit: max_tokens + RPM + t\u00e4gliches Token-Budget. Redis-Middleware. Separates restriktiveres Limit f\u00fcr sensible Gesch\u00e4ftsflows.",
+      "title_en": "Unrestricted Resource Consumption",
+      "default_tom_measure_en": "Combined limits: max_tokens + RPM + daily token budget. Rate-limiting middleware. Separate, stricter limit for sensitive business flows."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API5",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Broken Function Level Authorization",
+      "text": "API5:2019 - Broken Function Level Complex access control policies with different hierarchies, Authorization groups, and roles, and an unclear separation between administrative and regular functions, tend to lead to authorization flaws. By exploiting these issues, attackers gain access to other users\u2019 resources and/or administrative functions.",
+      "default_tom_measure": "RBAC: Admin-Rolle f\u00fcr System-Prompt-\u00c4nderungen, regul\u00e4re Nutzer nur Chat-Endpunkt. Middleware-Guard vor jedem Route-Handler.",
+      "title_en": "Broken Function Level Authorization",
+      "default_tom_measure_en": "RBAC: admin role for system prompt changes, regular users chat endpoint only. Middleware guard before every route handler."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API6",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Unrestricted Access to Sensitive Business Flows",
+      "text": "API6:2019 - Mass Assignment Binding client provided data (e.g., JSON) to data models, without proper properties filtering based on a whitelist, usually lead to Mass Assignment. Either guessing objects properties, exploring other API endpoints, reading the documentation, or providing additional object properties in request payloads, allows attackers to modify object properties they are not supposed to.",
+      "default_tom_measure": "Sensible Flows (automatisierte Entscheidungen, Massengenerierungen) durch zus\u00e4tzliche Authentifizierung gesch\u00fctzt. Separates restriktiveres Rate-Limit.",
+      "title_en": "Unrestricted Access to Sensitive Business Flows",
+      "default_tom_measure_en": "Sensitive flows (automated decisions, bulk generation) protected by additional authentication. Separate, stricter rate limit."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API7",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Server Side Request Forgery",
+      "text": "API7:2019 - Security Misconfiguration Security misconfiguration is commonly a result of unsecure default configurations, incomplete or ad-hoc configurations, open cloud storage, misconfigured HTTP headers, unnecessary HTTP methods, permissive Cross-Origin resource sharing (CORS), and verbose error messages containing sensitive information.",
+      "default_tom_measure": "URL-Allowlist f\u00fcr externe Inhalte. Blockierung interner IP-Ranges (RFC 1918) und Cloud-Metadaten-Endpunkte (169.254.169.254).",
+      "title_en": "Server Side Request Forgery",
+      "default_tom_measure_en": "URL allowlist for external content. Blocking of internal IP ranges (RFC 1918) and cloud metadata endpoints (169.254.169.254)."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API8",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Security Misconfiguration",
+      "text": "API8:2019 - Injection Injection flaws, such as SQL, NoSQL, Command Injection, etc., occur when untrusted data is sent to an interpreter as part of a command or query. The attacker's malicious data can trick the interpreter into executing unintended commands or accessing data without proper authorization.",
+      "default_tom_measure": "HTTPS-only enforced. Explizite Timeouts (connect: 5s, read: 30s). Keine Debug-Informationen oder Stack-Traces in Produktions-Responses.",
+      "title_en": "Security Misconfiguration",
+      "default_tom_measure_en": "HTTPS-only enforced. Explicit timeouts (connect: 5s, read: 30s). No debug information or stack traces in production responses."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API9",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Improper Inventory Management",
+      "text": "API9:2019 - Improper Assets Management APIs tend to expose more endpoints than traditional web applications, making proper and updated documentation highly important. Proper hosts and deployed API versions inventory also play an important role to mitigate issues such as deprecated API versions and exposed debug endpoints.",
+      "default_tom_measure": "Service-Inventory mit eingesetzten Modellversionen. Alerting bei Deprecation-Notices. Geplante Review-Zyklen bei Modellwechsel.",
+      "title_en": "Improper Inventory Management",
+      "default_tom_measure_en": "Service inventory with deployed model versions. Alerting on deprecation notices. Scheduled review cycles on model changes."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "API10",
+      "framework": "OWASP_API_Top10",
+      "title_de": "Unsafe Consumption of APIs",
+      "text": "API10:2019 Insufficient Logging & Monitoring.....26 \u2022 Extensive conferences worldwide. +D What\u2019s Next for Developers...............................28 \u2022 Mailing lists . +DSO What\u2019s Next for DevSecOps.........................29 Learn more at: https://www.owasp.org. +DAT Methodology and Data..................................30 +ACK Acknowledgments........................................31 All OWASP tools, documents, videos, presentations, and chapters are free and open to anyone interested in improving application security. We advocate approaching application security as a people, process, and technology problem because the most effective approaches to application security require improvements in these areas. OWASP is a new kind of organization. Our freedom from commercial pressures allows us to provide unbiased, practical, and cost-effective information about application security. OWASP is not affiliated with any technology company, although we support the informed use of commercial security technology. OWASP produces many types of materials in a collaborative, transparent, and open way. The OWASP Foundation is the non-profit entity that ensures the project's long-term success. Almost everyone associated with OWASP is a volunteer, including the OWASP board, chapter leaders, project leaders, and project members. We support innovative security research with grants and infrastructure. Come join us! https://owasp.org This work is licensed under a Creative Commons Attribution ShareAlike 4.0 International License FW Foreword A foundational element of innovation in today\u2019s app-driven world is the Application Programming Interface (API). From banks, retail, and transportation to IoT, autonomous vehicles, and smart cities, APIs are a critical part of modern mobile, SaaS, and web applications and can be found in customer-facing, partner-facing, and internal applications.",
+      "default_tom_measure": "Output-Schema-Validierung (Pydantic/Zod) f\u00fcr alle LLM-Outputs. Escaping vor SQL-Queries, HTML-Templates und Shell-Commands.",
+      "title_en": "Unsafe Consumption of APIs",
+      "default_tom_measure_en": "Output schema validation (Pydantic/Zod) for all LLM outputs. Escaping before SQL queries, HTML templates and shell commands."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM03",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Supply Chain",
+      "text": "",
+      "default_tom_measure": "Dependency-Pinning in requirements.txt (==). Automatische Vulnerability-Scans per Dependabot oder pip-audit in CI/CD-Pipeline.",
+      "title_en": "Supply Chain",
+      "default_tom_measure_en": "Dependency pinning in requirements.txt (==). Automated vulnerability scans in the CI/CD pipeline."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM04",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Data and Model Poisoning",
+      "text": "",
+      "default_tom_measure": "Trainingsdaten nur aus verifizierten Quellen. Embedding-Inputs vor Vektorspeicherung validieren. Similarity-Threshold (Cosine > 0.75) f\u00fcr RAG-Abrufe.",
+      "title_en": "Data and Model Poisoning",
+      "default_tom_measure_en": "Training data from verified sources only. Embedding inputs validated before vector storage. Similarity threshold (cosine > 0.75) for RAG retrievals."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM05",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Improper Output Handling",
+      "text": "",
+      "default_tom_measure": "Output-Schema-Validierung (Pydantic) f\u00fcr alle LLM-Responses. HTML-Escaping vor Rendering. SQL-Parameterization vor Datenbankoperationen.",
+      "title_en": "Improper Output Handling",
+      "default_tom_measure_en": "Output schema validation (Pydantic) for all LLM responses. HTML escaping before rendering. SQL parameterisation before database operations."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM07",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "System Prompt Leakage",
+      "text": "",
+      "default_tom_measure": "System-Prompt nicht an Client exponieren. API-Responses filtern: interne Metadaten (Modellparameter, system content) im Backend-Layer entfernen.",
+      "title_en": "System Prompt Leakage",
+      "default_tom_measure_en": "System prompt not exposed to the client. API responses filtered: internal metadata (model parameters, system content) removed in the backend layer."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "LLM10",
+      "framework": "OWASP_LLM_Top10",
+      "title_de": "Unbounded Consumption",
+      "text": "",
+      "default_tom_measure": "Pro Session: max_tokens-Limit (4096), Requests-per-Minute (10 RPM), t\u00e4gliches Token-Budget (100k). Redis-basiertes Rate-Limiting-Middleware.",
+      "title_en": "Unbounded Consumption",
+      "default_tom_measure_en": "Per session: max_tokens limit (4096), requests per minute (10 RPM), daily token budget (100k). In-memory-cache-based rate limiting."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "CON.2",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Datenschutz",
+      "text": "CON.2 CON: Konzepte und Vorgehensweisen CON.2 Datenschutz 1. Beschreibung 1.1. Einleitung ImGegensatz zurInformationssicherheit,die prim\u00e4rdemSchutzder datenverarbeitendenInstitutiondient, istes AufgabedesDatenschutzes,nat\u00fcrlichePersonendavorzusch\u00fctzen,dassInstitutionenoderStellenmitihrenVerar- beitungst\u00e4tigkeitenzuintensivindieGrundrechteundGrundfreiheitenderPersoneneingreifen.DasGrundgesetz f\u00fcr die Bundesrepublik Deutschland gew\u00e4hrleistet das Recht von B\u00fcrgerinnen und B\u00fcrgern, grunds\u00e4tzlich selbst \u00fcber die Verwendung ihrer personenbezogenen Daten zu bestimmen. Die Datenschutzgesetze des Bundes und derBundesl\u00e4nder nehmendaraufBezug, wennsiedenSchutz desRechtsauf informationelleSelbstbestimmung hervorheben.DieEU-GrundrechtechartaformuliertinArtikel8unmittelbardasRechtaufdenSchutzpersonenbe- zogenerDaten(Absatz1),hebtdieNotwendigkeiteinerRechtsgrundlagezurDatenverarbeitunghervor(Absatz2) undschreibtdie\u00dcberwachungderEinhaltungvonDatenschutzvorschriftendurcheineunabh\u00e4ngigeStellevor(Ab- satz3).DieDatenschutz-Grundverordnung(DSGVO)f\u00fchrtdieseAnforderungenderGrundrechtechartan\u00e4heraus. VonzentralerBedeutungistdabeiderArtikel5DSGVO,derdieGrunds\u00e4tzef\u00fcrdieVerarbeitungpersonenbezoge- nerDatenauflistet,dieteilweiseauchalsSchutzzieleverstandenwerdenk\u00f6nnen.NebenderDSGVOsinddasBun- desdatenschutzgesetz(BDSG)unddieDatenschutzgesetzederBundesl\u00e4ndersowieweiterebereichsspezifischeRe- gelungenwiebeispielsweisedasTelekommunikation-Telemedien-Datenschutz-Gesetz(TTDSG)zuber\u00fccksichtigen. ZugespitztsindimRahmendesoperativenDatenschutzesvierTypenvonRisiken,diemitunterschiedlichenAuspr\u00e4- gungenvonSchutzma\u00dfnahmenzuverringernsind,zuunterscheiden: \u2022 RisikotypA:DerGrundrechtseingriffbeinat\u00fcrlichenPersonendurchdieVerarbeitungistnichthinreichendmilde gestaltet.",
+      "default_tom_measure": "Datenschutzkonzept dokumentiert. Datensparsamkeit implementiert: nur notwendige Felder gespeichert. Pseudonymisierung via UUID-Mapping (ADR-001).",
+      "title_en": "Data Protection",
+      "default_tom_measure_en": "Data protection concept documented. Data minimisation implemented: only necessary fields stored. Pseudonymisation via UUID mapping."
+    },
+    {
+      "service": "OpenAI",
+      "control_id": "5.23",
+      "framework": "ISO_27001",
+      "title_de": "Information security for use of cloud services",
+      "text": "5.23 Information security for use of cloud services Processes for acquisition, use, management and exit from cloud services shall be established in accordance with the organization\u2019s information security requirements.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Postmark",
+      "control_id": "OPS.1.2.5",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Fernwartung",
+      "text": null,
+      "default_tom_measure": null,
+      "title_en": "Remote Maintenance"
+    },
+    {
+      "service": "Postmark",
+      "control_id": "5.14",
+      "framework": "ISO_27001",
+      "title_de": "Information transfer",
+      "text": "5.14 Information transfer Information transfer rules, procedures, or agreements shall be in place for all types of transfer facilities within the organization and between the organization and other parties.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Postmark",
+      "control_id": "OPS.1.2.4",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Telearbeit",
+      "text": null,
+      "default_tom_measure": null,
+      "title_en": "Teleworking"
+    },
+    {
+      "service": "Redis",
+      "control_id": "CON.1",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Kryptokonzept",
+      "text": null,
+      "default_tom_measure": "TLS 1.2+ f\u00fcr alle Verbindungen erzwungen. AES-256 f\u00fcr ruhende Daten. Schl\u00fcsselrotation j\u00e4hrlich oder bei Verdacht auf Kompromittierung.",
+      "title_en": "Crypto Concept",
+      "default_tom_measure_en": "TLS 1.2+ enforced on all connections. AES-256 for data at rest. Key rotation annually or on suspected compromise."
+    },
+    {
+      "service": "Segment",
+      "control_id": "5.33",
+      "framework": "ISO_27001",
+      "title_de": "Protection of records",
+      "text": "5.33 Protection of records Records shall be protected from loss, destruction, falsification, unau- thorized access and unauthorized release.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Segment",
+      "control_id": "8.15",
+      "framework": "ISO_27001",
+      "title_de": "Logging",
+      "text": "8.15 Logging Logs that record activities, exceptions, faults and other relevant events shall be produced, stored, protected and analysed.",
+      "default_tom_measure": null
+    },
+    {
+      "service": "Segment",
+      "control_id": "ORP.3",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Sensibilisierung und Schulung zur Informationssicherheit",
+      "text": null,
+      "default_tom_measure": null,
+      "title_en": "Awareness and Training in Information Security"
+    },
+    {
+      "service": "Sentry",
+      "control_id": "DER.2.1",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Behandlung von Sicherheitsvorf\u00e4llen",
+      "text": null,
+      "default_tom_measure": "Incident-Response-Plan dokumentiert. Meldekette definiert (DSGVO Art. 33: 72h). Post-Mortem nach jedem Sicherheitsvorfall.",
+      "title_en": "Security Incident Handling",
+      "default_tom_measure_en": "Incident response plan documented. Notification chain defined (GDPR Art. 33: 72h). Post-mortem after every security incident."
+    },
+    {
+      "service": "Sentry",
+      "control_id": "OPS.1.1.5",
+      "framework": "BSI_Grundschutz",
+      "title_de": "Protokollierung",
+      "text": null,
+      "default_tom_measure": null,
+      "title_en": "Logging"
+    }
+  ],
+  "risk_levels": [
+    {
+      "service": "OpenAI",
+      "level": "GPAI",
+      "action": "Technische Dokumentation, Urheberrechtsrichtlinie, GPAI-Code of Practice"
+    }
+  ],
+  "overall_risk": "minimal",
+  "active_risks": [
+    "PII_IN_LLM_CONTEXT",
+    "PII_IN_LOGS",
+    "NO_AI_AUDIT_TRAIL"
+  ],
+  "usecase_risks": []
+}

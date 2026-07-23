@@ -1,0 +1,27 @@
+{% if lang == 'en' %}
+---
+**Draft — to be completed before use**
+
+{{ gaps|length }} mandatory field{% if gaps|length != 1 %}s are{% else %} is{% endif %} still missing:
+
+{% for gap in gaps %}
+- **{{ gap.description_en or '☐ translation pending (German version exists)' }}** ({{ gap.article | en_cite }}) — [add in the project settings]({{ gap.fix_url }})
+{% endfor %}
+
+These details are required for completion.
+
+---
+{%- else %}
+---
+**Entwurf — vor Verwendung zu vervollständigen**
+
+{{ gaps|length }} Pflichtangabe{% if gaps|length != 1 %}n fehlen{% else %} fehlt{% endif %} noch:
+
+{% for gap in gaps %}
+- **{{ gap.description }}** ({{ gap.article }}) — [in den Projekteinstellungen ergänzen]({{ gap.fix_url }})
+{% endfor %}
+
+Diese Angaben werden für die Fertigstellung benötigt.
+
+---
+{%- endif %}

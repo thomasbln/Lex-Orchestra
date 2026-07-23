@@ -1,0 +1,111 @@
+[
+  {
+    "id": "hosting_provider_missing",
+    "severity": "REQUIRED",
+    "article": "DSGVO Art. 32 Abs. 1 (TOM-Nachweispflicht)",
+    "doc_affected": [
+      "TOM"
+    ],
+    "description": "Prim\u00e4rer Hosting-Provider (TOM \u00a7 1.1 Zutrittskontrolle)",
+    "field": "hosting_provider",
+    "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+    "affected_docs": [
+      "TOM \u00a7 1.1"
+    ],
+    "fix_url": "http://localhost:3000/project/rand-industries/hosting",
+    "fix_label": "Select hosting provider",
+    "priority": 1
+  },
+  {
+    "id": "retention_missing",
+    "severity": "REQUIRED",
+    "article": "DSGVO Art. 13 Abs. 2 lit. a; Art. 28 Abs. 3 lit. g; Art. 30 Abs. 1 lit. f",
+    "doc_affected": [
+      "AVV",
+      "VVT",
+      "Datenschutzerkl\u00e4rung"
+    ],
+    "description": "Speicherfristen / L\u00f6schkonzept",
+    "field": "retention",
+    "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+    "affected_docs": [
+      "AVV",
+      "VVT",
+      "Datenschutzerkl\u00e4rung"
+    ],
+    "fix_url": "http://localhost:3000/project/rand-industries/retention",
+    "fix_label": "Add retention policies",
+    "priority": 1
+  },
+  {
+    "id": "avv_instructing_persons_missing",
+    "severity": "REQUIRED",
+    "article": "DSGVO Art. 28 Abs. 3 Satz 2 lit. a",
+    "doc_affected": [
+      "AVV"
+    ],
+    "description": "Weisungsberechtigte Person(en) auf Seiten des Verantwortlichen",
+    "field": "instructing_persons",
+    "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+    "affected_docs": [
+      "AVV"
+    ],
+    "fix_url": "http://localhost:3000/project/rand-industries/instructing_persons",
+    "fix_label": "Weisungsberechtigte erg\u00e4nzen",
+    "priority": 1
+  },
+  {
+    "id": "vvt_legal_basis_missing",
+    "severity": "RECOMMENDED",
+    "article": "DSGVO Art. 6 Abs. 1; Art. 30 Abs. 1 lit. a; Art. 13 Abs. 1 lit. c",
+    "doc_affected": [
+      "VVT",
+      "Datenschutzerkl\u00e4rung"
+    ],
+    "description": "Rechtsgrundlage fehlt im Graph f\u00fcr: Braintree, MongoDB, Segment",
+    "field": "legal_basis",
+    "gap_reason": "Services without legal_basis in graph \u2014 VVT cannot state legal ground: Braintree, MongoDB, Segment.",
+    "affected_docs": [
+      "VVT"
+    ],
+    "fix_url": "http://localhost:3000/project/rand-industries/integrations",
+    "fix_label": "Service-Rechtsgrundlagen erg\u00e4nzen",
+    "priority": 2
+  },
+  {
+    "id": "avv_technical_measures_missing",
+    "severity": "RECOMMENDED",
+    "article": "DSGVO Art. 28 Abs. 3 lit. c; Art. 32",
+    "doc_affected": [
+      "TOM"
+    ],
+    "description": "TOM-Implementierungen nicht konfiguriert \u2014 im TOM-Setup erg\u00e4nzen",
+    "field": "tom_implementations",
+    "gap_reason": "tom_implementations not configured \u2014 AVV cannot reference concrete TOM measures.",
+    "affected_docs": [
+      "TOM"
+    ],
+    "fix_url": "http://localhost:3000/project/rand-industries/hosting",
+    "fix_label": "TOM-Implementierungen erg\u00e4nzen",
+    "priority": 2
+  },
+  {
+    "id": "repo_legal_docs_missing",
+    "severity": "RECOMMENDED",
+    "article": "",
+    "doc_affected": [
+      "Impressum",
+      "Datenschutzerkl\u00e4rung"
+    ],
+    "description": "Keine Rechts-Artefakte im Repo (privacy.html, impressum.*)",
+    "field": "repo_legal_docs",
+    "gap_reason": "No legal artifacts found in repo (privacy.html, impressum.*, DPA.*). Fields must be entered manually.",
+    "affected_docs": [
+      "Impressum",
+      "Datenschutzerkl\u00e4rung"
+    ],
+    "fix_url": "http://localhost:3000/project/rand-industries/company",
+    "fix_label": "Enter details manually",
+    "priority": 3
+  }
+]

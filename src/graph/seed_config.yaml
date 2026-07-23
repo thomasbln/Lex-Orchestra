@@ -1,0 +1,20 @@
+# Lex-Orchestra Seed Configuration
+# Controls which layers are loaded into your Neo4j graph.
+# Applied by: make seed-all (scripts/seed_master.py — layer manifest + modules)
+# Full layer catalogue: docs/reference/graph-layers.md
+
+jurisdiction:
+  - "eu"        # loads 00_global + 10_eu_primary
+  - "de"        # loads 10_de
+
+frameworks:     # opt-in — uncomment as needed
+  - owasp       # already in 00_global/00_frameworks.cypher
+  # - iso27001  # de-seeded ADR-120 (BYOS) — do not re-seed without a license
+  # - bsi_c5    # de-seeded ADR-118 — no re-seed (durability)
+  # - aic4      # de-seeded ADR-126 phase 0.5 — no re-seed
+  # - hipaa
+  # - soc2
+  # - iso42001
+
+custom_layers: []
+# Example: ["./my_company/internal_controls.cypher"]

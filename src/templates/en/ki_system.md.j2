@@ -1,0 +1,131 @@
+{% import '_marker.md.j2' as marker with context %}
+# AI System Documentation — {{ model.service.name }}
+## Tool profile pursuant to EU AI Act Art. 11
+[[LEX_HEAD_END]]
+
+**Project:** {{ project_name }}
+**AI service:** {{ model.service.name }} | **Provider:** {{ model.service.country or "—" }}
+**Date:** {{ generation_date }} | **Run ID:** `{{ run_id }}`
+
+{% if fields.customer_info %}
+{{ marker.render(fields.customer_info, "Company data") }}
+{% endif %}
+
+{% set _lm = ["gap"] %}
+{% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{% if model.is_high_risk %}{% set _lm = _lm + ["duty"] %}{% endif %}
+{{ marker.legend(_lm) }}
+
+---
+
+## 1. System description and purpose — from scan + your inputs
+
+| Field | Content |
+|---|---|
+| **Function / purpose** | {{ model.service.processing_purpose or "—" }} |
+| **Area of use** | {% if model.ai_usecase %}{{ model.ai_usecase.title_de }}{% else %}—{% endif %} |
+| **User groups** | {% if model.user_groups %}{{ model.user_groups }}{% else %}{{ inline_gap_marker('ki_system_user_groups_missing') }}{% endif %} |
+| **System limitations** | {% if model.usage_limits %}{{ model.usage_limits }}{% else %}{{ inline_gap_marker('ki_system_usage_limits_missing') }}{% endif %} |
+| **Risk level (EU AI Act)** | {% if model.ai_usecase %}{{ model.ai_usecase.risk_level }}{% else %}—{% endif %} |
+| **Risk level provider** | {{ model.service.risk_level or "—" }} |
+
+{% if model.ai_usecase and model.project_risk_level and model.ai_usecase.risk_level != model.project_risk_level %}
+_This classification is based on your dashboard input for this service. The project-wide assessment from the code analysis may differ — see the AI Act manifest (ai_act_manifest_{{ run_id[:8] }}.md)._
+{% endif %}
+
+---
+
+## 2. Data basis — from scan + your inputs
+
+| Field | Content |
+|---|---|
+| **Input data** | — |
+| **Output data** | — |
+| **Personal data** | {{ model.service.data_categories or "—" }} |
+| **Storage location** | {{ model.service.country or "—" }}{% if not model.service.gdpr_adequate %} — third country, SCCs required{% endif %} |
+| **Data used for training** | {% if model.training_data is not none %}{{ "Yes" if model.training_data else "No" }}{% else %}{{ inline_gap_marker('ki_system_training_data_missing') }}{% endif %} |
+| **Deletion period** | {{ model.service.deletion_period or "—" }} |
+
+---
+
+## 3. Technical specification — from scan + your inputs
+
+| Field | Content |
+|---|---|
+| **Model / version** | {% if model.model_name %}{{ model.model_name }}{% else %}{{ inline_gap_marker('ki_system_modell_version_missing') }}{% endif %} |
+| **Integration** | — |
+| **Logging enabled** | {% if model.logging is not none %}{{ "Yes" if model.logging else "No" }}{% else %}{{ inline_gap_marker('ki_system_logging_missing') }}{% endif %} |
+
+---
+
+## 4. Contractual basis
+
+| Field | Content |
+|---|---|
+| **Data processing agreement (DPA)** | {% if model.service.dpa_url %}[Link]({{ model.service.dpa_url }}){% else %}—{% endif %} |
+| **GDPR adequacy** | {% if model.service.gdpr_adequate %}✅ Adequacy decision{% else %}❌ SCCs pursuant to Art. 46 GDPR{% endif %} |
+
+---
+
+## 5. Risk assessment _(DSK OH KI-Systeme 2025-06 evaluation criteria)_
+
+| Risk | Assessment | Measure |
+|---|---|---|
+| Data exfiltration / third-country transfer | {% if not model.service.gdpr_adequate %}high{% else %}low{% endif %} | {% if not model.service.gdpr_adequate %}Conclude SCCs + TIA (see scc_{{ run_id[:8] }}.md){% else %}Review DPA{% endif %} |
+| Bias / discrimination | {% if model.is_high_risk %}high{% else %}low{% endif %} | {% if model.is_high_risk %}Conformity assessment (Art. 43 AI Act) + bias audit + four-eyes principle{% else %}Review results{% endif %} |
+| Model hallucination | medium | Output validation + source citation for fact-relevant use cases |
+| Prompt injection / system prompt leak | {% if model.service.category in ['ai_llm', 'ai_platform'] %}high{% else %}medium{% endif %} | Input validation + regex blocklist + response filtering (OWASP LLM01/LLM07) |
+| Unintended PII disclosure | {% if model.service.gdpr_adequate %}medium{% else %}high{% endif %} | UUID-only pattern + PII scrubbing before LLM call (OWASP LLM02) |
+
+---
+
+## 6. Human oversight _(DSK OH KI-Systeme 2025-06)_
+
+{% if model.is_high_risk %}
+### ⚖️ Obligation for high-risk AI — to be fulfilled / evidenced by the deployer (Art. 14 EU AI Act)
+
+1. **Four-eyes principle** before every final decision with legal effect.
+   A qualified natural person must review the AI result and be able to
+   override it (document the override capability).
+2. **Escalation path** for critical or unclear outputs — designated
+   contact person, escalation time (e.g. max. 24h), escalation protocol.
+3. **Override logs** — every deviation of the final decision from the AI suggestion
+   must be logged with a justification (linked to the audit trail, Art. 12 AI Act).
+4. **Duty to inform** data subjects — persons subject to AI processing
+   must be explicitly informed (Art. 50 EU AI Act + Art. 13–14 GDPR).
+5. **Training of the reviewing persons** — qualified oversight requires an
+   understanding of both how the AI works and of the domain (Art. 4 AI Act).
+{% else %}
+**Recommended even for limited risk:**
+
+- Review results before use; no automated decisions without
+  human oversight.
+- Document the escalation path for critical outputs.
+- Inform users about the use of AI (Art. 50 EU AI Act).
+{% endif %}
+
+---
+
+## 7. Implemented measures
+
+{% if model.implemented_measures %}
+| Control | Framework | Concrete implementation |
+|---|---|---|
+{% for m in model.implemented_measures %}| {{ m.measure }} | {{ m.framework_label }} | {{ m.concrete or "_(standard implementation, to be documented)_" }} |
+{% endfor %}
+
+_For the complete TOM list with cross-refs see `tom_{{ run_id[:8] }}.md`._
+{% else %}
+_No TOM controls from the scan are assigned to this service._
+{% endif %}
+
+---
+
+## 8. Updates
+
+**Last review:** {{ generation_date }}
+{% if model.is_high_risk %}**Monitoring:** The use is monitored regularly (Art. 26(5) EU AI Act); incidents and malfunctions are reported to the provider.{% else %}**Review:** The deployer reviews the use on an event-driven basis — in particular when the provider, model, purpose of use or legal situation changes. There is no fixed review cycle, and none is legally required for the identified risk class.{% endif %}
+
+---
+_Generated by Lex-Orchestra · {{ generation_date }} · {{ run_id[:8] }}_
+_Legal basis: EU AI Act Art. 11 (high-risk obligation), best practice for all AI services_
