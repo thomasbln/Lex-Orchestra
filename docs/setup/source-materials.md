@@ -1,6 +1,6 @@
 # Source Materials — Setup Guide
 
-This document covers all source materials used by Lex-Orchestra to seed the knowledge graph. It follows the three-tier license model defined in ADR-107.
+This document covers all source materials used by Lex-Orchestra to seed the knowledge graph. It follows a three-tier license model: Tier A ships in the repo, Tier B/C are fetched or licensed by the operator.
 
 **Tier A:** Public, redistributable. Provenance (URL + SHA-256 + license per source) lives in [docs/sources/SOURCES.md](../sources/SOURCES.md). The repo ships **no binary source files** — the graph seeds fully without them; download from the URLs in SOURCES.md only if you want to re-run `pdf_ingest.py`.
 **Tier B:** Publicly downloadable but not redistributable. You must download manually.
@@ -20,7 +20,7 @@ cp docker/envs/.env.sovereign docker/envs/.env  # configure secrets
 
 # Default target is `local` (bolt://localhost:7687, no prompts)
 make seed-all                  # seed Tier-A sources only
-make seed-validate             # ADR-100 invariants
+make seed-validate             # graph invariants
 
 # Optional: convenience target = seed-all + seed-validate
 make seed-bootstrap
@@ -92,7 +92,7 @@ License: amtliches Werk § 5 UrhG (Tier A) — except `04-TOM-Checkliste*` which
 Location: `docs/sources/` and `docs/sources/eur-lex/`
 License: Works of the EU institutions, free to use.
 
-All major EU regulations are present in **both DE and EN** parallel versions, downloaded directly from EUR-Lex via stable CELEX URLs. This enables EN-output for SCC, AI-Act-Manifest, and VVT (see ADR-108 for the full EU-wide roadmap).
+All major EU regulations are present in **both DE and EN** parallel versions, downloaded directly from EUR-Lex via stable CELEX URLs. This enables EN-output for SCC, AI-Act-Manifest, and VVT. Extending beyond the EU is on the roadmap.
 
 | Regulation | CELEX | DE | EN | Used by |
 |---|---|---|---|---|
@@ -119,7 +119,7 @@ License: amtliches Werk § 5 UrhG
 Location: `docs/sources/bsi it grundschutz/`
 License: amtliches Werk § 5 UrhG
 
-Full BSI IT-Grundschutz Kompendium Edition 2023 in machine-parseable form, including all 111 Bausteine. **Reserved for post-release Measure-Layer extension** (see ADR-106 Option 3 Hybrid). The current `seed_adr066` seeds only 17 Requirements; this directory contains the full ~1500 requirements for a future post-release sprint.
+Full BSI IT-Grundschutz Kompendium Edition 2023 in machine-parseable form, including all 111 Bausteine. **Reserved for a post-release Measure-Layer extension.** The current `seed_adr066` seeds only 17 Requirements; this directory contains the full ~1500 requirements for a future post-release sprint.
 
 | File | Type | Used by |
 |---|---|---|
@@ -190,7 +190,7 @@ If you don't have these PDFs, the corresponding seed scripts will skip with a cl
 
 **Purchase:** https://www.beuth.de/de/norm/iso-iec-42001/375036944 (~195 EUR)
 
-**Used by:** Post-release ADR-096 (Framework-Erweiterung). Not currently seeded.
+**Used by:** A planned post-release framework extension. Not currently seeded.
 
 ### ISO/IEC 22989:2022 (KI-Konzepte)
 
@@ -198,7 +198,7 @@ If you don't have these PDFs, the corresponding seed scripts will skip with a cl
 
 **Purchase:** https://www.beuth.de/de/norm/iso-iec-22989/348421094 (~195 EUR)
 
-**Used by:** Post-release ADR-096. Not currently seeded.
+**Used by:** A planned post-release framework extension. Not currently seeded.
 
 ---
 
@@ -230,11 +230,11 @@ When adding new source materials, **always** create a matching sidecar. The prov
 
 ## Migration notes (one-time, for existing setups)
 
-If you already have a working Lex-Orchestra setup from before ADR-107:
+If you already have a working Lex-Orchestra setup from before source provenance was introduced:
 
 1. **ISO PDFs:** If you have them, they stay on your disk (now gitignored). Pull will not remove them.
 2. **OWASP aggregator PDF:** Same. Stays locally, gitignored.
-3. **Seed re-run:** After pulling ADR-107 PR-2, run `make seed-all` to populate source/license/last_verified properties on all existing nodes. MERGE-pattern is idempotent — no data loss.
+3. **Seed re-run:** After pulling, run `make seed-all` to populate source/license/last_verified properties on all existing nodes. MERGE-pattern is idempotent — no data loss.
 4. **Validation:** `pytest tests/test_provenance_invariants.py` to confirm 100% provenance coverage.
 
 ---
@@ -256,7 +256,8 @@ If you already have a working Lex-Orchestra setup from before ADR-107:
 
 ## References
 
-- ADR-107: Graph Reproducibility + Source Provenance + License Tiering
-- ADR-095: Metadata Discipline (raised to Accepted by ADR-107)
-- ADR-100: Graph Data Integrity
-- ADR-106: Docs Signature-Ready SDM-Foundation
+- [SOURCES.md](../sources/SOURCES.md) — per-source provenance, license tier and retrieval date
+- [graph.md](../architecture/graph.md) — node types, seed layers, write rules
+- `scripts/seed_both.py --validate-only` — the graph invariants enforced on every seed run
+
+Design decisions behind these mechanisms are tracked internally.

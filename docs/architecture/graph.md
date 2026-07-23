@@ -7,9 +7,9 @@
 > **Concept:** Lex-Orchestra uses Neo4j not as a simple Knowledge Graph
 > but as a **Context Graph** — see [context-graph.md](context-graph.md).
 >
-> **Scale:** The graph uses a seed layer architecture (ADR-009).
-> EU is one jurisdiction among many — see ADR-009
-> and [../reference/graph-layers.md](../reference/graph-layers.md).
+> **Scale:** The graph uses a seed layer architecture.
+> EU is one jurisdiction among many — see
+> [../reference/graph-layers.md](../reference/graph-layers.md).
 
 ## Two data stores — clear roles
 
@@ -70,7 +70,7 @@
 // Temporal (Layer 2) — all Law nodes have applies_from
 (:Law { name: "CRA", article: "14", applies_from: date("2026-09-11"), confidence: 1.0 })
 
-// UseCase nodes — deployer risk classification (ADR-010)
+// UseCase nodes — deployer risk classification
 (:UseCase { type: "customer_service_chatbot", risk_level: "Limited", eu_ai_act_article: "50" })
 (:UseCase { type: "hr_recruitment_screening", risk_level: "High", annex_iii_nr: "4" })
 
@@ -78,7 +78,7 @@
 (:Project { uuid: "..." })
 (:ProjectAsset { uuid: "...", type: "payment_service" })
 
-// News Scout (Layer 4 — ADR-011)
+// News Scout (Layer 4)
 (:NewsEvent { source: "EUR-Lex", date: date("2026-03-15"), verified: false })
 (:KnowledgeSource { name: "ISO 42001", status: "missing", priority: "high" })
 ```
@@ -119,7 +119,7 @@ ORDER BY s.country, s.name
 
 Full registry: **[docs/reference/dpa-url-registry.md](../reference/dpa-url-registry.md)**
 
-## Write permissions — three-tier model (ADR-005)
+## Write permissions — three-tier model
 
 | Tier | Who | What | When |
 |---|---|---|---|
@@ -132,9 +132,9 @@ Full registry: **[docs/reference/dpa-url-registry.md](../reference/dpa-url-regis
 
 ## Core principles
 
-1. **MERGE over CREATE** — graph is idempotent, no seed creates duplicates (ADR-003)
-2. **Only LangGraph writes** — UI layers are read-only (ADR-004)
-3. **No PII** — Neo4j never receives file names, paths, or customer data (ADR-001)
+1. **MERGE over CREATE** — graph is idempotent, no seed creates duplicates
+2. **Only LangGraph writes** — UI layers are read-only
+3. **No PII** — Neo4j never receives file names, paths, or customer data
 4. **Temporal** — all Law nodes have `applies_from`, `confidence`, `source` (Layer 2 complete)
 5. **Explicit jurisdictions** — every Law node has `jurisdictions: ["DE"]` / `["EU"]` / `["global"]`
 6. **Source-verified** — all regulatory content from official sources (EUR-Lex or official PDFs — registry: `docs/sources/SOURCES.md`)
@@ -143,14 +143,14 @@ Full registry: **[docs/reference/dpa-url-registry.md](../reference/dpa-url-regis
 
 ```bash
 # Standard (fresh install)
-make seed-all        # layer manifest + modules + ADR-100 validator
+make seed-all        # layer manifest + modules + validator
 make seed-validate   # graph invariants, read-only
 
 # Configuration: src/graph/seed_config.yaml
 # Layer catalogue: docs/reference/graph-layers.md
 ```
 
-Seed architecture: layer files under `src/graph/layers/` (ADR-009).
+Seed architecture: layer files under `src/graph/layers/`.
 
 ## Regulatory knowledge in the graph
 
@@ -158,7 +158,7 @@ Seed architecture: layer files under `src/graph/layers/` (ADR-009).
 
 | Source | Status | Jurisdiction |
 |--------|--------|---|
-| ISO 27001 | 🔒 BYOS — license-gated, not shipped (ADR-120) | global |
+| ISO 27001 | 🔒 BYOS — license-gated, not shipped | global |
 | BSI IT-Grundschutz Ed. 2022 | ✅ seeded (titles + EN basis requirements) | global |
 | OWASP LLM Top 10 v2025 | ✅ seeded | global |
 | OWASP API Security Top 10 | ✅ seeded | global |
@@ -225,7 +225,4 @@ RETURN labels(n)[0] AS type, n.confidence AS confidence, n.note_unverified AS no
 
 - [context-graph.md](context-graph.md) — Concept, four layers, self-learning
 - [../reference/graph-layers.md](../reference/graph-layers.md) — Layer catalogue, global structure
-- ADR-009 — Architecture decision
-- ADR-010 — UseCase deployer risk
-- ADR-011 — NewsEvent + confidence decay
 - [../reference/dpa-url-registry.md](../reference/dpa-url-registry.md) — DPA links for all services

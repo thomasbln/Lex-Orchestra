@@ -100,7 +100,7 @@ unclear">
 ## Why this is a gap, not a guess
 
 <1-2 sentences: why improvisation here would damage the product's trust
-proposition. Connects back to ADR-102 source-of-truth rule>
+proposition. Connects back to the source-of-truth rule>
 
 ---
 
@@ -150,10 +150,10 @@ Different gap types route to different deciders:
 
 ## Connection to other principles
 
-- **ADR-102 Doc Quality Enforcement** — gap notices are the operational mechanism
+- **[Doc quality](doc-quality.md)** — gap notices are the operational mechanism
   for "no hardcoded legal facts" and "every section has a source"
-- **ADR-103 Subagent Architecture** — gap notices are the third human gate
-  (alongside Plan-Approval and PR-Review)
+- **Review gates** — gap notices are the third human gate
+  (alongside plan approval and PR review)
 - **Approval protocol** — gap resolution requires an explicit maintainer decision
   before continuing, same discipline as plan approval
 

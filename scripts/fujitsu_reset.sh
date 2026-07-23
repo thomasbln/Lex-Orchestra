@@ -13,7 +13,8 @@
 #   - every container of the compose project (label com.docker.compose.project)
 #   - every named volume of that project        <-- the Neo4j graph lives here
 #   - the docker_lex-net network
-#   - the repo clone, including .venv, every .env, legal/ output and pgdata
+#   - the repo clone ($HOME/Lex-Orchestra, override with LEX_REPO), including
+#     .venv, every .env, legal/ output and pgdata
 #   - project images, ONLY with --full
 #
 # WHAT IT KEEPS (host layer) — never touched
@@ -63,7 +64,7 @@ set -euo pipefail
 
 # ── Configuration ────────────────────────────────────────────────────────────
 EXPECTED_HOST="fujitsu"
-REPO="${LEX_REPO:-$HOME/Projects/Lex-Orchestra}"
+REPO="${LEX_REPO:-$HOME/Lex-Orchestra}"
 COMPOSE_PROJECT="docker"          # compose derives it from the docker/ directory
 NETWORK="docker_lex-net"
 VOLUME_PREFIX="docker_"           # docker_neo4j_data, docker_ollama_data, ...
@@ -99,6 +100,9 @@ REMOVES  containers, named volumes (the Neo4j graph lives there), the
          .env, legal/ output and pgdata.
 KEEPS    Docker engine + compose, git, Node, Python, SSH config, GitHub deploy
          key, docker group membership. No unfiltered prune, ever.
+
+CLONE    defaults to $HOME/Lex-Orchestra (the path the README clone produces).
+         Override with LEX_REPO=/some/other/path.
 
   (none)     containers + volumes + network + clone; images kept (fast re-test)
   --full     also remove project images (proves the build is reproducible)

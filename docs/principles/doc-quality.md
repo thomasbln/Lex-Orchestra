@@ -90,7 +90,7 @@ subject matter of processing), the gap hint must clearly signal this field is
 - `REQUIRED` — missing field violates a specific article (blocks document validity)
 - `RECOMMENDED` — missing field reduces document quality but does not block validity
 
-This distinction is tracked as a follow-up in ADR-086 (gap_analyzer priority levels).
+Gap-analyzer priority levels are a tracked follow-up.
 
 ---
 
@@ -100,14 +100,13 @@ This distinction is tracked as a follow-up in ADR-086 (gap_analyzer priority lev
 - **Template review:** for each section, ask "what signal/node activates this?"
 - **Gap hints:** use `gap_analyzer.py` — name the gap, cite the article, link to workspace
 
-## ADR References
+## Where these rules live in code
 
-| ADR | What it implements |
+| Mechanism | Implementation |
 |---|---|
-| ADR-076 | Three-layer evidence markers (✓ / ? / ⊘) |
-| ADR-085 | Signal-driven DSFA sections |
-| ADR-086 | gap_analyzer — Nächste Schritte + gap hint layer |
-| ADR-089 | Hardcoded values refactor (planned) |
+| Three-layer evidence markers (✓ / ? / ⊘) | `src/templates/_marker.md.j2` |
+| Signal-driven DSFA sections | `src/documents/builders/dsfa_builder.py` |
+| Gap hints — next steps + hint layer | `src/scanner/gap_analyzer.py` |
 
 ## Language doctrine
 

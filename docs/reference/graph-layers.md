@@ -1,10 +1,8 @@
 # Graph Layer Catalogue
 
-> Reference: ADR-009 — Scalable Context Graph: Seed Layer Architecture
-
 Lex-Orchestra's knowledge graph is built from named layers.
 Each layer is an idempotent Cypher file that can be loaded independently.
-Layers follow the MERGE-over-CREATE principle (ADR-003) — safe to re-run at any time.
+Layers follow the MERGE-over-CREATE principle — safe to re-run at any time.
 
 ---
 
@@ -314,5 +312,4 @@ Source requirements for contributed layers:
 | `20_etsi_303645.cypher` | 🔲 planned | — |
 
 **Migration note:** All layers currently exist as one monolithic file
-(`src/graph/neo4j_seed.cypher`). Phase 1 of ADR-009 splits this into
-the structure above. See ADR-009 for the migration plan.
+(`src/graph/neo4j_seed.cypher`). It was split into the structure above.

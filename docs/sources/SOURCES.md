@@ -50,7 +50,7 @@ EUR-Lex reuse policy.
 
 | Identifier | URL | Snapshot |
 |---|---|---|
-| EU-US Data Privacy Framework participant list | https://www.dataprivacyframework.gov/list | Local `DataPrivacyFrameworkParticipantsList.xlsx`, **checked 2026-06-04** (ADR-119 reproducibility — the online list changes over time). |
+| EU-US Data Privacy Framework participant list | https://www.dataprivacyframework.gov/list | Local `DataPrivacyFrameworkParticipantsList.xlsx`, **checked 2026-06-04** (pinned for reproducibility — the online list changes over time). |
 
 ---
 
@@ -60,7 +60,7 @@ BSI / ISO material whose commercial-reuse licence is unclear is **not shipped** 
 repo. It lives locally in `docs/proprietär/` (gitignored), the user places the file
 themselves (Bring-Your-Own-Source). The graph carries only provenance — BSI Baustein
 **titles are seeded free** (`seed_adr066`, MERGE, no full-text), the licensed full text
-is never embedded. Precedent: ISO is BYOS (ADR-120).
+is never embedded. Precedent: ISO 27001 is BYOS.
 
 | Source | Edition | Download | Licence note |
 |---|---|---|---|

@@ -138,7 +138,7 @@ only during document generation.
 - Signal: LLM API + database/BaaS detected (without vector DB)
 - Meaning: PII could reach the LLM context unfiltered
 - Norm: DSGVO Art. 25 + Art. 32
-- Measure: UUID-Only Pattern (ADR-001) or Presidio Gateway
+- Measure: UUID-Only Pattern or Presidio Gateway
 
 **PII_IN_LOGS**
 - Signal: LLM API + monitoring (Sentry/Datadog) detected

@@ -132,10 +132,10 @@ WHERE n.note_unverified IS NOT NULL
 RETURN labels(n)[0] AS type, n.confidence, n.note_unverified
 ```
 
-## ADR-001: PII separation
+## PII separation — the UUID-Only Pattern
 
-The technical implementation is documented in ADR-001 (PII separation,
-internal decision record).
+The technical implementation lives in
+[`src/graph/asset_translator.py`](../../src/graph/asset_translator.py).
 
 **Core rule:** Neo4j and the LLM receive only UUIDs and anonymised asset types —
 never file names, variable names, paths, or code snippets.

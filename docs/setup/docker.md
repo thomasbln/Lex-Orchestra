@@ -103,7 +103,7 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
 make db-migrate      # relational schema: migrate.sql + supabase/migrations (idempotent)
-make seed-all        # graph: layer manifest + modules + ADR-100 validator (ADR-130)
+make seed-all        # graph: layer manifest + modules + validator
 make seed-validate   # re-run the §4.1–§4.4 invariants, no writes
 ```
 
@@ -163,7 +163,7 @@ sudo systemctl start docker
 ## Security posture
 
 `approve_api` (:8001) and the dashboard (:3000) ship **without authentication**
-(trusted-LAN design, ADR-129 PR 17 / audit K10). Do not port-forward or expose
+(trusted-LAN design). Do not port-forward or expose
 them to the internet. For remote access use an authenticating reverse proxy or
 a VPN (e.g. Tailscale). `X-Scan-Secret` only guards the internal
 `PATCH /scan/{run_id}/step` endpoint — nothing else.

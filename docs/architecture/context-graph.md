@@ -5,6 +5,10 @@
 > rules but understands what applies to *this* project, *right now*,
 > *with what degree of certainty*.
 
+The graph knows not just what applies, but when it applies (enforcement dates on law
+nodes), for whom it applies (jurisdiction layers), and where the knowledge comes from
+(source and license provenance on nodes and relationships).
+
 ---
 
 ![Lex-Orchestra Context Graph — the four layers](../images/architecture-context-graph.svg)
@@ -176,7 +180,7 @@ the real jurisdiction, the real point in time.
 
 ## The four layers of the Context Graph
 
-### Layer 1 — Seed Layer Architecture (ADR-009) ✅
+### Layer 1 — Seed Layer Architecture ✅
 
 ```
 Service → REQUIRES → DocumentType → BASED_ON → Law
@@ -184,7 +188,7 @@ Service → REQUIRES → DocumentType → BASED_ON → Law
 
 ~470 nodes on a fresh seed. Deterministic. Global-first, not EU-first.
 
-The graph is structured as independent seed layers (ADR-009).
+The graph is structured as independent seed layers.
 EU is one jurisdiction among many — not the universal default:
 
 ```
@@ -239,11 +243,11 @@ The graph now knows not just *what* applies — but *when* and *for whom*.
 
 ---
 
-### Layer 3 — Context Graph: Scanner + UseCase Nodes (ADR-001, ADR-010)
+### Layer 3 — Context Graph: Scanner + UseCase Nodes
 
 Two components make the graph specific to *this* project:
 
-**Scanner as input layer (ADR-001):**
+**Scanner as input layer:**
 
 Without scanner: generic graph, applies to everyone.
 With scanner: project-specific graph, applies to *this* project.
@@ -260,7 +264,13 @@ per-project scan state lives in local Postgres (scan signals) and is joined
 with the graph at render time; `Project`/`ProjectAsset` nodes in the graph
 itself are on the roadmap (see the table below).
 
-**UseCase nodes — deployer risk classification (ADR-010):**
+Detection is layered and local: pattern matching against a curated signal map first;
+anything unknown is classified by a local LLM (Gemma 4 via Ollama) running on your
+machine. Only canonical service names and anonymised identifiers ever reach the graph —
+never file names, variables, code content or secrets (the logbook and graph enforce
+this as an invariant, not a convention).
+
+**UseCase nodes — deployer risk classification:**
 
 Provider risk (OpenAI = GPAI) is not the same as deployer risk.
 A user building a chatbot with Claude has `Limited` risk (Art. 50),
@@ -289,7 +299,7 @@ What Layer 3 enables:
 
 ---
 
-### Layer 4 — Self-Describing Context Graph (ADR-011) 🔲 planned
+### Layer 4 — Self-Describing Context Graph 🔲 planned
 
 The design goal: the graph knows what it does not know — and detects when
 knowledge becomes stale. Today every node carries source / license /
@@ -302,7 +312,7 @@ SET k.status = "missing", k.priority = "high",
     k.reason = "AI Management System — relevant for EU AI Act Art. 9"
 ```
 
-The Legal News Scanner (roadmap) will write `NewsEvent` nodes (ADR-011):
+The Legal News Scanner (roadmap) will write `NewsEvent` nodes:
 
 ```cypher
 MERGE (n:NewsEvent {source: "EUR-Lex", url: "...", date: date("2026-04-15")})
@@ -333,12 +343,12 @@ All four layers are **additive**. No existing node or relationship needs to chan
 | What | Type | Status |
 |---|---|---|
 | `applies_from`, `confidence`, `jurisdictions` on Law nodes | Extension | ✅ done |
-| Seed layer architecture (ADR-009) | Refactoring | ✅ done |
-| UseCase nodes — deployer risk (ADR-010) | Extension | ✅ done |
+| Seed layer architecture | Refactoring | ✅ done |
+| UseCase nodes — deployer risk | Extension | ✅ done |
 | `get_upcoming_deadlines()` in graph_client | Extension | 🔲 next |
 | `KnowledgeSource` nodes | Extension | 🔲 next |
 | `ProjectAsset` nodes (Scanner output) | Extension | 🔲 v1 |
-| `NewsEvent` nodes + confidence decay (ADR-011) | Extension | 🔲 v1 |
+| `NewsEvent` nodes + confidence decay | Extension | 🔲 v1 |
 | `DataCategory` as real nodes (ontology) | **Refactoring** | optional |
 
 The ontology layer (DataCategory, ProcessingBasis as nodes instead of strings)
@@ -394,7 +404,7 @@ The stages from GraphRAG onwards are directly relevant to Lex-Orchestra:
 | 5 — Specialised retrieval for data types | Temporal, accuracy-sensitive, anomaly retrieval | ✅ `applies_from`, `confidence`, deadline queries |
 | 6 — Self-describing stores | Graph carries metadata about its own structure | ⚠️ partial: source/license/last_verified provenance on every node; `KnowledgeSource` gap nodes planned |
 | 7 — Dynamic retrieval strategies | LLM derives retrieval logic it has never seen before | 🔲 planned: LLM generates Cypher from schema, not fixed methods |
-| 8 — Closing the loop | System reingests its outputs to adjust future retrieval | 🔲 planned: ADR-013 Preference Notes + scan delta feedback |
+| 8 — Closing the loop | System reingests its outputs to adjust future retrieval | 🔲 planned: preference notes + scan delta feedback |
 
 Stages 3–5 are implemented, stage 6 partially (provenance metadata everywhere,
 self-describing gap nodes planned). Stages 7–8 are the explicit next evolution.
@@ -403,7 +413,7 @@ self-describing gap nodes planned). Stages 7–8 are the explicit next evolution
 Lex-Orchestra's Context Graph operates under a hard constraint that most
 GraphRAG implementations do not have — no user data, code, or infrastructure
 details leave the local network. The graph receives only anonymised UUIDs
-and asset types (ADR-001). This rules out cloud-based graph enrichment
+and asset types. This rules out cloud-based graph enrichment
 approaches but makes the system deployable in compliance-sensitive environments
 where sending proprietary code to an external service is not an option.
 
@@ -431,8 +441,8 @@ Layer 4 — Self-Describing            Compass     (what is missing or stale)
 
 - [graph.md](graph.md) — Node types, schema, seed queries
 - [../reference/graph-layers.md](../reference/graph-layers.md) — Layer catalogue, global structure, contribution guide
-- [data-sovereignty.md](data-sovereignty.md) — What stays where (ADR-001)
+- [data-sovereignty.md](data-sovereignty.md) — What stays where
 - [Context Graph Manifesto](https://trustgraph.ai/news/context-graph-manifesto/) — TrustGraph, Dec 2025 — industry framing of the Context Graph concept
 - [GraphRAG for Legal AI: Why Knowledge Graphs Beat Vector Search](https://medium.com/@thomasrehmer/graphrag-for-legal-ai-why-knowledge-graphs-beat-vector-search-01436abfe095) — Thomas Rehmer, Dec 2025 — GraphRAG foundations + CUAD proof-of-concept
 - [Claude + Neo4j with MCP: Turning Your Knowledge Graph into an AI Interface](https://medium.com/@thomasrehmer/claude-neo4j-with-mcp-turning-your-knowledge-graph-into-an-ai-interface-910ca04e9942) — Thomas Rehmer, Jan 2026 — MCP as natural language interface to the graph
-- [Privacy by Architecture: Why Your Knowledge Graph Should Only Store UUIDs](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — Thomas Rehmer, Feb 2026 — UUID-Only Pattern and PII separation (ADR-001)
+- [Privacy by Architecture: Why Your Knowledge Graph Should Only Store UUIDs](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — Thomas Rehmer, Feb 2026 — UUID-Only Pattern and PII separation

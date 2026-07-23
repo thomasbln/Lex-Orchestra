@@ -7,7 +7,7 @@ Lex-Orchestra tests on two levels:
 **Unit tests** — individual modules in isolation  
 **Integration tests** — full workflow against real infrastructure (they skip with a reason when the environment is not configured)
 
-No DB mocking — tests run against the real Supabase instance. This is intentional: mocking the database would not reliably verify ADR-001 (PII separation).
+No DB mocking — tests run against the real Supabase instance. This is intentional: mocking the database would not reliably verify PII separation.
 
 ## Directory
 
@@ -19,7 +19,7 @@ tests/
 │   └── env.example           ← .env with credential patterns (fake values only)
 │
 ├── test_smoke.py             ← ✅ Infrastructure connectivity checks
-├── test_asset_translator.py  ← ✅ ADR-001 PII separation
+├── test_asset_translator.py  ← ✅ PII separation
 ├── test_graph_client.py      ← ✅ Neo4j queries
 ├── test_workflow.py          ← ✅ Full scan workflow
 └── test_scout.py             ← 🔲 TODO: Infrastructure scanner
@@ -40,19 +40,19 @@ pytest tests/ -v
 
 ## Key assertions per module
 
-### test_asset_translator.py — ADR-001 verification
+### test_asset_translator.py — PII-separation verification
 
 The most critical test in the system:
 
 ```python
 def test_anonymize_no_real_names():
-    """ADR-001 core assertion: anonymize() must never return real asset names."""
+    """Core assertion: anonymize() must never return real asset names."""
     anon = translator.anonymize(records)
     for item in anon:
         assert item.get("name") not in real_names
 ```
 
-If this test fails → PII leak → ADR-001 violated.
+If this test fails → PII leak → the UUID-Only Pattern is violated.
 
 ### test_graph_client.py
 
@@ -65,7 +65,7 @@ If this test fails → PII leak → ADR-001 violated.
 
 - `build_workflow()` compiles without error
 - Dry-run invocation → all 5 nodes complete, zero errors
-- `graph_result` contains no PII from fixture files (ADR-001)
+- `graph_result` contains no PII from fixture files
 - Checkpointer persists state to Supabase
 
 ## CI/CD (Phase 3)

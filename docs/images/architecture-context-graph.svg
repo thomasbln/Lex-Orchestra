@@ -20,7 +20,7 @@
   <!-- ── LAYER 1 — Seed Layer Architecture ── -->
   <rect x="30" y="20" width="740" height="108" rx="12" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1"/>
   <rect x="30" y="20" width="6" height="108" rx="3" fill="#888780"/>
-  <text x="56" y="46" font-size="13" font-weight="700" fill="#2C2C2A">Layer 1 — Seed Layer Architecture (ADR-009)</text>
+  <text x="56" y="46" font-size="13" font-weight="700" fill="#2C2C2A">Layer 1 — Seed Layer Architecture</text>
   <text x="56" y="64" font-size="11" fill="#5F5E5A">Global frameworks · EU primary law · DE national law · opt-in frameworks — each deployed independently</text>
 
   <!-- seed layer pills -->
@@ -67,18 +67,18 @@
   <!-- ── LAYER 3 — Context Graph ── -->
   <rect x="30" y="298" width="740" height="130" rx="12" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1"/>
   <rect x="30" y="298" width="6" height="130" rx="3" fill="#534AB7"/>
-  <text x="56" y="324" font-size="13" font-weight="700" fill="#26215C">Layer 3 — Context Graph: Scanner + UseCase Nodes (ADR-010)</text>
+  <text x="56" y="324" font-size="13" font-weight="700" fill="#26215C">Layer 3 — Context Graph: Scanner + UseCase Nodes</text>
   <text x="56" y="342" font-size="11" fill="#3C3489">Scanner personalises the graph per project · UseCase nodes add deployer-perspective risk classification</text>
 
   <!-- left: scanner -->
   <rect x="56" y="352" width="290" height="64" rx="8" fill="#CECBF6" stroke="#AFA9EC" stroke-width="0.5"/>
-  <text x="72" y="370" font-size="10" font-weight="600" fill="#26215C">Scanner → ProjectAsset (ADR-001)</text>
+  <text x="72" y="370" font-size="10" font-weight="600" fill="#26215C">Scanner → ProjectAsset</text>
   <text x="72" y="386" font-size="10" fill="#3C3489">Project:uuid → USES → Stripe → AVV</text>
   <text x="72" y="401" font-size="10" fill="#534AB7">rescan = delta → compliance_task</text>
 
   <!-- right: UseCase -->
   <rect x="358" y="352" width="390" height="64" rx="8" fill="#534AB7" stroke="#3C3489" stroke-width="0.5"/>
-  <text x="374" y="370" font-size="10" font-weight="600" fill="#EEEDFE">UseCase Nodes — Deployer Risk (ADR-010)</text>
+  <text x="374" y="370" font-size="10" font-weight="600" fill="#EEEDFE">UseCase Nodes — Deployer Risk</text>
   <text x="374" y="386" font-size="10" fill="#CECBF6">customer_service_chatbot → Limited (Art. 50)</text>
   <text x="374" y="401" font-size="10" fill="#AFA9EC">hr_recruitment_screening → High (Anhang III Nr. 4)</text>
 
@@ -89,7 +89,7 @@
   <!-- ── LAYER 4 — Self-Describing ── -->
   <rect x="30" y="458" width="740" height="130" rx="12" fill="#FAEEDA" stroke="#FAC775" stroke-width="1"/>
   <rect x="30" y="458" width="6" height="130" rx="3" fill="#BA7517"/>
-  <text x="56" y="484" font-size="13" font-weight="700" fill="#412402">Layer 4 — Self-Describing Context Graph (ADR-011)</text>
+  <text x="56" y="484" font-size="13" font-weight="700" fill="#412402">Layer 4 — Self-Describing Context Graph</text>
   <text x="56" y="502" font-size="11" fill="#633806">Graph knows what it does not know · NewsEvents signal regulatory changes · confidence decay marks staleness</text>
 
   <!-- three badges -->

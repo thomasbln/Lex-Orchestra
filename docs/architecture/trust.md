@@ -40,9 +40,11 @@ it exists — is an addition, never a substitution. You can always run
 the same Lex-Orchestra entirely on your hardware with no outbound
 traffic during a scan.
 
-→ Implemented in ADR-040,
-ADR-050,
-ADR-053.
+→ Verifiable in code: [`docker/envs/.env.sovereign`](../../docker/envs/.env.sovereign)
+and the `with-ollama` / `with-neo4j` profiles in
+[`docker/docker-compose.yml`](../../docker/docker-compose.yml). The model client
+is [`src/llm/__init__.py`](../../src/llm/__init__.py) — it reads `OLLAMA_URL`,
+not a cloud endpoint.
 
 ---
 
@@ -76,7 +78,10 @@ domain, or the keys.
 - **The logging trap:** PII never ends up in LLM provider error logs —
   it is never sent.
 
-→ Implemented in ADR-001. See
+→ Verifiable in code: [`src/graph/asset_translator.py`](../../src/graph/asset_translator.py)
+(`anonymize()`), guarded by
+[`tests/test_asset_translator.py`](../../tests/test_asset_translator.py) — the
+test asserts that no real asset name survives anonymisation. See
 also [Data Sovereignty](data-sovereignty.md) for the full data-by-zone
 breakdown.
 
@@ -106,10 +111,11 @@ The schema convention is `*_secret_id UUID` referencing
 blocks regressions — a PR that reintroduces such a column fails the
 audit job before it can merge.
 
-→ Implemented in ADR-083.
-First consumers: ADR-082
-(API-key integrations) and ADR-033
-(GitHub PATs on `project_tokens` / `project_repos`).
+→ Verifiable in code: the `*_secret_id` convention in
+[`src/interface/approve_api.py`](../../src/interface/approve_api.py), proven
+end-to-end by [`scripts/vault_smoke_test.sh`](../../scripts/vault_smoke_test.sh)
+(checks that no plaintext survives at rest). First consumers: API-key
+integrations and GitHub PATs on `project_tokens` / `project_repos`.
 
 ---
 
@@ -132,8 +138,10 @@ and reversible.
   (they reference runs by ID only), so retention does not conflict
   with erasure.
 
-→ Implemented in ADR-076,
-ADR-080.
+→ Verifiable in code:
+[`supabase/migrations/014_project_setups.sql`](../../supabase/migrations/014_project_setups.sql)
+(`retention_policies`, append-only revisions) and the setup endpoints in
+[`src/interface/approve_api.py`](../../src/interface/approve_api.py).
 
 ---
 
@@ -142,7 +150,7 @@ ADR-080.
 **Claim:** Every generated compliance document tells you which facts
 came from where, and which ones are missing.
 
-The three-layer generation (ADR-076) renders three explicit markers
+The three-layer generation renders three explicit markers
 into every TOM, AVV, VVT, DSFA, SCC, KI-Policy, KI-System, and AI-Act
 Manifest:
 
@@ -156,7 +164,9 @@ There is no LLM hallucination passed off as a verified fact. There is
 no silent "best guess" filling in for missing data. Every assertion in
 a generated document is traceable to its source layer.
 
-→ Implemented in ADR-076.
+→ Verifiable in code: [`src/templates/_marker.md.j2`](../../src/templates/_marker.md.j2)
+defines the marker vocabulary; injection happens in
+[`src/agents/document_architect.py`](../../src/agents/document_architect.py).
 
 ---
 
@@ -178,9 +188,8 @@ The price is that the curated catalog grows from public contributions
 and operator review, not from silent telemetry. We consider this the
 correct trade-off for a compliance tool.
 
-→ Convention encoded throughout the codebase; reviewed in
-ADR-082 §
-"Not in Scope".
+→ Convention encoded throughout the codebase: there is no telemetry client,
+no analytics endpoint and no phone-home call anywhere in the tree.
 
 ---
 
@@ -232,8 +241,8 @@ exists to make available.
 If you want to verify the claims here, read in this order:
 
 1. [Data Sovereignty](data-sovereignty.md) — what data lives where, with examples
-2. ADR-001 — PII separation in code
-3. ADR-083 — secret storage convention
-4. ADR-076 — three-layer generation + evidence markers
-5. ADR-053 — sovereign vs edge profiles
+2. [`src/graph/asset_translator.py`](../../src/graph/asset_translator.py) — PII separation in code
+3. [`scripts/audit_no_plaintext_secrets.py`](../../scripts/audit_no_plaintext_secrets.py) — secret storage convention
+4. [`src/templates/_marker.md.j2`](../../src/templates/_marker.md.j2) — evidence markers in generated documents
+5. [`docker/envs/.env.sovereign`](../../docker/envs/.env.sovereign) — the sovereign profile
 6. [Privacy by Architecture](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — the published concept behind the UUID-Only Pattern

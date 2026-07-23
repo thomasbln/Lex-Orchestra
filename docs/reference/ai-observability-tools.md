@@ -11,7 +11,7 @@
 ┌─────────────────────────────────────────────────────────────┐
 │  Layer 1 — Data Store (UUID-Only Pattern)                   │
 │  Problem: PII lives in the graph / vector store             │
-│  Solution: Architecture decision (ADR-001)                  │
+│  Solution: UUID-Only Pattern (architectural)                │
 │  Tool:    No tool — design decision                         │
 │  Norm:    DSGVO Art. 25 (Privacy by Design)                 │
 └─────────────────────────────────────────────────────────────┘
