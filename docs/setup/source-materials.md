@@ -15,7 +15,7 @@ After cloning the repo, the graph can be seeded fully from Tier-A sources alone 
 ```bash
 git clone https://github.com/thomasbln/Lex-Orchestra.git
 cd Lex-Orchestra
-cp docker/envs/.env.sovereign docker/envs/.env  # configure secrets
+cp docker/envs/.env.example docker/envs/.env  # fill in the __SET_ME__ values
 # full stack setup: see the README Quickstart (network create + profiles)
 
 # Default target is `local` (bolt://localhost:7687, no prompts)

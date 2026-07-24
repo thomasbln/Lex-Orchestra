@@ -7,7 +7,7 @@ x86_64 or arm64, ADR-053).
 
 - `docker_lex-net` Docker network exists: `docker network create docker_lex-net`
 - `supabase-db` container is running (see `docker/supabase/`)
-- `docker/envs/.env` filled (copy `docker/envs/.env.sovereign` as your starting point)
+- `docker/envs/.env` filled (copy `docker/envs/.env.example` as your starting point)
 
 ## Build & Start
 

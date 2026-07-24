@@ -47,7 +47,7 @@ docker compose --profile with-neo4j --profile with-ollama up -d
 Starts: `supabase-db`, `neo4j`, `ollama`, `lex-agent`, `lex-dashboard`.
 
 Requires `NEO4J_BACKEND=local` and `LLM_BACKEND=local` in `docker/envs/.env`
-(copy `docker/envs/.env.sovereign` as your starting point and fill in the
+(copy `docker/envs/.env.example` as your starting point and fill in the
 `__SET_ME__` values).
 
 ### API-backend profile (BYOK cloud LLM + external Neo4j)

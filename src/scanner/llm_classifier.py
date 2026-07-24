@@ -10,8 +10,8 @@ Deployment targets:
   - Local dev:           whatever OLLAMA_MODEL env names
 
 The model + URL are env-var driven so the scanner runs on any target without
-a code change. `OLLAMA_MODEL` and `OLLAMA_URL` are set in docker/envs/.env.*
-per profile (see .env.sovereign, .env.edge).
+a code change. `OLLAMA_MODEL` and `OLLAMA_URL` are set in docker/envs/.env
+(see docker/envs/.env.example for the shipped defaults).
 
 ADR-028 invariants:
   - Input MUST be anonymised (Presidio Layer 2 applied first)
@@ -35,8 +35,8 @@ logger = logging.getLogger(__name__)
 OLLAMA_URL = resolve_ollama_endpoint(
     full_env="OLLAMA_URL", full_default="http://host.docker.internal:11434/api/generate"
 )
-# Env-driven. Sovereign (.env.sovereign) sets OLLAMA_MODEL=gemma4:e4b,
-# edge (.env.edge) sets phi4-mini. Default is gemma4:e4b because that is the
+# Env-driven. The shipped template sets OLLAMA_MODEL=gemma4:e4b; a smaller
+# target may set something like phi4-mini. Default is gemma4:e4b because that is the
 # current primary. A hardcoded fallback was the bug this module shipped with
 # for too long — it made is_available() return False on any target that had
 # moved off phi4-mini, silently skipping the whole Layer 3 pipeline.

@@ -40,8 +40,8 @@ it exists — is an addition, never a substitution. You can always run
 the same Lex-Orchestra entirely on your hardware with no outbound
 traffic during a scan.
 
-→ Verifiable in code: [`docker/envs/.env.sovereign`](../../docker/envs/.env.sovereign)
-and the `with-ollama` / `with-neo4j` profiles in
+→ Verifiable in code: [`docker/envs/.env.example`](../../docker/envs/.env.example),
+whose active values are the local stack, and the `with-ollama` / `with-neo4j` profiles in
 [`docker/docker-compose.yml`](../../docker/docker-compose.yml). The model client
 is [`src/llm/__init__.py`](../../src/llm/__init__.py) — it reads `OLLAMA_URL`,
 not a cloud endpoint.
@@ -244,5 +244,5 @@ If you want to verify the claims here, read in this order:
 2. [`src/graph/asset_translator.py`](../../src/graph/asset_translator.py) — PII separation in code
 3. [`scripts/audit_no_plaintext_secrets.py`](../../scripts/audit_no_plaintext_secrets.py) — secret storage convention
 4. [`src/templates/_marker.md.j2`](../../src/templates/_marker.md.j2) — evidence markers in generated documents
-5. [`docker/envs/.env.sovereign`](../../docker/envs/.env.sovereign) — the sovereign profile
+5. [`docker/envs/.env.example`](../../docker/envs/.env.example) — the sovereign profile as the shipped default
 6. [Privacy by Architecture](https://medium.com/@thomasrehmer/privacy-by-architecture-why-your-knowledge-graph-should-only-store-uuids-a26fb375c908) — the published concept behind the UUID-Only Pattern

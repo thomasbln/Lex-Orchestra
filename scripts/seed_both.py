@@ -666,7 +666,7 @@ def resolve_target_env(target: str) -> tuple[str, str, str, str]:
         if not pwd:
             raise ValueError(
                 "No password for target 'local' — set NEO4J_LOCAL_PASSWORD or "
-                "NEO4J_PASSWORD (docker/envs/.env, see .env.sovereign template)"
+                "NEO4J_PASSWORD (docker/envs/.env, see .env.example template)"
             )
         db = os.getenv("NEO4J_LOCAL_DATABASE", "neo4j")
         return uri, user, pwd, db

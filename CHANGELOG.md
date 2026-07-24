@@ -3,6 +3,25 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.0 — 2026-07-24
+
+**One environment template instead of three.** `docker/envs/.env.example` is now
+the only template, and its active values are the sovereign stack: local Ollama,
+local Neo4j, nothing leaving the network. Running against a cloud model or Neo4j
+Aura is a commented block in the same file.
+
+`.env.sovereign` and `.env.minimal` are gone. The first line of the quickstart
+changes accordingly:
+
+```bash
+cp docker/envs/.env.example docker/envs/.env
+```
+
+The values you fill in are unchanged, and an existing `docker/envs/.env` keeps
+working as it is. Three templates meant three copies of the same keys drifting
+apart: the placeholder fixed in v1.0.14 was missing from two of them, and the
+files had grown three different conventions for "you need to fill this in".
+
 ## v1.0.14 — 2026-07-24
 
 Fixed a placeholder in the sovereign environment template that the setup

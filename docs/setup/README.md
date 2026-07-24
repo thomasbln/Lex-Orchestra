@@ -4,7 +4,7 @@
 
 ## Order
 
-1. [docker.md](docker.md) — populate `docker/envs/.env` (copy `.env.sovereign`, fill the
+1. [docker.md](docker.md) — populate `docker/envs/.env` (copy `.env.example`, fill the
    `__SET_ME__` values), create the network, start the stack, seed the graph
    (hardware prerequisites: any x86_64 Linux host with Docker, 16 GB RAM — see the
    README Quickstart)
@@ -37,7 +37,7 @@ ssh lex
 ## Quick Start (after git clone)
 
 ```bash
-cp docker/envs/.env.sovereign docker/envs/.env   # then fill in your secrets
+cp docker/envs/.env.example docker/envs/.env   # then fill in the __SET_ME__ values
 ```
 
 Then follow [docker.md](docker.md): create the `docker_lex-net` network, start

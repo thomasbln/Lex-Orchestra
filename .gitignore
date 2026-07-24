@@ -27,9 +27,6 @@ docker/**/.env
 # Profile templates are committed (see ADR-053).
 docker/envs/.env
 !docker/envs/.env.example
-!docker/envs/.env.minimal
-!docker/envs/.env.sovereign
-!docker/envs/.env.edge
 
 # Generated compliance documents — not committed, use legal/drafts/.samples/ for references
 legal/drafts/*.md
