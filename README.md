@@ -5,7 +5,7 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.0.12](https://img.shields.io/badge/Release-v1.0.12-blue)]()
+[![Release: v1.0.13](https://img.shields.io/badge/Release-v1.0.13-blue)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
@@ -43,18 +43,18 @@ reviews and signs off, the responsibility is theirs.
 
 Every current approach to software compliance is broken. Questionnaire tools ask you to
 describe your infrastructure from memory. You forget the analytics pixel you added in
-March, and the tool has no way to know. Cloud-based LLM tools guess compliance
-probabilistically. An AI that is "85% confident" about a legal requirement is not an
-auditable answer, it is a liability. Code upload tools ask you to hand your IP and
-secrets to a third party to check for privacy violations. You violate data sovereignty
-to verify data sovereignty.
+March, and the tool has no way to know. The pixel was in the code the whole time.
+Cloud-based LLM tools guess compliance probabilistically. An AI that is "85% confident"
+about a legal requirement is not an auditable answer, it is a liability. Code upload
+tools ask you to hand your IP and secrets to a third party to check for privacy
+violations. You violate data sovereignty to verify data sovereignty.
 
 With Lex-Orchestra, legal moves into the pipeline at commit time, not after
 deployment. Your running infrastructure becomes a model that legal requirements
 attach to, and the documents are one output of it. The legal team's job shifts from
 data collection to review and sign-off.
 
-In code we trust. The infrastructure speaks for itself.
+In code we trust. The infrastructure is the evidence.
 
 ## Quickstart
 

@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.0.13 — 2026-07-24
+
+The README demonstrated its central claim three times without ever naming it: the
+repository already holds the record of what runs, so compliance is a question of
+reading it rather than remembering it. The problem section now says so.
+
 ## v1.0.12 — 2026-07-24
 
 The Context Graph now carries the weight it should: the problem section says what
