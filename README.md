@@ -18,9 +18,9 @@ Most developers find out months later — from a lawyer.
 Lex-Orchestra scans your code repository, detects which laws apply, and generates
 pre-filled legal documents — DPA, TOM, records of processing, DPIA, SCC assessment,
 AI Act manifest and more — automatically, in German and English.
-Your source code never leaves your network. Not as a policy. As an architectural constraint.
+Your source code never leaves your network. That is an architectural constraint, not a policy.
 
-One scan. Nine document types. Two languages. Fully local.
+One scan produces nine document types in two languages, fully local.
 
 ![Lex-Orchestra — repo in, compliance docs out](docs/assets/lex-demo-dark.gif#gh-dark-mode-only)
 ![Lex-Orchestra — repo in, compliance docs out](docs/assets/lex-demo-light.gif#gh-light-mode-only)
@@ -29,7 +29,7 @@ One scan. Nine document types. Two languages. Fully local.
 
 Built for the developers and DevOps teams who own the infrastructure — a documented
 starting point to take to a lawyer, not a substitute for one. Lex-Orchestra proves what
-it can from your code and marks the rest as gaps; it never fills a blank with a guess.
+it can from your code and marks the rest as gaps, never filling a blank with a guess.
 That is deterministic groundwork, not a legal opinion. Once a qualified professional
 reviews and signs off, the responsibility is theirs.
 
@@ -53,7 +53,7 @@ In code we trust. The infrastructure speaks for itself.
 ## Quickstart
 
 Full setup guide: **[docs/setup/README.md](docs/setup/README.md)** · tested on
-x86_64 Linux with Docker; 16 GB RAM recommended. aarch64 is untested — the base
+x86_64 Linux with Docker, 16 GB RAM recommended. aarch64 is untested — the base
 images are multi-arch, so it should build, but there is no verified run yet.
 
 ```bash
@@ -86,7 +86,7 @@ When the last step finishes it prints your dashboard URL — open it, create a p
 **What to expect:** the first scan on CPU-only hardware takes a few minutes — measured
 4 min 02 s end-to-end on a 12-core mini PC (no GPU), including local LLM
 classification and rendering of all nine documents. The status page tracks each step
-live; nothing is hanging.
+live, so nothing is hanging.
 
 ### Uninstall
 
@@ -129,7 +129,7 @@ edit measures and re-render documents. Before deploying:
 - For remote access, put an authenticating reverse proxy (Basic Auth, OIDC,
   Tailscale/VPN) in front.
 - The internal LangGraph engine (port 8000) is not published outside the
-  container at all; the only built-in guard is the internal `X-Scan-Secret`
+  container at all. The only built-in guard is the internal `X-Scan-Secret`
   header on the scan step endpoint.
 
 ## What it looks like in practice
@@ -183,7 +183,7 @@ In the default sovereign profile there is no cloud component at all.
 | Content | Coverage | Source |
 |---|---|---|
 | GDPR, EU AI Act, NIS2, CRA, DORA, DSA + German national law (BGB, UWG, TTDSG, PAngV, DDG) | 55+ law articles with enforcement dates | EUR-Lex / official texts |
-| BSI IT-Grundschutz | 22 controls (titles + mappings; full requirement texts are license-gated — bring your own Kompendium copy) | BSI |
+| BSI IT-Grundschutz | 22 controls (titles + mappings, full requirement texts are license-gated — bring your own Kompendium copy) | BSI |
 | NIST CSF 2.0 | 12 functions/categories | NIST |
 | OWASP Top 10 (Web, LLM, API) | 30 controls | OWASP |
 | EU AI Act use cases | 20 (Annex III + Art. 5 prohibited) | EUR-Lex |
@@ -218,26 +218,25 @@ flow. The Scout does not ask what you use. It sees it.
 
 ### The Context Graph
 
-The Context Graph is not a feature. It is the engine that makes the whole system work.
+The Context Graph is not a feature but the engine the whole system runs on.
 Built on Neo4j (a local container by default), it maps your infrastructure to legal
 requirements deterministically. It does not guess. Every finding is traceable to a
 specific node and an official source — the graph either finds a path from your detected
 component to a legal requirement, or it does not.
 
 The default profile is fully sovereign: Neo4j and the LLM both run locally, documents
-are assembled deterministically from the graph, and nothing leaves your network. This
-is not a privacy policy. It is an architectural constraint.
+are assembled deterministically from the graph, and nothing leaves your network.
 
 The detection layers, enforcement dates, jurisdiction layers, provenance and the
 provider/deployer risk split are documented in
-[context-graph.md](docs/architecture/context-graph.md); the data zones and the
-UUID-only pattern in [data-sovereignty.md](docs/architecture/data-sovereignty.md).
+[context-graph.md](docs/architecture/context-graph.md). The data zones and the
+UUID-only pattern are covered in [data-sovereignty.md](docs/architecture/data-sovereignty.md).
 
 ## Why open source
 
 Compliance should not depend on black boxes. Regulation defines obligations — but how
 those obligations are derived should be inspectable, verifiable, and open: every mapping
-visible, every decision traceable, every component inspectable.
+visible, every decision traceable, every source named.
 
 AGPL-3.0 ensures that improvements remain open. Anyone who takes this code, modifies it,
 and offers it as a service must publish their changes. The compliance logic stays open.
