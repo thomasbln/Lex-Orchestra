@@ -3,6 +3,13 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.3 — 2026-07-24
+
+The footer still read `Release: v1.0.0` while the badge at the top of the README
+had been kept current, so the page contradicted itself. Both now carry the same
+number, the badge links to the releases page instead of nowhere, and the footer
+points at this changelog.
+
 ## v1.1.2 — 2026-07-24
 
 The uninstall commands now resolve the clone through `git rev-parse` instead of
