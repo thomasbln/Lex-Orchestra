@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState, useCallback, Suspense } from 'react'
+import { pickLang, pickLangString, isRedundantGermanProp } from '@/lib/nodeLang'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Sidebar from '../../components/Sidebar'
 import { getGraphSchema, getNodesByType, getNodeEdges, getEgoGraph } from '../../lib/api'
@@ -125,8 +126,9 @@ function getNodeDisplayId(props: NodeProps): string {
 }
 
 function getNodeDisplayTitle(props: NodeProps): string {
-  // i18n: prefer EN as primary display, DE as fallback (ADR-047)
-  return String(props.title_en || props.title_de || props.description || '')
+  // i18n: prefer EN as primary display, DE as fallback (ADR-047).
+  // Shared with the ego-graph panel via lib/nodeLang so the two cannot drift.
+  return pickLangString(props, 'title') || String(props.description || '')
 }
 
 function getGroupKey(props: NodeProps): string {
@@ -202,8 +204,8 @@ function buildContextSummary(nodeType: string, props: NodeProps, edges: any[]): 
       return [
         props.framework ? `This control is part of **${props.framework}**.` : null,
         laws ? `It technically implements **${laws}**.` : null,
-        (props.default_tom_measure_en || props.default_tom_measure)
-          ? `Default TOM measure: ${String(props.default_tom_measure_en || props.default_tom_measure).slice(0, 120)}${String(props.default_tom_measure_en || props.default_tom_measure).length > 120 ? '...' : ''}`
+        pickLang(props, 'default_tom_measure')
+          ? `Default TOM measure: ${pickLangString(props, 'default_tom_measure').slice(0, 120)}${pickLangString(props, 'default_tom_measure').length > 120 ? '...' : ''}`
           : null,
         props.severity === 'critical'
           ? `⚠ Severity is **CRITICAL** — non-compliance directly violates ${props.dsgvo_article ? `GDPR Art. ${props.dsgvo_article}` : 'applicable law'}.`
@@ -1239,7 +1241,7 @@ const [loadingGraph, setLoadingGraph] = useState(false)
                       padding: '10px 12px',
                     }}>
                       {Object.entries(selectedNode)
-                        .filter(([k]) => !SKIP_PROPS.has(k))
+                        .filter(([k]) => !SKIP_PROPS.has(k) && !isRedundantGermanProp(k, selectedNode))
                         .map(([key, value]) => (
                           <div key={key} style={{
                             display: 'flex',

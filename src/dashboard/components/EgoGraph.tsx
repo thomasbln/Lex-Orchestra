@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { pickLang, pickLangString, isRedundantGermanProp } from '@/lib/nodeLang'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EgoNode = { id: string; type: string; props: Record<string, any>; is_center: boolean }
@@ -41,8 +42,8 @@ function buildSimpleContext(nodeType: string, props: Record<string, any>): strin
       return [
         props.framework ? `Part of **${props.framework}**.` : null,
         props.severity ? `Severity: **${String(props.severity).toUpperCase()}**.` : null,
-        props.default_tom_measure
-          ? `Default measure: ${String(props.default_tom_measure).slice(0, 100)}...`
+        pickLang(props, 'default_tom_measure')
+          ? `Default measure: ${pickLangString(props, 'default_tom_measure').slice(0, 100)}...`
           : null,
       ].filter(Boolean).join(' ') || null
     case 'Service':
@@ -132,7 +133,7 @@ export default function EgoGraph({
   // Tooltip data
   const hoveredNode = hovered ? nodeMap.get(hovered) : null
 
-  const PROP_SKIP = new Set(['text', 'title', 'title_en', 'id', 'name', 'type', 'description'])
+  const PROP_SKIP = new Set(['text', 'title', 'title_en', 'title_de', 'id', 'name', 'type', 'description'])
 
   return (
     <div
@@ -370,9 +371,9 @@ export default function EgoGraph({
           }}>
             {panelNode.id}
           </div>
-          {(panelNode.props.title || panelNode.props.title_en) && (
+          {pickLang(panelNode.props, 'title') !== undefined && (
             <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-              {panelNode.props.title || panelNode.props.title_en}
+              {pickLangString(panelNode.props, 'title')}
             </div>
           )}
 
@@ -433,7 +434,9 @@ export default function EgoGraph({
               </div>
             )}
             {Object.entries(panelNode.props)
-              .filter(([k]) => !PROP_SKIP.has(k) && !['confidence', 'severity', 'framework', 'default_tom_measure'].includes(k))
+              .filter(([k]) => !PROP_SKIP.has(k)
+                && !isRedundantGermanProp(k, panelNode.props)
+                && !['confidence', 'severity', 'framework', 'default_tom_measure', 'default_tom_measure_en'].includes(k))
               .slice(0, 6)
               .map(([key, value]) => (
                 <div key={key} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '3px 0' }}>

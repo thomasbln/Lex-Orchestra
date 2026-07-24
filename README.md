@@ -5,7 +5,7 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-blue)]()
+[![Release: v1.1.1](https://img.shields.io/badge/Release-v1.1.1-blue)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->

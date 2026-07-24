@@ -3,6 +3,18 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.1 — 2026-07-24
+
+The graph explorer's side panel showed German field values while the rest of the
+dashboard was English. It picked the language itself instead of sharing the
+Inspector's logic, and had the order inverted: a node with a perfectly good
+`title_en` was displayed in German, and the German twin of an already-shown
+English field appeared a second time in the property table.
+
+Both views now use one helper. German-only fields such as `label_de` stay
+visible, because no English variant exists for them yet and hiding them would
+drop the information rather than translate it.
+
 ## v1.1.0 — 2026-07-24
 
 **One environment template instead of three.** `docker/envs/.env.example` is now
