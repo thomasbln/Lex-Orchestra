@@ -27,6 +27,12 @@ One scan. Nine document types. Two languages. Fully local.
 
 ![Lex-Orchestra Architecture — Sense, Know, Act](docs/images/architecture.svg)
 
+Built for the developers and DevOps teams who own the infrastructure — a documented
+starting point to take to a lawyer, not a substitute for one. Lex-Orchestra proves what
+it can from your code and marks the rest as gaps; it never fills a blank with a guess.
+That is deterministic groundwork, not a legal opinion. Once a qualified professional
+reviews and signs off, the responsibility is theirs.
+
 [The problem](#the-problem) · [Quickstart](#quickstart) · [In practice](#what-it-looks-like-in-practice) · [Data boundary](#data-boundary) · [Comparison](#how-lex-orchestra-compares) · [Knowledge graph](#whats-in-the-knowledge-graph) · [How it works](#how-it-works) · [Why open source](#why-open-source) · [Repository structure](#repository-structure) · [Documentation](#documentation) · [Status and roadmap](#status-and-roadmap)
 
 ## The problem
