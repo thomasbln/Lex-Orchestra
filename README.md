@@ -10,24 +10,24 @@
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
 **Local compliance agent for software teams.**
-From git push to legal draft — on your own hardware.
+From git push to legal draft, on your own hardware.
 
 A single line of code can trigger a GDPR violation that costs your company millions.
-Most developers find out months later — from a lawyer.
+Most developers find out months later, from a lawyer.
 
-Lex-Orchestra scans your code repository, detects which laws apply, and generates
-pre-filled legal documents — DPA, TOM, records of processing, DPIA, SCC assessment,
-AI Act manifest and more — automatically, in German and English.
+Lex-Orchestra scans your code repository, detects which laws apply, and automatically
+generates pre-filled legal documents in German and English: DPA, TOM, records of
+processing, DPIA, SCC assessment, AI Act manifest and more.
 Your source code never leaves your network. That is an architectural constraint, not a policy.
 
 One scan produces nine document types in two languages, fully local.
 
-![Lex-Orchestra — repo in, compliance docs out](docs/assets/lex-demo-dark.gif#gh-dark-mode-only)
-![Lex-Orchestra — repo in, compliance docs out](docs/assets/lex-demo-light.gif#gh-light-mode-only)
+![Lex-Orchestra: repo in, compliance docs out](docs/assets/lex-demo-dark.gif#gh-dark-mode-only)
+![Lex-Orchestra: repo in, compliance docs out](docs/assets/lex-demo-light.gif#gh-light-mode-only)
 
-![Lex-Orchestra Architecture — Sense, Know, Act](docs/images/architecture.svg)
+![Lex-Orchestra Architecture: Sense, Know, Act](docs/images/architecture.svg)
 
-Built for the developers and DevOps teams who own the infrastructure — a documented
+Built for the developers and DevOps teams who own the infrastructure: a documented
 starting point to take to a lawyer, not a substitute for one. Lex-Orchestra proves what
 it can from your code and marks the rest as gaps, never filling a blank with a guess.
 That is deterministic groundwork, not a legal opinion. Once a qualified professional
@@ -38,14 +38,14 @@ reviews and signs off, the responsibility is theirs.
 ## The problem
 
 Every current approach to software compliance is broken. Questionnaire tools ask you to
-describe your infrastructure from memory — you forget the analytics pixel you added in
+describe your infrastructure from memory. You forget the analytics pixel you added in
 March, and the tool has no way to know. Cloud-based LLM tools guess compliance
-probabilistically — an AI that is "85% confident" about a legal requirement is not an
+probabilistically. An AI that is "85% confident" about a legal requirement is not an
 auditable answer, it is a liability. Code upload tools ask you to hand your IP and
-secrets to a third party to check for privacy violations — you violate data sovereignty
+secrets to a third party to check for privacy violations. You violate data sovereignty
 to verify data sovereignty.
 
-With Lex-Orchestra, legal moves into the pipeline — at commit time, not after
+With Lex-Orchestra, legal moves into the pipeline at commit time, not after
 deployment. The legal team's job shifts from data collection to review and sign-off.
 
 In code we trust. The infrastructure speaks for itself.
@@ -53,7 +53,7 @@ In code we trust. The infrastructure speaks for itself.
 ## Quickstart
 
 Full setup guide: **[docs/setup/README.md](docs/setup/README.md)** · tested on
-x86_64 Linux with Docker, 16 GB RAM recommended. aarch64 is untested — the base
+x86_64 Linux with Docker, 16 GB RAM recommended. aarch64 is untested: the base
 images are multi-arch, so it should build, but there is no verified run yet.
 
 ```bash
@@ -81,18 +81,18 @@ make seed-all        # knowledge graph (layer manifest + modules + validator)
 make seed-validate
 ```
 
-When the last step finishes it prints your dashboard URL — open it, create a project, and run the first scan.
+When the last step finishes it prints your dashboard URL. Open it, create a project, and run the first scan.
 
-**What to expect:** the first scan on CPU-only hardware takes a few minutes — measured
-4 min 02 s end-to-end on a 12-core mini PC (no GPU), including local LLM
+**What to expect:** the first scan on CPU-only hardware takes a few minutes. On a
+12-core mini PC (no GPU) it measured 4 min 02 s end-to-end, including local LLM
 classification and rendering of all nine documents. The status page tracks each step
 live, so nothing is hanging.
 
 ### Uninstall
 
-Lex-Orchestra leaves nothing behind outside its clone directory — no configs in your
+Lex-Orchestra leaves nothing behind outside its clone directory: no configs in your
 home directory, no system services, no cron jobs (the optional systemd autostart unit
-is only installed if you copied it yourself — disable it first if you did).
+is only installed if you copied it yourself, so disable it first if you did).
 
 ```bash
 cd docker && docker compose --profile with-neo4j --profile with-ollama down -v
@@ -114,17 +114,17 @@ prefer to avoid sudo, delete them from a throwaway container first.
 ```
 
 Run it from the clone directory. It removes the images too, so the next install
-re-pulls and re-builds from scratch — including the language model, which is the
+re-pulls and re-builds from scratch. That includes the language model, which is the
 slow part.
 
 ### Security posture (self-hosters)
 
 The backend API (`approve_api`, port **8001**) and the dashboard (port **3000**)
-are **unauthenticated by design** — Lex-Orchestra is built for a trusted
+are **unauthenticated by design**. Lex-Orchestra is built for a trusted
 private network (LAN/VPN). Anyone who can reach port 8001 can trigger scans,
 edit measures and re-render documents. Before deploying:
 
-- Bind the services to `localhost` or a private interface — **never expose
+- Bind the services to `localhost` or a private interface. **Never expose
   ports 8001/3000 directly to the internet.**
 - For remote access, put an authenticating reverse proxy (Basic Auth, OIDC,
   Tailscale/VPN) in front.
@@ -176,14 +176,14 @@ In the default sovereign profile there is no cloud component at all.
 | When compliance happens | Legal reviews after deployment | Integrated at commit time |
 | What you get for a missing DPA | "You need a DPA with Stripe" | Pre-filled DPA draft with direct signing link |
 | How often it runs | Once a year, maybe | Re-scan on demand, delta on every run |
-| Auditability | Black box — no trace | Every finding traceable to a graph node and source |
+| Auditability | Black box, no trace | Every finding traceable to a graph node and source |
 
 ## What's in the knowledge graph
 
 | Content | Coverage | Source |
 |---|---|---|
 | GDPR, EU AI Act, NIS2, CRA, DORA, DSA + German national law (BGB, UWG, TTDSG, PAngV, DDG) | 55+ law articles with enforcement dates | EUR-Lex / official texts |
-| BSI IT-Grundschutz | 22 controls (titles + mappings, full requirement texts are license-gated — bring your own Kompendium copy) | BSI |
+| BSI IT-Grundschutz | 22 controls (titles + mappings, full requirement texts are license-gated, so bring your own Kompendium copy) | BSI |
 | NIST CSF 2.0 | 12 functions/categories | NIST |
 | OWASP Top 10 (Web, LLM, API) | 30 controls | OWASP |
 | EU AI Act use cases | 20 (Annex III + Art. 5 prohibited) | EUR-Lex |
@@ -193,7 +193,7 @@ ISO 27001, BSI C5 and BSI AIC4 are **bring-your-own-standard**: the content is
 license-gated, so the repo ships the seed slots but not the licensed texts.
 Every node and relationship carries source, license and last-verified provenance.
 
-![Context Graph — the four layers](docs/images/architecture-context-graph.svg)
+![Context Graph: the four layers](docs/images/architecture-context-graph.svg)
 
 ## How it works
 
@@ -205,7 +205,7 @@ git push  -->  Scout (local)  -->  Context Graph (local)  -->  Documents  -->  D
 
 ### The Scout
 
-The Scout reads your repository directly — docker-compose files, package manifests
+The Scout reads your repository directly: docker-compose files, package manifests
 (npm, pip, poetry, composer, go), .env patterns, Dockerfiles. It detects services
 automatically against a curated catalogue of 67 processors, including a direct link
 to each processor's DPA signing page. No forms. No memory. The code is the real data
@@ -213,7 +213,7 @@ flow. The Scout does not ask what you use. It sees it.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/architecture-scout-layers-dark.svg">
-  <img src="docs/images/architecture-scout-layers.svg" alt="Scout — layered local analysis pipeline">
+  <img src="docs/images/architecture-scout-layers.svg" alt="Scout: layered local analysis pipeline">
 </picture>
 
 ### The Context Graph
@@ -221,7 +221,7 @@ flow. The Scout does not ask what you use. It sees it.
 The Context Graph is not a feature but the engine the whole system runs on.
 Built on Neo4j (a local container by default), it maps your infrastructure to legal
 requirements deterministically. It does not guess. Every finding is traceable to a
-specific node and an official source — the graph either finds a path from your detected
+specific node and an official source. The graph either finds a path from your detected
 component to a legal requirement, or it does not.
 
 The default profile is fully sovereign: Neo4j and the LLM both run locally, documents
@@ -234,7 +234,7 @@ UUID-only pattern are covered in [data-sovereignty.md](docs/architecture/data-so
 
 ## Why open source
 
-Compliance should not depend on black boxes. Regulation defines obligations — but how
+Compliance should not depend on black boxes. Regulation defines obligations, but how
 those obligations are derived should be inspectable, verifiable, and open: every mapping
 visible, every decision traceable, every source named.
 
@@ -277,7 +277,7 @@ logs/         scan logs and graph write history — runtime output, starts empty
 
 ## Status and roadmap
 
-**Operational today:** full pipeline — repository scan, deterministic graph matching,
+**Operational today:** full pipeline. Repository scan, deterministic graph matching,
 nine document types (DPA/AVV, TOM, records of processing, DPIA, SCC assessment,
 AI policy, AI system documentation, AI Act manifest, scan report) in German and
 English, Markdown + PDF, per-document provenance logbook, editable measures
@@ -296,4 +296,4 @@ Release: v1.0.0 · License: AGPL-3.0 · Partner access: [open an issue](https://
 > scan and knowledge graph. Each document must be reviewed by a qualified legal
 > professional before use or filing.
 
-AGPL-3.0 — Built by Thomas Rehmer — Neo4j — LangGraph — Ollama
+AGPL-3.0 · Built by Thomas Rehmer · Neo4j · LangGraph · Ollama
