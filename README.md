@@ -5,7 +5,7 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.1.1](https://img.shields.io/badge/Release-v1.1.1-blue)]()
+[![Release: v1.1.2](https://img.shields.io/badge/Release-v1.1.2-blue)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
@@ -105,13 +105,16 @@ home directory, no system services, no cron jobs (the optional systemd autostart
 is only installed if you copied it yourself, so disable it first if you did).
 
 ```bash
-cd docker && docker compose --profile with-neo4j --profile with-ollama down -v
+cd "$(git rev-parse --show-toplevel)/docker" && docker compose --profile with-neo4j --profile with-ollama down -v
 # removes containers, network, and ALL volumes — including the graph and the model
 docker network rm docker_lex-net 2>/dev/null || true   # compose leaves this one: it is declared external
 # optional: images too
 docker images -q --filter=reference='docker-*' --filter=reference='ollama/*' --filter=reference='neo4j*' | xargs -r docker rmi -f
-cd .. && cd .. && sudo rm -rf Lex-Orchestra
+LEX="$(git rev-parse --show-toplevel)" && cd "$LEX/.." && sudo rm -rf "$LEX"
 ```
+
+Both blocks resolve the clone through `git rev-parse`, so they work from any
+subdirectory and whatever you named the directory when you cloned.
 
 The `sudo` is honest, not lazy: the database volume directory (`pgdata`) and generated
 `legal/` files are written by containers and end up root-owned on the host. If you
@@ -120,10 +123,10 @@ prefer to avoid sudo, delete them from a throwaway container first.
 **In a hurry?** The same four steps as one line:
 
 ```bash
-(cd docker && docker compose --profile with-neo4j --profile with-ollama down -v; docker network rm docker_lex-net 2>/dev/null; docker images -q --filter=reference='docker-*' --filter=reference='ollama/*' --filter=reference='neo4j*' | xargs -r docker rmi -f); cd .. && sudo rm -rf Lex-Orchestra
+(cd "$(git rev-parse --show-toplevel)/docker" && docker compose --profile with-neo4j --profile with-ollama down -v; docker network rm docker_lex-net 2>/dev/null; docker images -q --filter=reference='docker-*' --filter=reference='ollama/*' --filter=reference='neo4j*' | xargs -r docker rmi -f); LEX="$(git rev-parse --show-toplevel)" && cd "$LEX/.." && sudo rm -rf "$LEX"
 ```
 
-Run it from the clone directory. It removes the images too, so the next install
+Run it from anywhere inside the clone. It removes the images too, so the next install
 re-pulls and re-builds from scratch. That includes the language model, which is the
 slow part.
 

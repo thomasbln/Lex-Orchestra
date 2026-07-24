@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.2 — 2026-07-24
+
+The uninstall commands now resolve the clone through `git rev-parse` instead of
+counting `cd ..` steps and assuming the directory is called `Lex-Orchestra`.
+Two ways the old form could miss: a clone under a different name was never the
+target, and starting the one-liner from inside `docker/` pointed the delete at a
+path that does not exist, which `rm -rf` accepts without a word. Both blocks now
+work from any subdirectory of the clone, whatever you named it.
+
 ## v1.1.1 — 2026-07-24
 
 The graph explorer's side panel showed German field values while the rest of the
