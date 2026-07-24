@@ -5,7 +5,7 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.0.11](https://img.shields.io/badge/Release-v1.0.11-blue)]()
+[![Release: v1.0.12](https://img.shields.io/badge/Release-v1.0.12-blue)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
@@ -19,8 +19,7 @@ from that.
 A single line of code can trigger a GDPR violation that costs your company millions.
 Most developers find out months later, from a lawyer.
 
-Lex-Orchestra scans your code repository, detects which laws apply, and automatically
-generates pre-filled legal documents in German and English: DPA, TOM, records of
+The documents come out pre-filled, in German and English: DPA, TOM, records of
 processing, DPIA, SCC assessment, AI Act manifest and more.
 Your source code never leaves your network. That is an architectural constraint, not a policy.
 The reasoning runs on a deterministic Context Graph.
@@ -35,7 +34,7 @@ One scan produces nine document types in two languages, fully local.
 Built for the developers and DevOps teams who own the infrastructure: a documented
 starting point to take to a lawyer, not a substitute for one. Lex-Orchestra proves what
 it can from your code and marks the rest as gaps, never filling a blank with a guess.
-That is deterministic groundwork, not a legal opinion. Once a qualified professional
+That is groundwork, not a legal opinion. Once a qualified professional
 reviews and signs off, the responsibility is theirs.
 
 [The problem](#the-problem) · [Quickstart](#quickstart) · [In practice](#what-it-looks-like-in-practice) · [Data boundary](#data-boundary) · [Comparison](#how-lex-orchestra-compares) · [Knowledge graph](#whats-in-the-knowledge-graph) · [How it works](#how-it-works) · [Why open source](#why-open-source) · [Repository structure](#repository-structure) · [Documentation](#documentation) · [Status and roadmap](#status-and-roadmap)
@@ -51,7 +50,9 @@ secrets to a third party to check for privacy violations. You violate data sover
 to verify data sovereignty.
 
 With Lex-Orchestra, legal moves into the pipeline at commit time, not after
-deployment. The legal team's job shifts from data collection to review and sign-off.
+deployment. Your running infrastructure becomes a model that legal requirements
+attach to, and the documents are one output of it. The legal team's job shifts from
+data collection to review and sign-off.
 
 In code we trust. The infrastructure speaks for itself.
 
@@ -143,6 +144,10 @@ edit measures and re-render documents. Before deploying:
 
 ## What it looks like in practice
 
+You add Stripe to your docker-compose and push. On the next scan the Scout sees it,
+and in the graph Stripe sits under GDPR Art. 28. The missing DPA becomes a draft with
+a signing link.
+
 You use Stripe and Supabase. Your system includes an AI component.
 
 ```
@@ -229,12 +234,12 @@ flow. The Scout does not ask what you use. It sees it.
 
 The Context Graph is not a feature but the engine the whole system runs on.
 Built on Neo4j (a local container by default), it maps your infrastructure to legal
-requirements deterministically. It does not guess. Every finding is traceable to a
+requirements. It does not guess. Every finding is traceable to a
 specific node and an official source. The graph either finds a path from your detected
 component to a legal requirement, or it does not.
 
 The default profile is fully sovereign: Neo4j and the LLM both run locally, documents
-are assembled deterministically from the graph, and nothing leaves your network.
+are assembled from the graph, and nothing leaves your network.
 
 The detection layers, enforcement dates, jurisdiction layers, provenance and the
 provider/deployer risk split are documented in
@@ -286,7 +291,7 @@ logs/         scan logs and graph write history — runtime output, starts empty
 
 ## Status and roadmap
 
-**Operational today:** full pipeline. Repository scan, deterministic graph matching,
+**Operational today:** full pipeline. Repository scan, graph matching,
 nine document types (DPA/AVV, TOM, records of processing, DPIA, SCC assessment,
 AI policy, AI system documentation, AI Act manifest, scan report) in German and
 English, Markdown + PDF, per-document provenance logbook, editable measures

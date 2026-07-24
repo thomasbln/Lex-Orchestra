@@ -3,6 +3,13 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.0.12 — 2026-07-24
+
+The Context Graph now carries the weight it should: the problem section says what
+the tool puts in place of the broken approaches, and the practice example shows the
+graph doing the work rather than storing it. "Deterministic" was doing less with
+each repetition, so it stays only where it earns its place.
+
 ## v1.0.11 — 2026-07-24
 
 The intro now says what Lex-Orchestra is before it says what it does: a
