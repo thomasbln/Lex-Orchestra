@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.0.14 — 2026-07-24
+
+Fixed a placeholder in the sovereign environment template that the setup
+instructions could not catch. `DASHBOARD_BASE_URL` shipped as
+`http://your-server-ip:3000`, while the documented step says to fill in the
+`__SET_ME__` values, so the host stayed unset and the deep-links in generated
+scan reports pointed at a hostname that does not exist. The placeholder now uses
+the same convention as the rest of the file.
+
 ## v1.0.13 — 2026-07-24
 
 The README demonstrated its central claim three times without ever naming it: the
