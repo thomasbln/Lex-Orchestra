@@ -5,12 +5,16 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.0.10](https://img.shields.io/badge/Release-v1.0.10-blue)]()
+[![Release: v1.0.11](https://img.shields.io/badge/Release-v1.0.11-blue)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
 **Local compliance agent for software teams.**
 From git push to legal draft, on your own hardware.
+
+Lex-Orchestra is a self-hosted platform, not a service you send your code to. It maps
+what it finds in your repository onto a local Context Graph, and the documents follow
+from that.
 
 A single line of code can trigger a GDPR violation that costs your company millions.
 Most developers find out months later, from a lawyer.
@@ -19,6 +23,7 @@ Lex-Orchestra scans your code repository, detects which laws apply, and automati
 generates pre-filled legal documents in German and English: DPA, TOM, records of
 processing, DPIA, SCC assessment, AI Act manifest and more.
 Your source code never leaves your network. That is an architectural constraint, not a policy.
+The reasoning runs on a deterministic Context Graph.
 
 One scan produces nine document types in two languages, fully local.
 

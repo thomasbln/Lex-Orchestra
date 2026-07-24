@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.0.11 — 2026-07-24
+
+The intro now says what Lex-Orchestra is before it says what it does: a
+self-hosted platform rather than a service you upload code to. The Context
+Graph is named in the opening paragraphs instead of appearing halfway down.
+
 ## v1.0.10 — 2026-07-24
 
 The quickstart now shows what a finished install looks like: a screenshot of the
