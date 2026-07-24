@@ -3,6 +3,11 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.0.10 — 2026-07-24
+
+The quickstart now shows what a finished install looks like: a screenshot of the
+post-setup banner with the four reachable services and the next steps.
+
 ## v1.0.9 — 2026-07-24
 
 Housekeeping. The release badge tracked v1.0.0 while the repository was at

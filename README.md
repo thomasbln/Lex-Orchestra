@@ -5,7 +5,7 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.0.9](https://img.shields.io/badge/Release-v1.0.9-blue)]()
+[![Release: v1.0.10](https://img.shields.io/badge/Release-v1.0.10-blue)]()
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
@@ -82,6 +82,10 @@ make seed-validate
 ```
 
 When the last step finishes it prints your dashboard URL. Open it, create a project, and run the first scan.
+
+![Install output: four services reachable](docs/assets/install-banner.png)
+
+*After `make seed-validate`: the stack reports which services are up and where to reach them.*
 
 **What to expect:** the first scan on CPU-only hardware takes a few minutes. On a
 12-core mini PC (no GPU) it measured 4 min 02 s end-to-end, including local LLM
