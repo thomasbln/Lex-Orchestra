@@ -27,6 +27,7 @@
 
 {% set _lm = ["gap"] %}
 {% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
+{% if ebene0_duty %}{% set _lm = _lm + ["duty"] %}{% endif %}
 {% if model.activities | selectattr('purpose_inferred') | list %}{% set _lm = _lm + ["inferred"] %}{% endif %}
 {{ marker.legend(_lm) }}
 

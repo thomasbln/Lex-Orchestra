@@ -68,13 +68,9 @@ ON CREATE SET
     l.fetched_via     = "cellar"
 ;
 
-MERGE (l:Law {name: "NIS2", article: "Overview"})
-ON CREATE SET
-    l.note_de         = "Überblick über die NIS2-Richtlinie",
-    l.source_url      = "https://publications.europa.eu/resource/celex/32022L2555",
-    l.fetched_at      = "2026-04-22T12:28:06+00:00",
-    l.fetched_via     = "cellar"
-;
+// NIS2 "Overview" MERGE removed 2026-07-28 — duplicate of "Überblick"
+// (canonical key, see 14b). A MERGE on a non-canonical key does not sync a
+// node, it creates one.
 
 
 // ── Section C — SET properties for all 55 entries from JSON ──
@@ -528,12 +524,7 @@ MATCH (l:Law {name: "NIS2", article: "Überblick"}) SET
     l.fetched_via     = "cellar"
 ;
 
-MATCH (l:Law {name: "NIS2", article: "Overview"}) SET
-    l.note_de         = "Überblick über die NIS2-Richtlinie",
-    l.source_url      = "https://publications.europa.eu/resource/celex/32022L2555",
-    l.fetched_at      = "2026-04-22T12:28:06+00:00",
-    l.fetched_via     = "cellar"
-;
+// NIS2 "Overview" SET removed 2026-07-28 — see the MERGE note above.
 
 MATCH (l:Law {name: "PAngV", article: "1"}) SET
     l.note_de         = "Anwendungsbereich; Grundsatz",

@@ -83,7 +83,9 @@ def test_via_dropped_when_none_kept_when_set(tmp_path):
 @pytest.mark.parametrize("bad_value", [
     "dpo@rand-industries.example.com",   # email / PII
     "src/payments.ts",                   # code path
-    "/Users/thomas/secret.env",          # absolute path
+    "/Users/example/secret.env",         # absolute path (synthetic user, like the
+                                         # .example.com address above — a dummy
+                                         # must not carry a maintainer identity)
     "C:\\Users\\config.py",              # windows path
 ])
 def test_guard_rejects_pii_or_code_path_in_property_value(tmp_path, bad_value):

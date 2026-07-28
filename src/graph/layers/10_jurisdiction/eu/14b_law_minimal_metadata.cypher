@@ -435,13 +435,11 @@ SET l.article_title   = "Nationale Cybersicherheitsstrategie",
     l.source_url      = "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32022L2555",
     l.fetched_at      = datetime("2026-04-21T19:09:45+00:00");
 
-// NIS2 Art. Overview
-MERGE (l:Law {name: "NIS2", article: "Overview"})
-SET l.article_title   = "Überblick über die NIS2-Richtlinie",
-    l.deadline_hours  = null,
-    l.retention_years = null,
-    l.source_url      = "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32022L2555",
-    l.fetched_at      = datetime("2026-04-21T19:09:45+00:00");
+// NIS2 Art. Overview — REMOVED 2026-07-28: this MERGE created a second node
+// for the same law next to "Überblick" below (identical article_title, no
+// consumer, 0 relationships). "Überblick" is the canonical key — seed_both.py
+// and fetch_law_note_de.py both target it; assistant.py:295 probing both
+// spellings was a workaround for exactly this duplicate.
 
 // NIS2 Art. Überblick
 MERGE (l:Law {name: "NIS2", article: "Überblick"})

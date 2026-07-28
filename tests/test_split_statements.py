@@ -55,4 +55,6 @@ def test_14d_cellar_sync_count():
     text = pathlib.Path(
         "src/graph/layers/10_jurisdiction/eu/14d_law_cellar_sync.cypher"
     ).read_text()
-    assert len(_split_statements(text)) == 65
+    # 63 since 2026-07-28: the two NIS2 "Overview" statements (a MERGE that
+    # created a duplicate of "Überblick", and the SET that fed it) are gone.
+    assert len(_split_statements(text)) == 63

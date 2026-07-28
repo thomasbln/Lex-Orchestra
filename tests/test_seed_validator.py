@@ -13,12 +13,14 @@ from scripts.seed_both import ALLOWED_DATA_SUBJECTS, ALLOWED_LEGAL_BASIS, valida
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
-def _make_session(services=None, relationships=None, usecase_rows=None, law_rows=None):
+def _make_session(services=None, relationships=None, usecase_rows=None, law_rows=None,
+                  law_dup_rows=None):
     """Return a mock session whose .run() returns canned rows per query keyword."""
     services = services or []
     relationships = relationships or []
     usecase_rows = usecase_rows or []
     law_rows = law_rows or []
+    law_dup_rows = law_dup_rows or []
 
     def run(query, **_kwargs):
         q = query.strip().lower()
@@ -28,6 +30,10 @@ def _make_session(services=None, relationships=None, usecase_rows=None, law_rows
             return relationships
         if "classified_by" in q:
             return usecase_rows
+        # §4.5 also opens with MATCH (l:Law) — discriminate on its aggregate
+        # before the generic law branch, or it swallows the duplicate check.
+        if "collect(l.article)" in q:
+            return law_dup_rows
         if "match (l:law)" in q:
             return law_rows
         return []
@@ -186,3 +192,38 @@ def test_multiple_errors_all_reported():
     )
     errors = validate_graph(session)
     assert len(errors) >= 5
+
+
+# ── §4.5 duplicate Law nodes (ADR-130 addendum, 2026-07-28) ──────────────────
+
+def _law_dup(name, title, articles):
+    return {"name": name, "title": title, "articles": articles}
+
+
+def test_law_under_two_article_keys_is_an_error():
+    """The NIS2 case: 14b MERGEd the overview as "Overview" AND "Überblick".
+
+    Same article_title, two keys — the (name, article) constraint never fired,
+    and every fresh install carried a duplicate node.
+    """
+    session = _make_session(law_dup_rows=[
+        _law_dup("NIS2", "Überblick über die NIS2-Richtlinie", ["Overview", "Überblick"]),
+    ])
+    errors = validate_graph(session)
+    assert len(errors) == 1
+    assert "NIS2" in errors[0]
+    assert "Overview" in errors[0] and "Überblick" in errors[0]
+    assert "canonical" in errors[0]
+
+
+def test_no_duplicate_law_returns_no_error():
+    assert validate_graph(_make_session(law_dup_rows=[])) == []
+
+
+def test_every_duplicate_group_is_reported():
+    session = _make_session(law_dup_rows=[
+        _law_dup("NIS2", "Überblick", ["Overview", "Überblick"]),
+        _law_dup("DSGVO", "Grundsätze", ["5", "Art. 5"]),
+    ])
+    errors = validate_graph(session)
+    assert len(errors) == 2

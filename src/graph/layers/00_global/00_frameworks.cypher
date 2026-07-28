@@ -65,20 +65,12 @@ MERGE (c)-[:IMPLEMENTS]->(l);
 MATCH (c:Control {framework: "OWASP_Top10", id: "A09"}), (l:Law {name: "DSGVO", article: "30"})
 MERGE (c)-[:IMPLEMENTS]->(l);
 
-MATCH (c:Control {framework: "OWASP_LLM_Top10"}), (l:Law {name: "DSGVO", article: "32"})
-WHERE c.dsgvo_article = "32"
-MERGE (c)-[:IMPLEMENTS]->(l);
-
-MATCH (c:Control {framework: "OWASP_LLM_Top10", id: "LLM08"}), (l:Law {name: "DSGVO", article: "25"})
-MERGE (c)-[:IMPLEMENTS]->(l);
-
-MATCH (c:Control {framework: "OWASP_LLM_Top10"}), (l:Law {name: "EU AI Act", article: "6"})
-WHERE c.eu_ai_act = "Art. 6"
-MERGE (c)-[:IMPLEMENTS]->(l);
-
-// AI Services → LLM Controls (müssen LLM Top 10 beachten)
-MATCH (s:Service {ai_act_relevant: true}), (c:Control {framework: "OWASP_LLM_Top10"})
-MERGE (s)-[:REQUIRES_CONTROL]->(c);
+// NOTE: the OWASP-LLM edge rules used to sit HERE. They were moved to the end
+// of the LLM control block (see "OWASP LLM — edge rules") because only LLM01/
+// LLM02/LLM06/LLM08/LLM09 are created above; LLM03/04/05/07/10 are created
+// several hundred lines further down, so the rules ran before half their nodes
+// existed and silently produced half the edges. Ordering rule, ADR-130
+// addendum: an edge rule never stands before the nodes it connects.
 
 
 // ============================================================
@@ -709,6 +701,36 @@ ON MATCH SET
 MATCH (c:Control {framework: "OWASP_LLM_Top10"})
 WHERE c.id IN ["LLM01","LLM02","LLM06","LLM08","LLM09"]
 SET c.source = "OWASP Top 10 for LLM Applications v2025";
+
+// ── OWASP LLM — edge rules ────────────────────────────────────────────────
+// Moved here from the top of the file (2026-07-28): all ten LLM controls now
+// exist, so these cartesian rules see the complete set. Before the move they
+// ran while only LLM01/02/06/08/09 existed — LLM03/04/05/07/10 got no edges at
+// all, which cost six controls in every rendered TOM.
+
+MATCH (c:Control {framework: "OWASP_LLM_Top10"}), (l:Law {name: "DSGVO", article: "32"})
+WHERE c.dsgvo_article = "32"
+MERGE (c)-[:IMPLEMENTS]->(l);
+
+// REMOVED 2026-07-28 (ADR-130 Addendum 1): LLM08 -[:IMPLEMENTS]-> DSGVO/25.
+// DSGVO Art. 25 is not seeded by any layer and is not in fetch_law_note_de.py's
+// article list — the rule could never fire. It is not reinstated as a commented
+// rule on purpose: the mapping claim lives in the PROPERTY
+// (Control {id:"LLM08"}.dsgvo_article = "25"), not in this rule, so a comment
+// here would document the wrong place — and a rule left standing would create
+// the unverified link automatically the moment someone seeds DSGVO/25.
+
+MATCH (c:Control {framework: "OWASP_LLM_Top10"}), (l:Law {name: "EU AI Act", article: "6"})
+WHERE c.eu_ai_act = "Art. 6"
+MERGE (c)-[:IMPLEMENTS]->(l);
+
+// AI Services → LLM Controls (müssen LLM Top 10 beachten)
+// NOTE: services created by a Phase-2 module (e.g. Replicate, seed_both.py)
+// do not exist yet when this Phase-1 layer runs — the manifest therefore
+// replays this file in Phase 3. Ordering rule, ADR-130 addendum: a Phase-1
+// rule cannot see Phase-2 nodes.
+MATCH (s:Service {ai_act_relevant: true}), (c:Control {framework: "OWASP_LLM_Top10"})
+MERGE (s)-[:REQUIRES_CONTROL]->(c);
 
 // ── OWASP Web Top 10 2025 — add 4 missing + update all titles ──────────────
 

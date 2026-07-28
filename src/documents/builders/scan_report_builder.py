@@ -195,12 +195,16 @@ class Ebene0Breakdown:
     Unlike the per-doc head box, the scan report carries the complete N / X /
     Differenz / other split (it is the natural home for it). other_services is
     surfaced explicitly — under-detection stays visible, never silently dropped.
+
+    ``unclassified`` was called ``tooling`` until 2026-07-28 and was rendered as
+    a fact ("development tools without independent data processing"). It never
+    was one — see the rationale in ``graph_client._classify_provenance``.
     """
     n: int
     x: int
     differenz: int
     processors: list[str]
-    tooling: list[str]
+    unclassified: list[str]
     other_services: list[str]
     x_drittland: int
     third_country: list[str]
@@ -265,7 +269,8 @@ class ScanReportBuilder(DocumentBuilder):
         if provenance and provenance.get("n", 0):
             ebene0 = Ebene0Breakdown(
                 n=provenance["n"], x=provenance["x"], differenz=provenance["differenz"],
-                processors=provenance["processors"], tooling=provenance["tooling"],
+                processors=provenance["processors"],
+                unclassified=provenance["unclassified"],
                 other_services=provenance["other_services"],
                 x_drittland=provenance["x_drittland"], third_country=provenance["third_country"],
             )

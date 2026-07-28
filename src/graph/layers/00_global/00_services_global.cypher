@@ -729,14 +729,19 @@ ON CREATE SET
 ON MATCH SET r.source = "DSGVO Art. 32";
 
 // Risk → Law VIOLATES relationships
-MATCH (r:Risk {id: "PII_IN_LLM_CONTEXT"}), (l:Law {name: "DSGVO", article: "25"}) MERGE (r)-[:VIOLATES]->(l);
+//
+// REMOVED 2026-07-28 (ADR-130 Addendum 1) — four rules that could never fire:
+//   PII_IN_LLM_CONTEXT -[:VIOLATES]-> DSGVO/25 and -> EU AI Act/10
+//   RAG_OVER_PII       -[:VIOLATES]-> DSGVO/25 and -> EU AI Act/10
+// Neither target Law is seeded by any layer, and neither is in
+// fetch_law_note_de.py's article list. They are NOT left as commented rules:
+// the claim lives in the PROPERTY (Risk.source above names both articles), so a
+// comment on the rule would document the wrong place — and a rule left standing
+// would materialise the unverified link the moment the Law nodes appear.
 MATCH (r:Risk {id: "PII_IN_LLM_CONTEXT"}), (l:Law {name: "DSGVO", article: "32"}) MERGE (r)-[:VIOLATES]->(l);
-MATCH (r:Risk {id: "PII_IN_LLM_CONTEXT"}), (l:Law {name: "EU AI Act", article: "10"}) MERGE (r)-[:VIOLATES]->(l);
 MATCH (r:Risk {id: "PII_IN_LLM_CONTEXT"}), (d:DocumentType {type: "TOM"}) MERGE (r)-[:REQUIRES_MEASURE_IN]->(d);
 
-MATCH (r:Risk {id: "RAG_OVER_PII"}), (l:Law {name: "DSGVO", article: "25"}) MERGE (r)-[:VIOLATES]->(l);
 MATCH (r:Risk {id: "RAG_OVER_PII"}), (l:Law {name: "DSGVO", article: "32"}) MERGE (r)-[:VIOLATES]->(l);
-MATCH (r:Risk {id: "RAG_OVER_PII"}), (l:Law {name: "EU AI Act", article: "10"}) MERGE (r)-[:VIOLATES]->(l);
 MATCH (r:Risk {id: "RAG_OVER_PII"}), (d:DocumentType {type: "TOM"}) MERGE (r)-[:REQUIRES_MEASURE_IN]->(d);
 MATCH (r:Risk {id: "RAG_OVER_PII"}), (s:Service {name: "Supabase"}) MERGE (s)-[:CAN_TRIGGER]->(r);
 
@@ -929,3 +934,75 @@ MERGE (h:HostingProvider {name: "Vercel"})         SET h.soc2 = true,  h.iso2700
 MERGE (h:HostingProvider {name: "Railway"})        SET h.soc2 = false, h.iso27001 = false, h.default_regions = ["us-west1"],                                h.requires_scc_outside_eu = true;
 MERGE (h:HostingProvider {name: "Fly.io"})         SET h.soc2 = true,  h.iso27001 = false, h.default_regions = ["global"],                                  h.requires_scc_outside_eu = true;
 MERGE (h:HostingProvider {name: "Cloudflare"})     SET h.soc2 = true,  h.iso27001 = true,  h.default_regions = ["global"],                                  h.requires_scc_outside_eu = true;
+
+// ── Catalogue backport (2026-07-28) ────────────────────────────────────────
+// Four services that existed only on the reference system: written there by
+// ad-hoc Cypher in earlier sessions and never carried back into a layer, so a
+// fresh install could not reproduce them. Values and provenance stamps are
+// taken verbatim from that curated stand — nothing re-researched.
+//
+// Why this matters beyond completeness: a detected service WITHOUT a catalog
+// node is dropped by Q_META and then classified as "development tooling
+// without independent data processing" in the Ebene-0 box. Elasticsearch and
+// Redis are in the static SIGNAL_MAP, so they are detected on every scan of a
+// repo that uses them — and were being declared harmless. Slack and Google
+// Cloud Authentication are not in the map; they arrive via the Gemma4 fallback,
+// which self-heals with a thin stub — the curated entry here wins because
+// main.py only auto-seeds when no node exists.
+
+MERGE (s:Service {name: "Elasticsearch"})
+ON CREATE SET s.category = "search_db", s.country = "USA", s.gdpr_adequate = true,
+              s.dpa_required = true, s.canonical_names = ["elasticsearch", "elasticsearch-py", "elastic"]
+SET s.processing_purpose = "Volltextsuche, Log-Analyse, Vector Search",
+    s.data_categories    = "Indizierte Dokumente, Suchanfragen, ggf. personenbezogene Inhalte",
+    s.data_subjects      = ["end_users"],
+    s.deletion_period    = "Bei Index-Löschung",
+    s.dpa_url            = "https://www.elastic.co/legal/elastic-dpa",
+    s.dpf_status         = "Active",
+    s.dpf_link           = "https://www.dataprivacyframework.gov/participant/9330",
+    s.vector_capable     = true,
+    s.rag_risk           = "critical",
+    s.rag_note           = "Elasticsearch Vector Search — KNNV queries mit personenbezogenen Dokumenten",
+    s.jurisdictions      = ["global"],
+    s.source             = "DPF-Liste EU-US (dataprivacyframework.gov), Status Active, geprüft 2026-06-04",
+    s.last_verified      = "2026-06-04";
+
+MERGE (s:Service {name: "Redis"})
+ON CREATE SET s.category = "cache_db", s.country = "USA", s.gdpr_adequate = false,
+              s.dpa_required = true, s.canonical_names = ["redis", "aioredis", "redis-py", "ioredis"]
+SET s.processing_purpose = "Caching, Session-Management, Message-Queue",
+    s.data_categories    = "Cache-Daten, Session-Daten, ggf. personenbezogene Inhalte",
+    s.data_subjects      = ["end_users"],
+    s.deletion_period    = "TTL-basiert — konfigurierbar",
+    s.dpa_url            = "https://redis.com/legal/redis-enterprise-cloud-dpa/",
+    s.dpf_status         = "not_listed",
+    s.vector_capable     = true,
+    s.vector_note        = "Redis Stack / RedisSearch hat Vector Search Funktion",
+    s.jurisdictions      = ["global"],
+    s.source             = "nicht in DPF-Liste EU-US, geprüft 2026-06-04",
+    s.last_verified      = "2026-06-04";
+
+MERGE (s:Service {name: "Slack"})
+ON CREATE SET s.category = "collaboration", s.country = "USA"
+SET s.data_categories = ["Nachrichteninhalte", "Nutzer-IDs", "E-Mail-Adressen", "Dateianhänge", "Workspace-Metadaten"],
+    s.data_subjects   = ["employees", "customers"],
+    s.default_region  = "us",
+    s.requires_scc    = true,
+    s.scc_mechanism   = "EU_SCCs_2021",
+    s.confidence      = 0.9,
+    s.source          = "Service-Provider Trust-Pages + DPAs (kuratiert ADR-106 PR B2)",
+    s.license         = "Lex-Orchestra internal + Provider Trust-Page-Statements",
+    s.license_attribution = "Lex-Orchestra (curated)",
+    s.last_verified   = "2026-05-28";
+
+MERGE (s:Service {name: "Google Cloud Authentication"})
+ON CREATE SET s.category = "auth", s.country = "USA", s.gdpr_adequate = false,
+              s.dpa_required = true, s.ai_act_relevant = false
+SET s.data_categories = ["E-Mail-Adressen", "OAuth-Tokens", "Authentifizierungs-Metadaten", "IP-Adressen"],
+    s.data_subjects   = ["end_users", "employees"],
+    s.jurisdictions   = ["global"],
+    s.confidence      = 0.9,
+    s.source          = "Service-Provider Trust-Pages + DPAs (kuratiert ADR-106 PR B2)",
+    s.license         = "Lex-Orchestra internal + Provider Trust-Page-Statements",
+    s.license_attribution = "Lex-Orchestra (curated)",
+    s.last_verified   = "2026-05-28";

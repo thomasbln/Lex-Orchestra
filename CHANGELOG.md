@@ -3,6 +3,48 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.3.0 — 2026-07-28
+
+Your documents change what they say about the services you use. If you generated
+documents with an earlier version, run the scan again.
+
+**Unknown services are no longer described as harmless**
+
+- A service the catalog did not know was listed as a "development tool without
+  independent data processing". Nothing in the scan supported that claim about a
+  third party — and two of the services it was applied to were Elasticsearch and
+  Redis, both of which store data.
+- Such services now appear in a block of their own, marked with the duty symbol
+  (⚖️), saying what is actually known: not in the service catalog, role
+  unverified, please assess whether they process personal data. They are
+  deliberately kept out of the processor list — listing them there would be the
+  same unfounded claim pointing the other way.
+
+**Four services added to the catalog, one detection repaired**
+
+- Elasticsearch, Redis, Slack and Google Cloud Authentication are now in the
+  catalog. Elasticsearch and Redis had no entry at all, so every detection of
+  them fell through.
+- Auth0 was detected and then silently dropped, because the detection table
+  pointed at a display label ("Auth0 / Okta") rather than the catalog name.
+
+**More security controls reach your technical measures document**
+
+- Five of the ten OWASP LLM Top 10 controls — LLM03, LLM04, LLM05, LLM07 and
+  LLM10 — never reached a document. A rule in the graph seed ran before the
+  controls it was meant to connect existed, so it quietly produced half its
+  links. Projects using an AI service get a correspondingly longer document.
+- Services added late in the seed, such as Replicate, had no controls attached
+  at all for the same reason.
+
+**Also**
+
+- The NIS2 overview existed twice in the graph, once under an English and once
+  under a German key. The duplicate is gone.
+- Two display defects in the "Why this document?" box: a note could run into the
+  previous sentence without a line break, and a count of one was written as a
+  plural.
+
 ## v1.2.0 — 2026-07-28
 
 English document output is now complete and is the default for new projects.

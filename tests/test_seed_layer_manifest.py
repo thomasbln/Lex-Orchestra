@@ -78,6 +78,12 @@ def test_manifest_matches_the_normative_adr130_order():
         "00_global/00_services_global.cypher",  # 2nd pass resolves the cycle
     ]
     assert LAYERS_PHASE_3 == [
+        # 2026-07-28: the cartesian Service→Control rules in 00_frameworks only
+        # see services that exist when the file runs. Replicate & co. are
+        # created by a Phase-2 module, so a Phase-1-only pass left them without
+        # any REQUIRES_CONTROL edge. Same second-pass pattern as Phase 1's
+        # 00_services_global; all statements are MERGE/SET, so replay is a no-op.
+        "00_global/00_frameworks.cypher",
         "00_global/00_tom_defaults.cypher",
         "00_global/01_bsi_basis_requirements_en.cypher",
         "10_jurisdiction/eu/11_data_subjects_normalize.cypher",
@@ -92,19 +98,27 @@ EXPECTED_STATEMENT_COUNTS = {
     # Drift guard: pinned from the ADR-130 read-of-truth inventory (post-D2
     # split). A conscious layer edit updates this table in the same commit.
     "00_global/00_constraints.cypher": 9,
+    # 186 since 2026-07-28: +4 catalog backport (Elasticsearch, Redis, Slack,
+    # Google Cloud Authentication), −4 Risk→Law rules whose target Law is not
+    # seeded (DSGVO/25, EU AI Act/10) — ADR-130 Addendum 1.
     "00_global/00_services_global.cypher": 186,
     # 124 since 2026-07-19: +1 stale-Limited-edge cleanup for the re-classified
     # emotion_recognition_system UseCase (Annex III 1(c) High, Art. 5(1)(f)).
     "10_jurisdiction/eu/10_eu_primary.cypher": 124,
     "10_jurisdiction/eu/10_de.cypher": 26,
-    "00_global/00_frameworks.cypher": 128,
+    # 127 since 2026-07-28: −1 LLM08→DSGVO/25 rule (target Law not seeded).
+    "00_global/00_frameworks.cypher": 127,
     "00_global/00_tom_defaults.cypher": 79,
     "00_global/01_bsi_basis_requirements_en.cypher": 16,  # +1: OPS.1.1.2 re-baseline (F23b close, 2026-07-28)
     "10_jurisdiction/eu/11_data_subjects_normalize.cypher": 13,
     "10_jurisdiction/eu/12_legal_basis_backfill.cypher": 4,
     "10_jurisdiction/eu/14a_law_dedup.cypher": 1,
-    "10_jurisdiction/eu/14b_law_minimal_metadata.cypher": 56,
-    "10_jurisdiction/eu/14d_law_cellar_sync.cypher": 65,
+    # 55 / 63 since 2026-07-28: the NIS2 overview was MERGEd under two article
+    # keys ("Overview" + "Überblick") by 14b and touched twice by 14d. Every
+    # fresh install carried a duplicate Law node. "Überblick" is canonical;
+    # the "Overview" statements are gone. Guarded by validate_graph() §4.5.
+    "10_jurisdiction/eu/14b_law_minimal_metadata.cypher": 55,
+    "10_jurisdiction/eu/14d_law_cellar_sync.cypher": 63,
 }
 
 

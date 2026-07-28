@@ -560,6 +560,12 @@ LAYERS_PHASE_1 = [
 ]
 
 LAYERS_PHASE_3 = [
+    # 2nd pass (2026-07-28): the cartesian Service→Control rules in this file
+    # only see services that exist when it runs. Replicate & co. are created by
+    # Phase-2 modules, so a Phase-1-only pass leaves them without any
+    # REQUIRES_CONTROL edge. All statements are MERGE/SET — replaying is
+    # idempotent. Ordering rule: a Phase-1 rule cannot see Phase-2 nodes.
+    "00_global/00_frameworks.cypher",
     "00_global/00_tom_defaults.cypher",
     "00_global/01_bsi_basis_requirements_en.cypher",
     "10_jurisdiction/eu/11_data_subjects_normalize.cypher",
@@ -641,6 +647,36 @@ def validate_graph(session) -> list[str]:
         key = f"{row['name']}/{row['article']}"
         if not row["article_title"]:
             errors.append(f"Law {key}: article_title missing or empty")
+
+    # §4.5 — no two :Law nodes may describe the same article under two keys
+    #
+    # ADR-130 addendum (2026-07-28). The NIS2 overview existed twice on every
+    # fresh install: 14b MERGEd it as article "Overview" AND as "Überblick",
+    # 14d touched both. Same article_title, different key — so the constraint
+    # on (name, article) never fired, and assistant.py:295 papered over it by
+    # probing both spellings.
+    #
+    # Why this check lives here and not in 14a_law_dedup.cypher: 14a is a
+    # one-time migration for instances seeded before ADR-100 (it deletes
+    # "Art. N"-prefixed DSGVO nodes that no layer creates any more), and it
+    # runs BEFORE 14b/14d in the manifest. A DELETE rule cannot catch a
+    # duplicate that a later layer has not created yet. validate_graph runs
+    # after every phase — it is the only place where the class actually bites.
+    #
+    # It reports rather than deletes: choosing a canonical key is a decision,
+    # and a seed run must not make it silently.
+    for row in session.run("""
+        MATCH (l:Law)
+        WHERE l.article_title IS NOT NULL
+        WITH l.name AS name, l.article_title AS title, collect(l.article) AS articles
+        WHERE size(articles) > 1
+        RETURN name, title, articles
+    """):
+        errors.append(
+            f"Law '{row['name']}': article_title {row['title']!r} appears under "
+            f"{len(row['articles'])} article keys {sorted(row['articles'])} — "
+            f"duplicate node, pick one canonical key"
+        )
 
     return errors
 
@@ -2887,7 +2923,7 @@ def run(target: str, modules: list[str], with_layers: bool = False) -> None:
                     for e in errors:
                         print(f"  [{target.upper():4}] ✗ {e}", file=sys.stderr)
                     raise RuntimeError(f"graph validation failed: {len(errors)} error(s)")
-                print(f"  [{target.upper():4}] ✓ validation passed (ADR-100 §4.1–§4.4)")
+                print(f"  [{target.upper():4}] ✓ validation passed (ADR-100 §4.1–§4.4, ADR-130 §4.5)")
     finally:
         driver.close()
 

@@ -15,7 +15,9 @@ PROV = {
     "x_drittland": 8,
     "third_country": ["Braintree", "MongoDB", "OpenAI", "Postmark", "Redis",
                       "Segment", "Stripe", "Supabase"],
-    "differenz": 3, "tooling": ["dotenv", "ts-node", "typescript"],
+    # Names each reachable production path can actually emit — see the
+    # "Fixture honesty" note in tests/test_processing_provenance.py.
+    "differenz": 3, "unclassified": ["Worker", "Nginx", "Acme Analytics"],
     "other_services": [],
 }
 
@@ -33,8 +35,11 @@ def test_avv_box_shows_n_x_differenz_and_names():
     for proc in PROV["processors"]:
         assert proc in box                       # all 11 processors named
     assert "weitere" not in box                  # no count collapse
-    for tool in ("dotenv", "ts-node", "typescript"):
-        assert tool in box                       # 3 tooling names all shown
+    for name in PROV["unclassified"]:
+        assert name in box                       # all 3 unclassified named
+    # the claim must be "unverified", never "development tooling"
+    assert "Entwicklungswerkzeuge" not in box
+    assert "nicht im Dienste-Katalog" in box and "⚖️" in box
     assert "Warum dieses Dokument" in box
 
 
@@ -94,3 +99,46 @@ def test_box_empty_when_provenance_unavailable():
 
 def test_unknown_doc_type_no_box():
     assert _orch()._render_ebene0_box("Sonstiges", {"run_id": "x"}) == ""
+
+
+# ── Two pre-existing defects surfaced on 2026-07-28 while adding the ⚖️ note ──
+
+_SINGULAR = {
+    "n": 3, "detected": [], "x": 1, "processors": ["OpenAI"],
+    "x_drittland": 1, "third_country": ["OpenAI"],
+    "differenz": 1, "unclassified": ["Worker"], "other_services": ["GitHub"],
+}
+
+
+def test_note_starts_on_its_own_line():
+    """`{%- if %}` + trim_blocks ate the newline on BOTH sides of the tag.
+
+    The note rendered glued to the sentence before it ("...ab.> Hinweis:"),
+    and the old assertions only checked that the substring was present, so it
+    shipped. Assert the line break itself.
+    """
+    for lang in ("de", "en"):
+        box = _orch(_SINGULAR)._render_ebene0_box("AVV", {"run_id": "x"}, lang)
+        for line in box.splitlines():
+            assert "⚖️" not in line or line.lstrip().startswith(">"), (
+                f"{lang}: note glued to previous text: {line!r}"
+            )
+        assert "ab.>" not in box and "services.>" not in box
+
+
+def test_number_agreement_at_count_one():
+    """A count of 1 read "davon 1 Dienste ... Aus diesen 1 Diensten"."""
+    de = _orch(_SINGULAR)._render_ebene0_box("AVV", {"run_id": "x"}, "de")
+    assert "**1** Dienst mit" in de and "Aus diesem **1** Dienst" in de
+    assert "1 erkannte Komponente ist" in de
+    assert "1 weiterer erkannter Dienst ist" in de
+    assert "Dienste mit" not in de and "Diensten leitet" not in de
+
+    en = _orch(_SINGULAR)._render_ebene0_box("AVV", {"run_id": "x"}, "en")
+    assert "**1** service potentially" in en and "this **1** service" in en
+    assert "1 detected component is" in en
+    assert "1 additional detected service is" in en
+
+    # the SCC variant carries the same agreement
+    assert "übermittelt **1**" in _orch(_SINGULAR)._render_ebene0_box("SCC", {"run_id": "x"}, "de")
+    assert "**1** transfers" in _orch(_SINGULAR)._render_ebene0_box("SCC", {"run_id": "x"}, "en")

@@ -19,9 +19,11 @@ https://github.com/thomasbln/Lex-Orchestra
 The infrastructure scan detected **{{ model.ebene0.n }}** components:
 
 - **{{ model.ebene0.x }}** services potentially processing personal data{{ (": " ~ (model.ebene0.processors | join(', '))) if model.ebene0.processors else "" }}
-- **{{ model.ebene0.differenz }}** development tools without independent data processing{{ (": " ~ (model.ebene0.tooling | join(', '))) if model.ebene0.tooling else "" }}
+{% if model.ebene0.unclassified %}
+- ⚖️ **{{ model.ebene0.differenz }}** components not in the service catalog, role unverified — please assess whether they process personal data: {{ model.ebene0.unclassified | join(', ') }}
+{% endif %}
 {% if model.ebene0.other_services %}
-- **{{ model.ebene0.other_services | length }}** additional detected services, not yet assigned to a data-processing category — please review: {{ model.ebene0.other_services | join(', ') }}
+- ⚖️ **{{ model.ebene0.other_services | length }}** additional detected services, not yet assigned to a data-processing category — please review: {{ model.ebene0.other_services | join(', ') }}
 {% endif %}
 
 Of these, **{{ model.ebene0.x_drittland }}** transfer data to third countries without an adequacy decision{{ (": " ~ (model.ebene0.third_country | join(', '))) if model.ebene0.third_country else "" }} — Standard Contractual Clauses required (Art. 46 GDPR).

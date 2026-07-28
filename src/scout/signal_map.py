@@ -48,7 +48,10 @@ SIGNAL_MAP: dict[str, str | None] = {
     "googlecloudstorage":    "Google Cloud",
     "azurestorageblob":      "Azure",
     "digitalocean":          "DigitalOcean",
-    "auth0":                 "Auth0 / Okta",
+    # 2026-07-28: was "Auth0 / Okta" — a display label, not a catalog key. The
+    # graph has no such Service node, so every auth0 hit fell through to the
+    # unknown-service path. Pinned by tests/test_signal_map_catalog_pin.py.
+    "auth0":                 "Auth0",
     "clerk":                 "Clerk",
     # ADR-072: google-auth*, expo, expo-notifications intentionally unmapped —
     # Gemma4 handles them via category classification (auth / baas).

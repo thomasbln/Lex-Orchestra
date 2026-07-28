@@ -500,12 +500,19 @@ class DocumentOrchestrator:
         self._current_lang = lang   # ADR-129 PR 14: inline_gap_marker localisation
         # ADR-076: expose lang inside the template so the marker macro can
         # localise its labels. Full i18n template split is a future ADR.
-        body = self._get_template(template_name, lang).render(**ctx, lang=lang)
+        # ADR-121 3-layer head: DISCLAIMER → Ebene-0 Warum-Box → ℹ️ definition.
+        # Rendered BEFORE the body (2026-07-28): the box may carry a ⚖️ duty note
+        # for unclassified / uncategorised services, and the body's legend has to
+        # declare that marker or the glyph stands unexplained. The flag is read
+        # back off the rendered box rather than recomputed — it cannot drift from
+        # what the box actually says.
+        ebene0_box = self._render_ebene0_box(doc_type, ctx, lang)  # '' or 'box\n\n'
+        body = self._get_template(template_name, lang).render(
+            **ctx, lang=lang, ebene0_duty=("⚖️" in ebene0_box)
+        )
         body = apply_hedging(body)
         disclaimer = get_disclaimer(doc_type, lang)
         footer = get_confidence_block(confidence, lang)
-        # ADR-121 3-layer head: DISCLAIMER → Ebene-0 Warum-Box → ℹ️ definition.
-        ebene0_box = self._render_ebene0_box(doc_type, ctx, lang)  # '' or 'box\n\n'
         intro_box = self._render_intro_box(doc_type, lang)   # '' or 'box\n\n'
         # A4 (Doc-Intro): order = TITLE → DISCLAIMER → 🔎 EBENE-0 → ℹ️ INTRO → 📥 STATUS → BODY → FOOTER.
         # Templates carry a [[LEX_HEAD_END]] sentinel right after their title region; the
@@ -579,7 +586,7 @@ class DocumentOrchestrator:
             variant=variant, lang=lang,
             n=prov["n"], x=prov["x"], differenz=prov["differenz"],
             processors=_fmt_ebene0_names(prov["processors"]),
-            tooling=_fmt_ebene0_names(prov["tooling"]),
+            unclassified=_fmt_ebene0_names(prov["unclassified"]),
             other=_fmt_ebene0_names(prov["other_services"]),
             other_count=len(prov["other_services"]),
             x_drittland=prov["x_drittland"],

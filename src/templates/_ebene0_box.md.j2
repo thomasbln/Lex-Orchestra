@@ -1,16 +1,33 @@
+{#-
+ADR-121 Ebene-0 "Warum-Box".
+
+Whitespace (2026-07-28): the note blocks use `{% if %}`, NOT `{%- if %}`. The
+Jinja env runs with trim_blocks=True, which already eats the newline AFTER the
+tag; a left-strip as well ate the newline BEFORE it, and the note rendered glued
+to the previous sentence ("...derived from these 3 services.> Note: ..."). The
+old test only asserted substring presence, so it never saw it.
+
+Numerus: German and English both need agreement here. A count of 1 read as
+"1 weitere erkannte Dienste ... sind", which is simply wrong German in a
+customer document.
+-#}
 {% if lang == 'en' %}
 {% if variant == "service" -%}
 > **Why this document?**
 >
-> The infrastructure scan detected **{{ n }}** components — **{{ x }}** services potentially processing personal data{% if processors %} ({{ processors }}){% endif %}{% if differenz %} and **{{ differenz }}** development tools without independent data processing{% if tooling %} ({{ tooling }}){% endif %}{% endif %}. This draft is derived from these **{{ x }}** services.
-{%- if other %}
+> The infrastructure scan detected **{{ n }}** {{ "component" if n == 1 else "components" }} — **{{ x }}** {{ "service" if x == 1 else "services" }} potentially processing personal data{% if processors %} ({{ processors }}){% endif %}. This draft is derived from {{ "this" if x == 1 else "these" }} **{{ x }}** {{ "service" if x == 1 else "services" }}.
+{% if differenz %}
 >
-> Note: {{ other_count }} additional detected services ({{ other }}) are not yet assigned to a data-processing category — please review.
-{%- endif %}
+> ⚖️ Note: {{ differenz }} detected {{ "component is" if differenz == 1 else "components are" }} not in the service catalog, so {{ "its" if differenz == 1 else "their" }} role is unverified ({{ unclassified }}) — please assess whether {{ "it processes" if differenz == 1 else "they process" }} personal data.
+{% endif %}
+{% if other %}
+>
+> ⚖️ Note: {{ other_count }} additional detected {{ "service is" if other_count == 1 else "services are" }} not yet assigned to a data-processing category ({{ other }}) — please review.
+{% endif %}
 {% elif variant == "drittland" -%}
 > **Why this document?**
 >
-> Of the detected services, **{{ x_drittland }}** transfer data to third countries without an adequacy decision{% if third_country %} ({{ third_country }}){% endif %}. For these transfers, Standard Contractual Clauses are required (Art. 46 GDPR).
+> Of the detected services, **{{ x_drittland }}** {{ "transfers" if x_drittland == 1 else "transfer" }} data to third countries without an adequacy decision{% if third_country %} ({{ third_country }}){% endif %}. For these transfers, Standard Contractual Clauses are required (Art. 46 GDPR).
 {% elif variant == "usecase" -%}
 > **Why this document?**
 >
@@ -20,15 +37,19 @@
 {% if variant == "service" -%}
 > **Warum dieses Dokument?**
 >
-> Im Infrastruktur-Scan wurden **{{ n }}** Komponenten erkannt — davon **{{ x }}** Dienste mit möglicher Verarbeitung personenbezogener Daten{% if processors %} ({{ processors }}){% endif %}{% if differenz %} und **{{ differenz }}** Entwicklungswerkzeuge ohne eigenständige Datenverarbeitung{% if tooling %} ({{ tooling }}){% endif %}{% endif %}. Aus diesen **{{ x }}** Diensten leitet sich dieser Entwurf ab.
-{%- if other %}
+> Im Infrastruktur-Scan {{ "wurde" if n == 1 else "wurden" }} **{{ n }}** {{ "Komponente" if n == 1 else "Komponenten" }} erkannt — davon **{{ x }}** {{ "Dienst" if x == 1 else "Dienste" }} mit möglicher Verarbeitung personenbezogener Daten{% if processors %} ({{ processors }}){% endif %}. Aus {{ "diesem" if x == 1 else "diesen" }} **{{ x }}** {{ "Dienst" if x == 1 else "Diensten" }} leitet sich dieser Entwurf ab.
+{% if differenz %}
 >
-> Hinweis: {{ other_count }} weitere erkannte Dienste ({{ other }}) sind noch keiner Datenverarbeitungs-Kategorie zugeordnet — bitte prüfen.
-{%- endif %}
+> ⚖️ Hinweis: {{ differenz }} erkannte {{ "Komponente ist" if differenz == 1 else "Komponenten sind" }} nicht im Dienste-Katalog enthalten, ihre Rolle ist daher ungeprüft ({{ unclassified }}) — bitte bewerten, ob sie personenbezogene Daten {{ "verarbeitet" if differenz == 1 else "verarbeiten" }}.
+{% endif %}
+{% if other %}
+>
+> ⚖️ Hinweis: {{ other_count }} {{ "weiterer erkannter Dienst ist" if other_count == 1 else "weitere erkannte Dienste sind" }} noch keiner Datenverarbeitungs-Kategorie zugeordnet ({{ other }}) — bitte prüfen.
+{% endif %}
 {% elif variant == "drittland" -%}
 > **Warum dieses Dokument?**
 >
-> Von den erkannten Diensten übermitteln **{{ x_drittland }}** in Drittländer ohne Angemessenheitsbeschluss{% if third_country %} ({{ third_country }}){% endif %}. Für diese Übermittlungen sind Standardvertragsklauseln erforderlich (Art. 46 DSGVO).
+> Von den erkannten Diensten {{ "übermittelt" if x_drittland == 1 else "übermitteln" }} **{{ x_drittland }}** in Drittländer ohne Angemessenheitsbeschluss{% if third_country %} ({{ third_country }}){% endif %}. Für diese Übermittlungen sind Standardvertragsklauseln erforderlich (Art. 46 DSGVO).
 {% elif variant == "usecase" -%}
 > **Warum dieses Dokument?**
 >

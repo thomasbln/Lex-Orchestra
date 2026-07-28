@@ -365,6 +365,11 @@ def test_no_engine_jargon_in_de_templates(template_path):
     leak into the rendered customer documents — checked at template source.
     """
     source = template_path.read_text(encoding="utf-8")
+    # Jinja comments are stripped first (2026-07-28): `{# ... #}` provably cannot
+    # reach a rendered document, so flagging an ADR reference inside one is a
+    # false positive that punishes documenting a template. Everything outside a
+    # comment is still scanned unchanged — jargon in the body still fails.
+    source = _re_jargon.sub(r"\{#.*?#\}", "", source, flags=_re_jargon.DOTALL)
     hits = [j for j in ENGINE_JARGON if j in source]
     # Internal ADR/PR references (e.g. "ADR-106 PR B4") are also jargon.
     if _re_jargon.search(r"\bPR\s?B\d", source) or _re_jargon.search(r"\bADR-\d{3}\b", source):
@@ -684,7 +689,7 @@ def test_scan_report_en_all_blocks_language_pure():
         },
         generated_doc_types=["AVV", "TOM", "DSFA"],
         provenance={"n": 5, "x": 3, "differenz": 2,
-                    "processors": ["OpenAI"], "tooling": ["pytest"],
+                    "processors": ["OpenAI"], "unclassified": ["Worker", "Nginx"],
                     "other_services": ["Foo"], "x_drittland": 1,
                     "third_country": ["OpenAI"]},
     )

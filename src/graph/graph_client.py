@@ -91,11 +91,31 @@ def _classify_provenance(detected: list[str], graph_rows: list[dict]) -> dict:
       ``requires_avv=true`` — services that process personal data.
     - ``third_country`` (X_drittland): the subset of X with ``gdpr_adequate=false``
       — the SCC trigger (NOT the AVV X).
-    - ``tooling`` (Differenz = N−X by the memo's definition): no Service node —
-      development tooling without standalone data processing.
-    - ``other_services``: has a node but ``requires_avv`` is not true — neither a
-      processor nor tooling. Surfaced separately so nothing is silently dropped
-      (``n == len(processors) + len(tooling) + len(other_services)``).
+    - ``unclassified`` (Differenz = N−X by the memo's definition): NO Service
+      node — the component is not in the seed catalog, so nothing is known
+      about whether it processes personal data.
+    - ``other_services``: has a node but ``requires_avv`` is not true — known to
+      the catalog, but no AVV-requiring category. Surfaced separately so nothing
+      is silently dropped
+      (``n == len(processors) + len(unclassified) + len(other_services)``).
+
+    Why ``unclassified`` and not ``tooling`` (2026-07-28, ADR-130 addendum)
+    ----------------------------------------------------------------------
+    This bucket used to be called ``tooling`` and was rendered as "development
+    tools without independent data processing". That is a factual claim about a
+    third party, and nothing in the pipeline supports it. Two paths lead here,
+    neither of which establishes "this is a dev tool":
+
+    1. A canonical SIGNAL_MAP name with no catalog node — a catalog gap. The
+       Fujitsu cleanroom scan labelled Elasticsearch and Redis as development
+       tooling this way, which is simply false (both are datastores).
+    2. ``lex_orchestra_scout._scan_deployment_signals``: an unmapped compose
+       image enters as ``canonical(raw) or raw.capitalize()``, so any container
+       name at all can land in this bucket.
+
+    The honest statement is "we do not know" — which is a review duty for the
+    controller, not a clean bill of health. Renaming it is the whole point;
+    a compatibility alias would keep the false claim alive in the templates.
 
     Pure function: no DB access, so the classification logic is unit-testable
     without Supabase or Neo4j.
@@ -103,12 +123,12 @@ def _classify_provenance(detected: list[str], graph_rows: list[dict]) -> dict:
     by_name = {r.get("name"): r for r in graph_rows}
     processors: list[str] = []
     third_country: list[str] = []
-    tooling: list[str] = []
+    unclassified: list[str] = []
     other: list[str] = []
     for nm in detected:
         row = by_name.get(nm, {})
         if not row.get("has_service_node"):
-            tooling.append(nm)
+            unclassified.append(nm)
         elif row.get("requires_avv"):
             processors.append(nm)
             if row.get("gdpr_adequate") is False:
@@ -122,8 +142,8 @@ def _classify_provenance(detected: list[str], graph_rows: list[dict]) -> dict:
         "processors": processors,
         "x_drittland": len(third_country),
         "third_country": third_country,
-        "differenz": len(tooling),
-        "tooling": tooling,
+        "differenz": len(unclassified),
+        "unclassified": unclassified,
         "other_services": other,
     }
 
@@ -183,7 +203,8 @@ class GraphClient:
         Joins the scanned service-detection signals in **Supabase** (scan_signals
         where signal_type='service_detected') against the compliance **graph**
         (Neo4j) and returns N / X / Differenz with names, so a document can show
-        "N components detected, X process personal data, (N−X) are dev tooling".
+        "N components detected, X process personal data, (N−X) are not in the
+        catalog and still need assessment".
 
         ADR-001: only canonical service names cross the Supabase↔Neo4j boundary;
         no PII is read or returned. ADR-121: this is the verified
