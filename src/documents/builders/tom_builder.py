@@ -61,6 +61,50 @@ TOM_SECTION_ORDER = [
     "4.4 Auftragskontrolle",
 ]
 
+# ── TOM-§ display labels — RENDER-BOUNDARY PROVISIONAL (2026-07-28) ─────────
+# The German strings above stay the IDENTITY everywhere (dict keys, sort keys,
+# Cypher parameter for Measure.tom_section, template loop filter, DB values,
+# validator spec). This table is display-only for the EN document; ADR-079
+# (real key/label split) is NOT done and stays open — this table doubles as
+# its migration template.
+#
+# Source (sighting 2026-07-28): official BMI translation of the BDSG,
+# § 64(3) control terms — https://www.gesetze-im-internet.de/englisch_bdsg/
+# englisch_bdsg.pdf (sha256-pinned in docs/sources/bdsg-en.meta.yaml; URL-only,
+# reproduction-restricted). Per-label provenance:
+#   1.1 equipment access control   — § 64(3) no. 1 (verbatim term)
+#   1.2 user control               — § 64(3) no. 4
+#   1.3 data access control        — § 64(3) no. 5
+#   1.4 separability               — § 64(3) no. 14
+#   1.5 pseudonymisation           — term § 64(2)/§ 46; house spelling -isation
+#   2.1 transport control          — § 64(3) no. 8 (chosen over no. 6
+#       'communication control': _get_tom_section maps NET.*/API7 here —
+#       transmission SECURITY, not the recipient-verification duty)
+#   2.2 input control              — § 64(3) no. 7
+#   3.1 availability control       — § 64(3) no. 13
+#   4.1 data protection measures   — HOUSE RUBRIC, no statutory term (also
+#       none on the DE side); deliberately NOT marked as sourced
+#   4.2 / 4.3                      — keys are already English (self-evident);
+#       4.3 carries '/Default' so the Art. 25(2) GDPR reference stays visible
+#       (validator keeps matching: the spec value is a substring)
+#   4.4 processing control         — § 64(3) no. 12
+TOM_SECTION_LABELS: dict[str, dict[str, str]] = {
+    "en": {
+        "1.1 Zutrittskontrolle":            "1.1 Equipment access control",
+        "1.2 Zugangskontrolle":             "1.2 User control",
+        "1.3 Zugriffskontrolle":            "1.3 Data access control",
+        "1.4 Trennungskontrolle":           "1.4 Separability",
+        "1.5 Pseudonymisierung":            "1.5 Pseudonymisation",
+        "2.1 Weitergabekontrolle":          "2.1 Transport control",
+        "2.2 Eingangskontrolle":            "2.2 Input control",
+        "3.1 Verfügbarkeitskontrolle":      "3.1 Availability control",
+        "4.1 Datenschutz-Maßnahmen":        "4.1 Data protection measures",
+        "4.2 Incident-Response-Management": "4.2 Incident response management",
+        "4.3 Privacy by Design":            "4.3 Privacy by Design/Default",
+        "4.4 Auftragskontrolle":            "4.4 Processing control",
+    },
+}
+
 FRAMEWORK_LABELS: dict[str, str] = {
     "BSI_Grundschutz": "BSI IT-Grundschutz",
     "ISO_27001":        "ISO 27001",
@@ -431,9 +475,9 @@ class TOMBuilder(DocumentBuilder):
         return CompanyBlock(
             name=config.get("company_name") or ctx.project_name,
             legal_form=config.get("legal_form") or "",
-            address=config.get("address") or "(Adresse eintragen)",
+            address=config.get("address") or ("(add address)" if (config.get("doc_language") or "de") == "en" else "(Adresse eintragen)"),
             zip_city=zip_city,
-            contact_email=config.get("contact_email") or "(E-Mail eintragen)",
+            contact_email=config.get("contact_email") or ("(add e-mail)" if (config.get("doc_language") or "de") == "en" else "(E-Mail eintragen)"),
             website_url=config.get("website_url") or "",
             responsible_name=config.get("responsible_name") or None,
             responsible_title=config.get("responsible_title") or None,

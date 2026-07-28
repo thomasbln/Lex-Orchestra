@@ -35,6 +35,13 @@ class GapHint:
     affected_docs: list = dc_field(default_factory=list)
     fix_url: str = ""
     fix_label: str = ""
+    # EN close-out (scan-report package): English twins for the two fields the
+    # scan report renders. Every creation site MUST set both (guard test counts
+    # sites, B-2/L2 pattern) — the EN render never falls back to German
+    # silently. `fix_label`/`gap_reason` are the German side; before this axis
+    # they were a DE/EN mix.
+    fix_label_en: str = ""
+    gap_reason_en: str = ""
     priority: int = 2                    # 1=critical, 2=important, 3=nice-to-have (deprecated, use severity)
 
 
@@ -62,10 +69,12 @@ def _check_company_gaps(config: dict, project_name: str) -> list[GapHint]:
             description="Unternehmensname",
             description_en="Company name",
             field="company_name",
-            gap_reason="Company name not configured — required in all generated documents.",
+            gap_reason="Unternehmensname nicht konfiguriert — in allen generierten Dokumenten erforderlich.",
+            gap_reason_en="Company name not configured — required in all generated documents.",
             affected_docs=["Impressum", "AVV", "TOM", "VVT"],
             fix_url=_url(project_name, "company"),
-            fix_label="Set company details",
+            fix_label="Firmenangaben setzen",
+            fix_label_en="Set company details",
             priority=1,
         ))
     if not config.get("address") or not config.get("city"):
@@ -77,10 +86,12 @@ def _check_company_gaps(config: dict, project_name: str) -> list[GapHint]:
             description="Vollständige Anschrift",
             description_en="Full postal address",
             field="address",
-            gap_reason="Legal address missing — required for Impressum per DDG § 5.",
+            gap_reason="Anschrift fehlt — für das Impressum nach § 5 DDG erforderlich.",
+            gap_reason_en="Legal address missing — required for the Impressum per § 5 DDG.",
             affected_docs=["Impressum"],
             fix_url=_url(project_name, "company"),
-            fix_label="Add address",
+            fix_label="Anschrift ergänzen",
+            fix_label_en="Add address",
             priority=1,
         ))
     if not config.get("dpo_name") or not config.get("dpo_email"):
@@ -92,10 +103,12 @@ def _check_company_gaps(config: dict, project_name: str) -> list[GapHint]:
             description="Datenschutzbeauftragter (falls gesetzlich erforderlich)",
             description_en="Data protection officer (where legally required)",
             field="dpo",
-            gap_reason="Data Protection Officer not set — required in AVV signature block and VVT.",
+            gap_reason="Datenschutzbeauftragter nicht gesetzt — im AVV-Unterschriftenblock und VVT erforderlich.",
+            gap_reason_en="Data protection officer not set — required in the DPA signature block and the RoPA.",
             affected_docs=["AVV", "VVT", "DSFA"],
             fix_url=_url(project_name, "company"),
-            fix_label="Set DPO",
+            fix_label="Datenschutzbeauftragten benennen",
+            fix_label_en="Set DPO",
             priority=2,
         ))
     if not config.get("register_court") or not config.get("register_number"):
@@ -107,10 +120,12 @@ def _check_company_gaps(config: dict, project_name: str) -> list[GapHint]:
             description="Handelsregistereintrag (für eingetragene Unternehmen)",
             description_en="Commercial register entry (for registered companies)",
             field="register",
-            gap_reason="Handelsregister details missing — required in Impressum for commercial entities.",
+            gap_reason="Handelsregister-Angaben fehlen — im Impressum für eingetragene Unternehmen erforderlich.",
+            gap_reason_en="Commercial register details missing — required in the Impressum for registered entities.",
             affected_docs=["Impressum"],
             fix_url=_url(project_name, "company"),
-            fix_label="Add register info",
+            fix_label="Handelsregister-Angaben ergänzen",
+            fix_label_en="Add register info",
             priority=2,
         ))
     return hints
@@ -125,12 +140,14 @@ def _check_hosting_gaps(setup: dict | None, project_name: str) -> list[GapHint]:
             article="DSGVO Art. 32 Abs. 1 (TOM-Nachweispflicht)",
             doc_affected=["TOM"],
             description="Primärer Hosting-Provider (TOM § 1.1 Zutrittskontrolle)",
-            description_en="Primary hosting provider (TOM § 1.1 physical access control)",
+            description_en="Primary hosting provider (TOM § 1.1 equipment access control)",
             field="hosting_provider",
-            gap_reason="Primary hosting provider not selected — TOM § 1.1 delegation block incomplete.",
+            gap_reason="Primärer Hosting-Provider nicht ausgewählt — TOM § 1.1 Delegationsblock unvollständig.",
+            gap_reason_en="Primary hosting provider not selected — TOM § 1.1 delegation block incomplete.",
             affected_docs=["TOM § 1.1"],
             fix_url=_url(project_name, "hosting"),
-            fix_label="Select hosting provider",
+            fix_label="Hosting-Provider wählen",
+            fix_label_en="Select hosting provider",
             priority=1,
         ))
     if setup and not setup.get("hosting_region") and not setup.get("on_prem"):
@@ -142,10 +159,12 @@ def _check_hosting_gaps(setup: dict | None, project_name: str) -> list[GapHint]:
             description="Hosting-Region (für Drittland-Transfer-Assessment)",
             description_en="Hosting region (for the third-country transfer assessment)",
             field="hosting_region",
-            gap_reason="Hosting region missing — relevant for third-country-transfer assessment.",
+            gap_reason="Hosting-Region fehlt — relevant für das Drittland-Transfer-Assessment.",
+            gap_reason_en="Hosting region missing — relevant for the third-country-transfer assessment.",
             affected_docs=["TOM", "AVV § 5"],
             fix_url=_url(project_name, "hosting"),
-            fix_label="Set hosting region",
+            fix_label="Hosting-Region angeben",
+            fix_label_en="Set hosting region",
             priority=2,
         ))
     return hints
@@ -162,10 +181,12 @@ def _check_retention_gaps(retention_policies: list, project_name: str) -> list[G
             description="Speicherfristen / Löschkonzept",
             description_en="Retention periods / deletion concept",
             field="retention",
-            gap_reason="No retention policies defined — privacy policy and VVT cannot state storage periods.",
+            gap_reason="Keine Löschfristen definiert — Datenschutzerklärung und VVT können keine Speicherdauern angeben.",
+            gap_reason_en="No retention policies defined — privacy policy and RoPA cannot state storage periods.",
             affected_docs=["AVV", "VVT", "Datenschutzerklärung"],
             fix_url=_url(project_name, "retention"),
-            fix_label="Add retention policies",
+            fix_label="Löschfristen anlegen",
+            fix_label_en="Add retention policies",
             priority=1,
         ))
     elif len(retention_policies) < 3:
@@ -177,10 +198,12 @@ def _check_retention_gaps(retention_policies: list, project_name: str) -> list[G
             description=f"Nur {len(retention_policies)} Löschfrist-Einträge — empfohlen: Logs, Accounts, Transaktionen",
             description_en=f"Only {len(retention_policies)} retention entries — recommended: logs, accounts, transactions",
             field="retention_coverage",
-            gap_reason=f"Only {len(retention_policies)} retention entr{'y' if len(retention_policies) == 1 else 'ies'}. Consider adding entries for logs, accounts, and purchases.",
+            gap_reason=f"Nur {len(retention_policies)} Löschfrist-{'Eintrag' if len(retention_policies) == 1 else 'Einträge'}. Einträge für Logs, Accounts und Käufe ergänzen.",
+            gap_reason_en=f"Only {len(retention_policies)} retention entr{'y' if len(retention_policies) == 1 else 'ies'}. Consider adding entries for logs, accounts, and purchases.",
             affected_docs=["VVT"],
             fix_url=_url(project_name, "retention"),
-            fix_label="Add more retention entries",
+            fix_label="Weitere Löschfrist-Einträge ergänzen",
+            fix_label_en="Add more retention entries",
             priority=3,
         ))
     return hints
@@ -199,10 +222,12 @@ def _check_service_gaps(services_detected: list[dict], project_name: str) -> lis
             description=f"Service-Metadaten konnten nicht abgerufen werden: {names}",
             description_en=f"Service metadata could not be retrieved: {names}",
             field="service_enrichment",
-            gap_reason=f"Could not auto-fetch metadata for: {names}. Using static fallback which may be outdated.",
+            gap_reason=f"Metadaten konnten nicht automatisch geladen werden für: {names}. Statischer Fallback wird verwendet und kann veraltet sein.",
+            gap_reason_en=f"Could not auto-fetch metadata for: {names}. Using static fallback which may be outdated.",
             affected_docs=["AVV § 1", "SCC"],
             fix_url=_url(project_name, "integrations"),
-            fix_label="Review service details manually",
+            fix_label="Service-Details manuell prüfen",
+            fix_label_en="Review service details manually",
             priority=2,
         ))
     no_country = [s for s in services_detected if not s.get("country")]
@@ -216,10 +241,12 @@ def _check_service_gaps(services_detected: list[dict], project_name: str) -> lis
             description=f"Herkunftsland unbekannt für: {names}",
             description_en=f"Country of origin unknown for: {names}",
             field="service_country",
-            gap_reason=f"Country unknown for: {names}. Third-country transfer assessment incomplete.",
+            gap_reason=f"Herkunftsland unbekannt für: {names}. Drittland-Transfer-Assessment unvollständig.",
+            gap_reason_en=f"Country unknown for: {names}. Third-country transfer assessment incomplete.",
             affected_docs=["AVV", "SCC"],
             fix_url=_url(project_name, "integrations"),
-            fix_label="Fill service countries",
+            fix_label="Service-Herkunftsländer ergänzen",
+            fix_label_en="Fill service countries",
             priority=1,
         ))
     return hints
@@ -237,10 +264,12 @@ def _check_avv_required_gaps(config: dict, services_detected: list[dict], projec
             description="Verantwortliche Person (Unterzeichner)",
             description_en="Responsible person (signatory)",
             field="responsible_name",
-            gap_reason="Responsible name not set — required as signatory in all legal documents.",
+            gap_reason="Verantwortliche Person nicht gesetzt — als Unterzeichner in allen Rechtsdokumenten erforderlich.",
+            gap_reason_en="Responsible name not set — required as signatory in all legal documents.",
             affected_docs=["AVV", "TOM", "VVT", "DSFA"],
             fix_url=_url(project_name, "company"),
-            fix_label="Set responsible person",
+            fix_label="Verantwortliche Person benennen",
+            fix_label_en="Set responsible person",
             priority=1,
         ))
     # instructing_persons: JSONB array in project_config, default [] — empty list = not configured
@@ -254,10 +283,12 @@ def _check_avv_required_gaps(config: dict, services_detected: list[dict], projec
             description="Weisungsberechtigte Person(en) auf Seiten des Verantwortlichen",
             description_en="Person(s) authorised to issue instructions on the controller's side",
             field="instructing_persons",
-            gap_reason="No instructing persons defined — AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+            gap_reason="Keine weisungsberechtigten Personen definiert — Kontrollmechanismus nach Art. 28 Abs. 3 Satz 2 lit. a DSGVO unvollständig.",
+            gap_reason_en="No instructing persons defined — control mechanism per Art. 28(3)(a) GDPR incomplete.",
             affected_docs=["AVV"],
             fix_url=_url(project_name, "instructing_persons"),
             fix_label="Weisungsberechtigte ergänzen",
+            fix_label_en="Add instructing persons",
             priority=1,
         ))
     # tom_implementations: JSONB in project_config, {} means not configured
@@ -271,10 +302,12 @@ def _check_avv_required_gaps(config: dict, services_detected: list[dict], projec
             description="TOM-Implementierungen nicht konfiguriert — im TOM-Setup ergänzen",
             description_en="TOM implementations not configured — add them in the TOM setup",
             field="tom_implementations",
-            gap_reason="tom_implementations not configured — AVV cannot reference concrete TOM measures.",
+            gap_reason="Konkrete TOM-Umsetzungen sind nicht hinterlegt — der AVV kann keine konkreten TOM-Maßnahmen referenzieren (tom_implementations).",
+            gap_reason_en="Concrete TOM implementations are not on file — the DPA cannot reference concrete TOM measures (tom_implementations).",
             affected_docs=["TOM"],
             fix_url=_url(project_name, "hosting"),
             fix_label="TOM-Implementierungen ergänzen",
+            fix_label_en="Add TOM implementations",
             priority=2,
         ))
     # data_subjects: derived from services_detected graph data, not project_config
@@ -287,10 +320,12 @@ def _check_avv_required_gaps(config: dict, services_detected: list[dict], projec
             description="Kein Service liefert Betroffenen-Kategorien aus dem Graph",
             description_en="No service provides data-subject categories from the graph",
             field="data_subjects",
-            gap_reason="No service provides data_subjects from graph — AVV § 1 Abs. 2 description of affected persons incomplete.",
+            gap_reason="Kein Service liefert data_subjects aus dem Graph — AVV § 1 Abs. 2 Beschreibung der betroffenen Personen unvollständig.",
+            gap_reason_en="No service provides data_subjects from the graph — DPA § 1(2) description of affected persons incomplete.",
             affected_docs=["AVV"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Details ergänzen",
+            fix_label_en="Add service details",
             priority=2,
         ))
     # ADR-129 PR N2 (re-audit B-3): the AVV § 2 else-branch renders this id —
@@ -304,10 +339,12 @@ def _check_avv_required_gaps(config: dict, services_detected: list[dict], projec
             description="Kein Service liefert Datenkategorien aus dem Graph",
             description_en="No service provides data categories from the graph",
             field="data_categories",
-            gap_reason="No service provides data_categories from graph — AVV § 2 description of data types incomplete.",
+            gap_reason="Kein Service liefert data_categories aus dem Graph — AVV § 2 Beschreibung der Datenarten unvollständig.",
+            gap_reason_en="No service provides data_categories from the graph — DPA § 2 description of data types incomplete.",
             affected_docs=["AVV"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Details ergänzen",
+            fix_label_en="Add service details",
             priority=2,
         ))
     return hints
@@ -331,10 +368,12 @@ def _check_vvt_gaps(services_detected: list[dict], project_name: str) -> list[Ga
             description=f"{len(no_purpose)} Service(s) ohne Verarbeitungszweck: {names}",
             description_en=f"{len(no_purpose)} service(s) without a processing purpose: {names}",
             field="processing_purpose",
-            gap_reason=f"Services without processing_purpose or category — no fallback possible: {names}.",
+            gap_reason=f"Services ohne processing_purpose oder category — kein Fallback möglich: {names}.",
+            gap_reason_en=f"Services without processing_purpose or category — no fallback possible: {names}.",
             affected_docs=["VVT"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Kategorien ergänzen",
+            fix_label_en="Add service categories",
             priority=2,
         ))
     # legal_basis comes from Q_META: HAS_CATEGORY→ServiceCategory→SUBJECT_TO_CONTROL[legal_basis].
@@ -350,10 +389,12 @@ def _check_vvt_gaps(services_detected: list[dict], project_name: str) -> list[Ga
             description=f"Rechtsgrundlage fehlt im Graph für: {names}",
             description_en=f"Legal basis missing in the graph for: {names}",
             field="legal_basis",
-            gap_reason=f"Services without legal_basis in graph — VVT cannot state legal ground: {names}.",
+            gap_reason=f"Services ohne legal_basis im Graph — VVT kann keine Rechtsgrundlage angeben: {names}.",
+            gap_reason_en=f"Services without legal_basis in the graph — the RoPA cannot state a legal ground: {names}.",
             affected_docs=["VVT"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Rechtsgrundlagen ergänzen",
+            fix_label_en="Add service legal bases",
             priority=2,
         ))
     # ADR-129 PR N2 (re-audit B-3): the VVT per-activity cells render these two ids
@@ -372,10 +413,12 @@ def _check_vvt_gaps(services_detected: list[dict], project_name: str) -> list[Ga
             description=f"Betroffenen-Kategorien fehlen im Graph für: {names}",
             description_en=f"Data-subject categories missing in the graph for: {names}",
             field="data_subjects",
-            gap_reason=f"Services without data_subjects in graph — VVT Art. 30(1)(c) categories of data subjects incomplete: {names}.",
+            gap_reason=f"Services ohne data_subjects im Graph — Kategorien betroffener Personen nach Art. 30 Abs. 1 lit. c DSGVO im VVT unvollständig: {names}.",
+            gap_reason_en=f"Services without data_subjects in the graph — categories of data subjects per Art. 30(1)(c) GDPR incomplete in the RoPA: {names}.",
             affected_docs=["VVT"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Details ergänzen",
+            fix_label_en="Add service details",
             priority=2,
         ))
     no_data_categories = [s for s in services_detected if not s.get("data_categories")]
@@ -389,10 +432,12 @@ def _check_vvt_gaps(services_detected: list[dict], project_name: str) -> list[Ga
             description=f"Datenkategorien fehlen im Graph für: {names}",
             description_en=f"Data categories missing in the graph for: {names}",
             field="data_categories",
-            gap_reason=f"Services without data_categories in graph — VVT Art. 30(1)(c) categories of personal data incomplete: {names}.",
+            gap_reason=f"Services ohne data_categories im Graph — Kategorien personenbezogener Daten nach Art. 30 Abs. 1 lit. c DSGVO im VVT unvollständig: {names}.",
+            gap_reason_en=f"Services without data_categories in the graph — categories of personal data per Art. 30(1)(c) GDPR incomplete in the RoPA: {names}.",
             affected_docs=["VVT"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Details ergänzen",
+            fix_label_en="Add service details",
             priority=2,
         ))
     # ADR-110/ADR-129 PR N2: the payment data-categories cell renders this id when
@@ -414,10 +459,12 @@ def _check_vvt_gaps(services_detected: list[dict], project_name: str) -> list[Ga
             description=f"Zahlungs-Integrationsart nicht verifiziert für: {names}",
             description_en=f"Payment integration mode not verified for: {names}",
             field="integration_mode",
-            gap_reason=f"Payment integration mode unknown — data categories depend on delegated vs merchant-side integration: {names}.",
+            gap_reason=f"Zahlungs-Integrationsart unbekannt — Datenkategorien hängen von delegierter vs. händlerseitiger Integration ab: {names}.",
+            gap_reason_en=f"Payment integration mode unknown — data categories depend on delegated vs merchant-side integration: {names}.",
             affected_docs=["VVT", "AVV"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Integrationsart prüfen",
+            fix_label_en="Verify integration mode",
             priority=2,
         ))
     return hints
@@ -435,10 +482,12 @@ def _check_dsfa_gaps(services_detected: list[dict], project_name: str) -> list[G
             description="Kein Service liefert Betroffenen-Kategorien aus dem Graph",
             description_en="No service provides data-subject categories from the graph",
             field="data_subjects",
-            gap_reason="No service provides data_subjects — DSFA Art. 35(7)(a) description of data subjects incomplete.",
+            gap_reason="Kein Service liefert data_subjects — Beschreibung der betroffenen Personen nach Art. 35 Abs. 7 lit. a DSGVO in der DSFA unvollständig.",
+            gap_reason_en="No service provides data_subjects — description of data subjects per Art. 35(7)(a) GDPR incomplete in the DPIA.",
             affected_docs=["DSFA"],
             fix_url=_url(project_name, "integrations"),
             fix_label="Service-Details ergänzen",
+            fix_label_en="Add service details",
             priority=2,
         ))
     return hints
@@ -478,10 +527,12 @@ def _check_ai_gaps(config: dict, services_detected: list[dict], project_name: st
             description="Operative KI-Verantwortung (benannte Person)",
             description_en="Operational AI responsibility (named person)",
             field="ai_config.project_level.operative_responsible",
-            gap_reason="operative_responsible not set in ai_config — AI-Act manifest §1 role assignment incomplete.",
+            gap_reason="Operative KI-Verantwortung nicht benannt — Rollenzuordnung im AI-Act-Manifest § 1 unvollständig (operative_responsible).",
+            gap_reason_en="Operational AI responsibility not assigned — AI Act manifest § 1 role assignment incomplete (operative_responsible).",
             affected_docs=["AI_Act_Manifest"],
             fix_url=_url(project_name, "ai"),
             fix_label="KI-Verantwortung ergänzen",
+            fix_label_en="Assign AI responsibility",
             priority=2,
         ))
     if not project_level.get("tech_responsible"):
@@ -493,10 +544,12 @@ def _check_ai_gaps(config: dict, services_detected: list[dict], project_name: st
             description="Technische KI-Verantwortung (benannte Person)",
             description_en="Technical AI responsibility (named person)",
             field="ai_config.project_level.tech_responsible",
-            gap_reason="tech_responsible not set in ai_config — AI-Act manifest §1 role assignment incomplete.",
+            gap_reason="Technische KI-Verantwortung nicht benannt — Rollenzuordnung im AI-Act-Manifest § 1 unvollständig (tech_responsible).",
+            gap_reason_en="Technical AI responsibility not assigned — AI Act manifest § 1 role assignment incomplete (tech_responsible).",
             affected_docs=["AI_Act_Manifest"],
             fix_url=_url(project_name, "ai"),
             fix_label="KI-Verantwortung ergänzen",
+            fix_label_en="Assign AI responsibility",
             priority=2,
         ))
     # ADR-124: ai_literacy_measures (Art. 4) replaces ki_policy_review_date. Tri-state:
@@ -511,10 +564,12 @@ def _check_ai_gaps(config: dict, services_detected: list[dict], project_name: st
             description="KI-Kompetenzmaßnahmen (AI Literacy)",
             description_en="AI literacy measures (Art. 4)",
             field="ai_config.project_level.ai_literacy_measures",
-            gap_reason="ai_literacy_measures not set in ai_config — Art. 4 AI-literacy declaration missing.",
+            gap_reason="KI-Kompetenz / Schulung (Art. 4 EU AI Act) nicht angegeben — die Erklärung zur KI-Kompetenz fehlt (ai_literacy_measures).",
+            gap_reason_en="AI literacy / training (Art. 4 EU AI Act) not declared — the AI-literacy declaration is missing (ai_literacy_measures).",
             affected_docs=["AI_Act_Manifest", "KI_Policy"],
             fix_url=_url(project_name, "ai"),
             fix_label="KI-Kompetenz angeben",
+            fix_label_en="Declare AI literacy measures",
             priority=2,
         ))
 
@@ -553,10 +608,12 @@ def _check_ai_gaps(config: dict, services_detected: list[dict], project_name: st
                 description=f"{desc} fehlt für: {names}",
                 description_en=f"{desc_en} missing for: {names}",
                 field=f"ai_config.per_service.{fld}",
-                gap_reason=f"{fld} not set in ai_config.per_service for: {names}.",
+                gap_reason=f"{desc} nicht hinterlegt für: {names} ({fld}).",
+                gap_reason_en=f"{desc_en} not provided for: {names} ({fld}).",
                 affected_docs=["KI_System_Dokumentation"],
                 fix_url=_url(project_name, "ai"),
                 fix_label="KI-System-Angaben ergänzen",
+                fix_label_en="Add AI system details",
                 priority=prio,
             ))
     return hints
@@ -570,13 +627,21 @@ def _check_repo_extraction_gaps(extraction_summary: dict | None, project_name: s
             severity="RECOMMENDED",
             article="",
             doc_affected=["Impressum", "Datenschutzerklärung"],
-            description="Keine Rechts-Artefakte im Repo (privacy.html, impressum.*)",
-            description_en="No legal artifacts in the repository (privacy.html, impressum.*)",
+            # File patterns in backticks — a bare `*`-pair is eaten by the
+            # Markdown renderer as an emphasis span (proven against the
+            # pdf_renderer engine). Named patterns are REAL globs from
+            # legal_artifact_extractor.LEGAL_ARTIFACT_GLOBS, marked as a
+            # selection ("u. a." / "among others") — the text must not promise
+            # more coverage than the detector performs.
+            description="Keine Rechts-Artefakte im Repo (u. a. `privacy.html`, `impressum.html`)",
+            description_en="No legal artifacts in the repository (among others `privacy.html`, `impressum.html`)",
             field="repo_legal_docs",
-            gap_reason="No legal artifacts found in repo (privacy.html, impressum.*, DPA.*). Fields must be entered manually.",
+            gap_reason="Keine Rechts-Artefakte im Repo gefunden (u. a. `privacy.html`, `impressum.html`, `DPA.*`). Felder müssen manuell eingetragen werden.",
+            gap_reason_en="No legal artifacts found in the repo (among others `privacy.html`, `impressum.html`, `DPA.*`). Fields must be entered manually.",
             affected_docs=["Impressum", "Datenschutzerklärung"],
             fix_url=_url(project_name, "company"),
-            fix_label="Enter details manually",
+            fix_label="Angaben manuell eintragen",
+            fix_label_en="Enter details manually",
             priority=3,
         ))
     return hints

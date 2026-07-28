@@ -6,14 +6,17 @@
     "doc_affected": [
       "TOM"
     ],
-    "description": "Prim\u00e4rer Hosting-Provider (TOM \u00a7 1.1 Zutrittskontrolle)",
+    "description": "Primärer Hosting-Provider (TOM § 1.1 Zutrittskontrolle)",
+    "description_en": "Primary hosting provider (TOM § 1.1 equipment access control)",
     "field": "hosting_provider",
-    "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+    "gap_reason": "Primärer Hosting-Provider nicht ausgewählt — TOM § 1.1 Delegationsblock unvollständig.",
     "affected_docs": [
-      "TOM \u00a7 1.1"
+      "TOM § 1.1"
     ],
     "fix_url": "http://localhost:3000/project/rand-industries/hosting",
-    "fix_label": "Select hosting provider",
+    "fix_label": "Hosting-Provider wählen",
+    "fix_label_en": "Select hosting provider",
+    "gap_reason_en": "Primary hosting provider not selected — TOM § 1.1 delegation block incomplete.",
     "priority": 1
   },
   {
@@ -23,18 +26,21 @@
     "doc_affected": [
       "AVV",
       "VVT",
-      "Datenschutzerkl\u00e4rung"
+      "Datenschutzerklärung"
     ],
-    "description": "Speicherfristen / L\u00f6schkonzept",
+    "description": "Speicherfristen / Löschkonzept",
+    "description_en": "Retention periods / deletion concept",
     "field": "retention",
-    "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+    "gap_reason": "Keine Löschfristen definiert — Datenschutzerklärung und VVT können keine Speicherdauern angeben.",
     "affected_docs": [
       "AVV",
       "VVT",
-      "Datenschutzerkl\u00e4rung"
+      "Datenschutzerklärung"
     ],
     "fix_url": "http://localhost:3000/project/rand-industries/retention",
-    "fix_label": "Add retention policies",
+    "fix_label": "Löschfristen anlegen",
+    "fix_label_en": "Add retention policies",
+    "gap_reason_en": "No retention policies defined — privacy policy and RoPA cannot state storage periods.",
     "priority": 1
   },
   {
@@ -45,13 +51,16 @@
       "AVV"
     ],
     "description": "Weisungsberechtigte Person(en) auf Seiten des Verantwortlichen",
+    "description_en": "Person(s) authorised to issue instructions on the controller's side",
     "field": "instructing_persons",
-    "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+    "gap_reason": "Keine weisungsberechtigten Personen definiert — Kontrollmechanismus nach Art. 28 Abs. 3 Satz 2 lit. a DSGVO unvollständig.",
     "affected_docs": [
       "AVV"
     ],
     "fix_url": "http://localhost:3000/project/rand-industries/instructing_persons",
-    "fix_label": "Weisungsberechtigte erg\u00e4nzen",
+    "fix_label": "Weisungsberechtigte ergänzen",
+    "fix_label_en": "Add instructing persons",
+    "gap_reason_en": "No instructing persons defined — control mechanism per Art. 28(3)(a) GDPR incomplete.",
     "priority": 1
   },
   {
@@ -60,16 +69,19 @@
     "article": "DSGVO Art. 6 Abs. 1; Art. 30 Abs. 1 lit. a; Art. 13 Abs. 1 lit. c",
     "doc_affected": [
       "VVT",
-      "Datenschutzerkl\u00e4rung"
+      "Datenschutzerklärung"
     ],
-    "description": "Rechtsgrundlage fehlt im Graph f\u00fcr: Braintree, MongoDB, Segment",
+    "description": "Rechtsgrundlage fehlt im Graph für: Braintree, MongoDB, Segment",
+    "description_en": "Legal basis missing in the graph for: Braintree, MongoDB, Segment",
     "field": "legal_basis",
-    "gap_reason": "Services without legal_basis in graph \u2014 VVT cannot state legal ground: Braintree, MongoDB, Segment.",
+    "gap_reason": "Services ohne legal_basis im Graph — VVT kann keine Rechtsgrundlage angeben: Braintree, MongoDB, Segment.",
     "affected_docs": [
       "VVT"
     ],
     "fix_url": "http://localhost:3000/project/rand-industries/integrations",
-    "fix_label": "Service-Rechtsgrundlagen erg\u00e4nzen",
+    "fix_label": "Service-Rechtsgrundlagen ergänzen",
+    "fix_label_en": "Add service legal bases",
+    "gap_reason_en": "Services without legal_basis in the graph — the RoPA cannot state a legal ground: Braintree, MongoDB, Segment.",
     "priority": 2
   },
   {
@@ -79,14 +91,17 @@
     "doc_affected": [
       "TOM"
     ],
-    "description": "TOM-Implementierungen nicht konfiguriert \u2014 im TOM-Setup erg\u00e4nzen",
+    "description": "TOM-Implementierungen nicht konfiguriert — im TOM-Setup ergänzen",
+    "description_en": "TOM implementations not configured — add them in the TOM setup",
     "field": "tom_implementations",
-    "gap_reason": "tom_implementations not configured \u2014 AVV cannot reference concrete TOM measures.",
+    "gap_reason": "Konkrete TOM-Umsetzungen sind nicht hinterlegt — der AVV kann keine konkreten TOM-Maßnahmen referenzieren (tom_implementations).",
     "affected_docs": [
       "TOM"
     ],
     "fix_url": "http://localhost:3000/project/rand-industries/hosting",
-    "fix_label": "TOM-Implementierungen erg\u00e4nzen",
+    "fix_label": "TOM-Implementierungen ergänzen",
+    "fix_label_en": "Add TOM implementations",
+    "gap_reason_en": "Concrete TOM implementations are not on file — the DPA cannot reference concrete TOM measures (tom_implementations).",
     "priority": 2
   },
   {
@@ -95,17 +110,20 @@
     "article": "",
     "doc_affected": [
       "Impressum",
-      "Datenschutzerkl\u00e4rung"
+      "Datenschutzerklärung"
     ],
-    "description": "Keine Rechts-Artefakte im Repo (privacy.html, impressum.*)",
+    "description": "Keine Rechts-Artefakte im Repo (u. a. `privacy.html`, `impressum.html`)",
+    "description_en": "No legal artifacts in the repository (among others `privacy.html`, `impressum.html`)",
     "field": "repo_legal_docs",
-    "gap_reason": "No legal artifacts found in repo (privacy.html, impressum.*, DPA.*). Fields must be entered manually.",
+    "gap_reason": "Keine Rechts-Artefakte im Repo gefunden (u. a. `privacy.html`, `impressum.html`, `DPA.*`). Felder müssen manuell eingetragen werden.",
     "affected_docs": [
       "Impressum",
-      "Datenschutzerkl\u00e4rung"
+      "Datenschutzerklärung"
     ],
     "fix_url": "http://localhost:3000/project/rand-industries/company",
-    "fix_label": "Enter details manually",
+    "fix_label": "Angaben manuell eintragen",
+    "fix_label_en": "Enter details manually",
+    "gap_reason_en": "No legal artifacts found in the repo (among others `privacy.html`, `impressum.html`, `DPA.*`). Fields must be entered manually.",
     "priority": 3
   }
 ]

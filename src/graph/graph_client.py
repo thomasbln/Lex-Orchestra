@@ -329,6 +329,7 @@ RETURN
     u.eu_ai_act_article  AS article,
     u.annex_iii_nr       AS annex_iii_nr,
     u.deployer_action    AS deployer_action,
+    u.deployer_action_en AS deployer_action_en,
     u.title_de           AS title_de,
     u.title_en           AS title_en
 """.strip()

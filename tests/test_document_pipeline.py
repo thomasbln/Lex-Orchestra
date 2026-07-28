@@ -432,9 +432,19 @@ def test_tom_renders_section_mapping_table(db_conn):
     tom_path = Path(tom_entry["file_path"])
     try:
         content = tom_path.read_text(encoding="utf-8")
-        assert "1.1 Zutrittskontrolle" in content, "TOM missing section 1.1 Zutrittskontrolle"
-        assert "1.2 Zugangskontrolle" in content, "TOM missing section 1.2 Zugangskontrolle"
-        assert "3.1 Verfügbarkeitskontrolle" in content, "TOM missing section 3.1"
+        # 2026-07-28 (TOM-§ display labels): the project's doc_language decides
+        # which surface renders — DE shows the German keys, EN shows the
+        # § 64(3) BDSG-EN labels (TOM_SECTION_LABELS). Assert language-aware so
+        # this test survives an EN-default project instead of silently pinning DE.
+        _sec = {
+            "1.1": ("1.1 Zutrittskontrolle", "1.1 Equipment access control"),
+            "1.2": ("1.2 Zugangskontrolle", "1.2 User control"),
+            "3.1": ("3.1 Verfügbarkeitskontrolle", "3.1 Availability control"),
+        }
+        for nr, variants in _sec.items():
+            assert any(v in content for v in variants), (
+                f"TOM missing section {nr} in either language: {variants}"
+            )
     finally:
         tom_path.unlink(missing_ok=True)
         with db_conn.cursor() as cur:
@@ -690,50 +700,26 @@ def test_validator_score_incomplete(tmp_path):
     assert missing is True  # section absent → would lower score
 
 
-def test_validator_appends_gaps(tmp_path):
-    """Gaps appendix is written to file when config fields are missing."""
+def test_validator_never_mutates_document_files(tmp_path):
+    """The gaps appendix was removed 2026-07-28 (German-only, retired
+    /config-/scan commands, raw identifiers in user text, duplicated the
+    warn-header/placeholder/scan-report info). The validator must be
+    READ-ONLY on document files — validate_all must not write into them."""
     from src.agents.document_validator import DocumentValidator
-    doc_path = tmp_path / "avv_test.md"
-    doc_path.write_text("# AVV\n\nSome content.\n", encoding="utf-8")
-
-    report = {
-        "doc_type": "AVV",
-        "file_path": str(doc_path),
-        "missing_sections": [],
-        "missing_config_fields": ["responsible_name", "dpo_email"],
-        "placeholder_fields": [],
-        "completeness_score": 1.0,
-        "is_usable": True,
-    }
-    DocumentValidator()._append_gaps_if_needed(report)
-
-    written = doc_path.read_text(encoding="utf-8")
-    assert "## Anhang: Noch ausstehende Angaben" in written
-    assert "responsible_name" in written
-    assert "dpo_email" in written
-
-
-def test_validator_appends_gaps_only_once(tmp_path):
-    """Gaps appendix is not duplicated on repeated calls."""
-    from src.agents.document_validator import DocumentValidator
-    doc_path = tmp_path / "avv_once.md"
-    doc_path.write_text("# AVV\n", encoding="utf-8")
-
-    report = {
-        "doc_type": "AVV",
-        "file_path": str(doc_path),
-        "missing_sections": [],
-        "missing_config_fields": ["responsible_name"],
-        "placeholder_fields": [],
-        "completeness_score": 1.0,
-        "is_usable": True,
-    }
     dv = DocumentValidator()
-    dv._append_gaps_if_needed(report)
-    dv._append_gaps_if_needed(report)
-
-    written = doc_path.read_text(encoding="utf-8")
-    assert written.count("## Anhang: Noch ausstehende Angaben") == 1
+    assert not hasattr(dv, "_append_gaps_if_needed"), (
+        "gaps appendix resurrected — it was removed by verdict 2026-07-28"
+    )
+    doc_path = tmp_path / "avv_test.md"
+    original = "# AVV\n\nSome content.\n"
+    doc_path.write_text(original, encoding="utf-8")
+    report = dv._validate_document(
+        {"doc_type": "AVV", "file_path": str(doc_path)}, config={}
+    )
+    assert doc_path.read_text(encoding="utf-8") == original, (
+        "validator wrote into a document file"
+    )
+    assert "completeness_score" in report
 
 
 def test_validator_no_disclaimer():

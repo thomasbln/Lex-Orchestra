@@ -25,6 +25,7 @@
 {% endif %}
 
 {% set _lm = ["gap", "derived"] %}
+{% if dpo_name %}{% set _lm = _lm + ["duty"] %}{% endif %}
 {% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
 {{ marker.legend(_lm) }}
 
@@ -103,6 +104,21 @@ existiert noch nicht)._
 
 {% else %}
 ▸ **Maschinelle Vorab-Einordnung (durch DSB/Anwalt zu bewerten): keine Konsultationspflicht nach Art. 36 DSGVO erkennbar.** {{ model.step5.begruendung }}
+{% endif %}
+
+---
+
+## Schritt 6: Konsultation Datenschutzbeauftragter (Art. 35 Abs. 2 DSGVO)
+
+{% if dpo_name %}
+⚖️ **Gesetzliche Pflicht (Art. 35 Abs. 2 DSGVO):** Bei der Durchführung dieser
+Datenschutz-Folgenabschätzung ist der Rat des benannten Datenschutzbeauftragten
+({{ dpo_name }}) einzuholen. Der Nachweis (Zeitpunkt, Ergebnis) ist außerhalb
+von Lex zu führen.
+{% else %}
+Kein Datenschutzbeauftragter benannt — die Einbindungspflicht nach Art. 35
+Abs. 2 DSGVO greift nur, sofern ein Datenschutzbeauftragter benannt wurde.
+Die Benennungspflicht (Art. 37 DSGVO) ist gesondert zu prüfen.
 {% endif %}
 
 ---

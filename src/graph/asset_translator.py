@@ -32,9 +32,9 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 def _resolve_db_url() -> str:
-    # MCP_SUPABASE_URL always points to accessible host (raspberrypi.local from Mac,
-    # or configured host from Pi). DATABASE_URL uses docker-internal hostname "supabase-db"
-    # which only resolves inside the Docker network.
+    # MCP_SUPABASE_URL points at the database from OUTSIDE the Docker network
+    # (host name or IP of the machine running the stack). DATABASE_URL uses the
+    # docker-internal hostname "supabase-db", which only resolves inside it.
     mcp_url = os.getenv("MCP_SUPABASE_URL", "")
     db_url  = os.getenv("DATABASE_URL", "")
     if mcp_url:

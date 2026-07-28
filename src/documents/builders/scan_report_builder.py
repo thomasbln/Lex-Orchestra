@@ -30,6 +30,21 @@ _USECASE_LABELS: dict[str, tuple[str, str, str]] = {
     "ai_assistant_general":         ("Allgemeiner KI-Assistent", "LIMITED RISK", "Art. 50"),
 }
 
+# EN close-out (scan-report package): EN twin — lex-authored class-B labels.
+# Guard test asserts key parity with the DE dict.
+_USECASE_LABELS_EN: dict[str, tuple[str, str, str]] = {
+    "hr_recruitment_screening":     ("HR recruiting / applicant screening", "HIGH RISK", "Annex III no. 4"),
+    "credit_scoring":               ("Credit scoring", "HIGH RISK", "Annex III no. 5"),
+    "education_assessment":         ("Educational assessment", "HIGH RISK", "Annex III no. 3"),
+    "healthcare_decision":          ("Medical decision-making", "HIGH RISK", "Annex III no. 2"),
+    "biometric_categorization":     ("Biometric identification", "PROHIBITED", "Art. 5"),
+    "critical_infrastructure_mgmt": ("Critical infrastructure", "HIGH RISK", "Annex III no. 2"),
+    "law_enforcement_ai":           ("Law enforcement", "HIGH RISK", "Annex III no. 6"),
+    "customer_service_chatbot":     ("Customer service chatbot", "LIMITED RISK", "Art. 50"),
+    "ai_content_generator":         ("Content generation", "LIMITED RISK", "Art. 50"),
+    "ai_assistant_general":         ("General AI assistant", "LIMITED RISK", "Art. 50"),
+}
+
 # Mixed-case keys — match generate_all() output. No .lower() needed.
 _DOC_LABELS: dict[str, str] = {
     "AVV":                     "AVV — Auftragsverarbeitungsvertrag (Art. 28 DSGVO)",
@@ -42,12 +57,34 @@ _DOC_LABELS: dict[str, str] = {
     "KI_System_Dokumentation": "KI-System-Dokumentation (EU AI Act Art. 11)",
 }
 
+# Labels match the EN doc H1s (en/*.md.j2) so the annex list names what the
+# reader actually receives — DPA / RoPA / DPIA acronyms per the H1s
+# (unification decision 2026-07-28; dict KEYS stay the internal doc types).
+_DOC_LABELS_EN: dict[str, str] = {
+    "AVV":                     "DPA — Data Processing Agreement (Art. 28 GDPR)",
+    "TOM":                     "TOM — Technical and Organisational Measures (Art. 32 GDPR)",
+    "VVT":                     "RoPA — Record of Processing Activities (Art. 30 GDPR)",
+    "SCC":                     "SCC — Standard Contractual Clauses for third-country transfers (Art. 46 GDPR)",
+    "DSFA":                    "DPIA — Data Protection Impact Assessment (Art. 35 GDPR)",
+    "AI_Act_Manifest":         "EU AI Act Risk Manifest",
+    "KI_Policy":               "AI Usage Policy (EU AI Act Art. 4 + 26)",
+    "KI_System_Dokumentation": "AI System Documentation (EU AI Act Art. 11)",
+}
+
 _RISK_DESCRIPTIONS: dict[str, str] = {
     "PII_IN_LLM_CONTEXT": "Personenbezogene Daten könnten in den KI-Kontext gelangen (DSGVO Art. 25)",
     "PII_IN_LOGS":        "PII in Monitoring-Logs erkannt — Log-Scrubbing empfohlen (DSGVO Art. 32)",
     "NO_AI_AUDIT_TRAIL":  "Kein Audit Trail für KI-Entscheidungen — Langfuse empfohlen (EU AI Act Art. 12)",
     "MISSING_AVV":        "Auftragsverarbeitungsvertrag fehlt für erkannte Sub-Prozessoren",
     "MISSING_SCC":        "Standardvertragsklauseln für Drittlandtransfer fehlen",
+}
+
+_RISK_DESCRIPTIONS_EN: dict[str, str] = {
+    "PII_IN_LLM_CONTEXT": "Personal data could reach the AI context (GDPR Art. 25)",
+    "PII_IN_LOGS":        "PII detected in monitoring logs — log scrubbing recommended (GDPR Art. 32)",
+    "NO_AI_AUDIT_TRAIL":  "No audit trail for AI decisions — Langfuse recommended (EU AI Act Art. 12)",
+    "MISSING_AVV":        "Data processing agreement missing for detected sub-processors",
+    "MISSING_SCC":        "Standard contractual clauses for third-country transfers missing",
 }
 
 _SIGNAL_LABELS: dict[str, str] = {
@@ -59,6 +96,44 @@ _SIGNAL_LABELS: dict[str, str] = {
     "secret_detected":    "⚠️ Mögliche Credentials/API-Keys im Code erkannt",
     "autonomy":           "Autonomes KI-Verhalten erkannt",
     "user_interaction":   "Nutzerinteraktion mit KI erkannt",
+}
+
+_SIGNAL_LABELS_EN: dict[str, str] = {
+    "ai_usage":           "AI API usage detected (OpenAI, Anthropic, or similar)",
+    "personal_data":      "Processing of personal data detected",
+    "system_prompt":      "System prompt found → AI use case classified",
+    "system_prompt_role": "AI use case classified automatically",
+    "decision_logic":     "Automated decision logic detected",
+    "secret_detected":    "⚠️ Possible credentials/API keys detected in code",
+    "autonomy":           "Autonomous AI behaviour detected",
+    "user_interaction":   "User interaction with AI detected",
+}
+
+# GapHint.affected_docs carries the German doc identifiers — render-boundary
+# display maps (unification decision 2026-07-28: the affected column names the
+# documents the reader actually holds; no raw underscore keys in user text).
+# Complete key inventory (AST over gap_analyzer, 2026-07-28): AI_Act_Manifest,
+# AVV, AVV § 1, AVV § 5, DSFA, Datenschutzerklärung, Impressum, KI_Policy,
+# KI_System_Dokumentation, SCC, TOM, TOM § 1.1, VVT. TOM and Impressum stay;
+# keys not in the map pass through unchanged.
+_AFFECTED_DOC_EN: dict[str, str] = {
+    "Datenschutzerklärung":     "Privacy policy",
+    "AVV":                      "DPA",
+    "VVT":                      "RoPA",
+    "DSFA":                     "DPIA",
+    "AVV § 1":                  "DPA § 1",
+    "AVV § 5":                  "DPA § 5",
+    "AI_Act_Manifest":          "EU AI Act Risk Manifest",
+    "KI_Policy":                "AI Usage Policy",
+    "KI_System_Dokumentation":  "AI System Documentation",
+}
+
+# DE display twin — readable German names for the underscore doc-type keys
+# (matches the _DOC_LABELS name parts); everything else passes through.
+_AFFECTED_DOC_DE: dict[str, str] = {
+    "AI_Act_Manifest":          "EU AI Act Risiko-Manifest",
+    "KI_Policy":                "KI-Nutzungsrichtlinie",
+    "KI_System_Dokumentation":  "KI-System-Dokumentation",
 }
 
 
@@ -181,6 +256,10 @@ class ScanReportBuilder(DocumentBuilder):
         generated_doc_types: list[str] | None = None,
         provenance: dict | None = None,
     ) -> ScanReportContentModel:
+        # EN close-out (analysis 2026-07-28, C4): the scan report follows
+        # doc_language like every other builder — DE default unchanged.
+        lang = config.get("doc_language", "de") or "de"
+        en = lang == "en"
         signals = risk_signals or []
         ebene0 = None
         if provenance and provenance.get("n", 0):
@@ -208,10 +287,13 @@ class ScanReportBuilder(DocumentBuilder):
         top_actions = [
             TopActionRow(
                 index=i + 1,
-                fix_label=h.fix_label,
+                # Language-pure pick (B-2/L2 pattern): EN reads the _en twin,
+                # never the German string — a site-count guard test keeps every
+                # creation site carrying both.
+                fix_label=(h.fix_label_en if en else h.fix_label),
                 icon=self._severity_icon(h.severity),
-                gap_reason=h.gap_reason,
-                affected_docs=h.affected_docs,
+                gap_reason=(h.gap_reason_en if en else h.gap_reason),
+                affected_docs=self._affected_docs(h, lang),
                 fix_url=h.fix_url,
             )
             for i, h in enumerate(top_3)
@@ -230,6 +312,11 @@ class ScanReportBuilder(DocumentBuilder):
         ki_docs_skipped_note = None
         if not ai_services_detected and not (_KI_DOC_TYPES & set(gen_types)):
             ki_docs_skipped_note = (
+                "AI-specific documents (AI policy, AI system documentation, DPIA, "
+                "EU AI Act manifest) were deliberately omitted — no AI services were "
+                "detected in the code. A DPIA or an AI Act manifest without detected "
+                "AI processing would suggest obligations that do not exist here."
+            ) if en else (
                 "KI-spezifische Dokumente (KI-Policy, KI-System-Dokumentation, DSFA, "
                 "EU-AI-Act-Manifest) wurden bewusst ausgelassen — im Code wurden keine "
                 "KI-Dienste erkannt. Eine DSFA oder ein AI-Act-Manifest ohne erkannte "
@@ -239,24 +326,26 @@ class ScanReportBuilder(DocumentBuilder):
         top_signal_dicts = sorted(
             signals, key=lambda s: s.get("confidence", 0), reverse=True
         )[:5]
+        signal_labels = _SIGNAL_LABELS_EN if en else _SIGNAL_LABELS
         top_signals = [
             SignalRow(
-                label=_SIGNAL_LABELS.get(s.get("signal_type", ""), s.get("signal_type", "?")),
+                label=signal_labels.get(s.get("signal_type", ""), s.get("signal_type", "?")),
                 confidence_pct=int(s.get("confidence", 0) * 100),
             )
             for s in top_signal_dicts
         ]
 
-        usecase_display = self._usecase_display(config)
+        usecase_display = self._usecase_display(config, lang)
         repo_extractions = self._repo_extractions_block(extractions)
 
         overall_risk = graph_result.get("overall_risk", "—")
         usecase_risks_from_graph = graph_result.get("usecase_risks", [])
-        risk_display = self._risk_display(overall_risk, usecase_risks_from_graph)
+        risk_display = self._risk_display(overall_risk, usecase_risks_from_graph, lang)
 
         active_risks_raw = graph_result.get("active_risks", [])
+        risk_descriptions = _RISK_DESCRIPTIONS_EN if en else _RISK_DESCRIPTIONS
         active_risks = [
-            ActiveRiskRow(id=r, description=_RISK_DESCRIPTIONS.get(r, r))
+            ActiveRiskRow(id=r, description=risk_descriptions.get(r, r))
             for r in active_risks_raw
         ]
 
@@ -265,27 +354,36 @@ class ScanReportBuilder(DocumentBuilder):
                 level_upper=(uc.get("risk_level") or "HIGH").upper(),
                 article=uc.get("article", "Art. 6"),
                 annex_iii_nr=str(uc.get("annex_iii_nr", "?")),
-                title=uc.get("title_de") or uc.get("type", "?"),
-                deployer_action=uc.get("deployer_action", ""),
+                # ADR-129 PR 12 (F8) pattern: doc-language title, honest DE
+                # fallback (title_en is seeded 20/20 — the fallback is a guard,
+                # not the expected path).
+                title=((uc.get("title_en") if en else None)
+                       or uc.get("title_de") or uc.get("type", "?")),
+                # Language-pure deployer obligation (B-2/L5 pattern): EN reads
+                # deployer_action_en (seeded 20/20, wired via Q_USECASE_RISK);
+                # a German value without its twin renders the honest pending
+                # marker, never silent German.
+                deployer_action=self._lang_field(uc, "deployer_action", lang) or "",
             )
             for uc in usecase_risks_from_graph
             if (uc.get("risk_level") or "").lower() in ("high", "unacceptable")
         ]
 
-        generated_doc_labels = [_DOC_LABELS.get(dt, dt) for dt in gen_types]
+        doc_labels = _DOC_LABELS_EN if en else _DOC_LABELS
+        generated_doc_labels = [doc_labels.get(dt, dt) for dt in gen_types]
 
         usecase_type = config.get("ai_usecase_type")
         immediate_actions, short_term_actions, long_term_actions = self._action_lists(
-            gap_hints_sorted, active_risks_raw, usecase_type,
+            gap_hints_sorted, active_risks_raw, usecase_type, lang,
         )
 
         all_gaps = [
             AllGapRow(
                 index=i + 1,
-                fix_label=h.fix_label,
-                severity_label=self._severity_label(h.severity),
-                gap_reason=h.gap_reason,
-                affected_docs=h.affected_docs,
+                fix_label=(h.fix_label_en if en else h.fix_label),
+                severity_label=self._severity_label(h.severity, lang),
+                gap_reason=(h.gap_reason_en if en else h.gap_reason),
+                affected_docs=self._affected_docs(h, lang),
                 fix_url=h.fix_url,
             )
             for i, h in enumerate(gap_hints_sorted)
@@ -318,16 +416,38 @@ class ScanReportBuilder(DocumentBuilder):
 
     # ─── Helpers ───────────────────────────────────────────────────────────────
 
+    # B-2/L5 twin (see ai_act_builder._lang_text): the EN doc NEVER silently
+    # shows German — a German value without its `_en` twin renders this marker.
+    _TRANSLATION_PENDING_EN = "☐ translation pending (German version exists)"
+
+    def _lang_field(self, row: dict, base: str, lang: str) -> str | None:
+        """Language-pure field pick: EN → `_en` or pending-marker; DE → base."""
+        if lang == "en":
+            val = row.get(f"{base}_en")
+            if val:
+                return val
+            return self._TRANSLATION_PENDING_EN if row.get(base) else None
+        return row.get(base)
+
+    def _affected_docs(self, h: GapHint, lang: str) -> list[str]:
+        """affected_docs for display — both languages map the raw identifiers
+        to readable doc names (_AFFECTED_DOC_EN / _AFFECTED_DOC_DE); unmapped
+        keys pass through unchanged."""
+        table = _AFFECTED_DOC_EN if lang == "en" else _AFFECTED_DOC_DE
+        return [table.get(d, d) for d in h.affected_docs]
+
     def _severity_icon(self, severity: str) -> str:
         return {"REQUIRED": "🔴", "RECOMMENDED": "🟡"}.get(severity, "⚪")
 
-    def _severity_label(self, severity: str) -> str:
+    def _severity_label(self, severity: str, lang: str = "de") -> str:
+        if lang == "en":
+            return {"REQUIRED": "🔴 required", "RECOMMENDED": "🟡 recommended"}.get(severity, "⚪ optional")
         return {"REQUIRED": "🔴 erforderlich", "RECOMMENDED": "🟡 empfohlen"}.get(severity, "⚪ optional")
 
-    def _risk_display(self, overall_risk: str, usecase_risks: list[dict]) -> str:
+    def _risk_display(self, overall_risk: str, usecase_risks: list[dict], lang: str = "de") -> str:
         base = _RISK_LABELS.get(
             (overall_risk or "").lower(),
-            overall_risk or "Nicht klassifiziert",
+            overall_risk or ("Not classified" if lang == "en" else "Nicht klassifiziert"),
         )
         high_ucs = [
             uc for uc in usecase_risks
@@ -336,19 +456,22 @@ class ScanReportBuilder(DocumentBuilder):
         if high_ucs and (overall_risk or "").lower() not in ("high", "unacceptable"):
             uc = high_ucs[0]
             lvl = (uc.get("risk_level") or "high").upper()
+            nr_word = "no." if lang == "en" else "Nr."
             return (
                 f"{lvl} RISK (EU AI Act {uc.get('article', 'Art. 6')}, "
-                f"Annex III Nr. {uc.get('annex_iii_nr', '?')})"
+                f"Annex III {nr_word} {uc.get('annex_iii_nr', '?')})"
             )
         return base
 
-    def _usecase_display(self, config: dict) -> str | None:
+    def _usecase_display(self, config: dict, lang: str = "de") -> str | None:
         usecase_type = config.get("ai_usecase_type")
-        if not usecase_type or usecase_type not in _USECASE_LABELS:
+        labels = _USECASE_LABELS_EN if lang == "en" else _USECASE_LABELS
+        if not usecase_type or usecase_type not in labels:
             return None
-        label, risk, article = _USECASE_LABELS[usecase_type]
+        label, risk, article = labels[usecase_type]
         confidence = config.get("ai_usecase_confidence")
-        conf_str = f" (Konfidenz: {confidence:.0%})" if confidence else ""
+        conf_word = "confidence" if lang == "en" else "Konfidenz"
+        conf_str = f" ({conf_word}: {confidence:.0%})" if confidence else ""
         return f"{label} — {risk} ({article}){conf_str}"
 
     def _repo_extractions_block(self, extractions: dict) -> RepoExtractionsBlock | None:
@@ -368,31 +491,53 @@ class ScanReportBuilder(DocumentBuilder):
         gap_hints_sorted: list[GapHint],
         active_risks: list[str],
         usecase_type: str | None,
+        lang: str = "de",
     ) -> tuple[list[str], list[str], list[str]]:
+        en = lang == "en"
+
+        def _label(h: GapHint) -> str:
+            return h.fix_label_en if en else h.fix_label
+
         immediate: list[str] = [
-            "Alle generierten Entwürfe durch Rechtsberater prüfen lassen",
+            "Have all generated drafts reviewed by legal counsel" if en
+            else "Alle generierten Entwürfe durch Rechtsberater prüfen lassen",
         ]
         for h in gap_hints_sorted:
-            if h.severity == "REQUIRED" and h.fix_label not in immediate:
-                immediate.append(h.fix_label)
+            if h.severity == "REQUIRED" and _label(h) not in immediate:
+                immediate.append(_label(h))
 
         short_term: list[str] = []
         if usecase_type and "hr_recruitment" in usecase_type:
             short_term.extend([
+                "Register the HR AI system in the EU database (AI Act Annex III)",
+                "Carry out a conformity assessment via a notified body",
+                "Document a fundamental rights impact assessment",
+                "Complete the DPIA before putting the system into operation",
+            ] if en else [
                 "HR-KI-System bei EU-Datenbank registrieren (AI Act Annex III)",
                 "Konformitätsbewertung durch benannte Stelle durchführen",
                 "Grundrechte-Folgenabschätzung dokumentieren",
                 "DSFA vor Inbetriebnahme abschließen",
             ])
         if "NO_AI_AUDIT_TRAIL" in active_risks:
-            short_term.append("Langfuse (oder gleichwertiges Tool) für AI Act Art. 12 Audit Trail integrieren")
+            short_term.append(
+                "Integrate Langfuse (or an equivalent tool) for the AI Act Art. 12 audit trail" if en
+                else "Langfuse (oder gleichwertiges Tool) für AI Act Art. 12 Audit Trail integrieren"
+            )
         if "PII_IN_LLM_CONTEXT" in active_risks:
-            short_term.append("UUID-Only Pattern implementieren — PII nie direkt in LLM-Kontext")
+            short_term.append(
+                "Implement the UUID-only pattern — never put PII directly into the LLM context" if en
+                else "UUID-Only Pattern implementieren — PII nie direkt in LLM-Kontext"
+            )
         for h in gap_hints_sorted:
-            if h.severity == "RECOMMENDED" and h.fix_label not in short_term:
-                short_term.append(h.fix_label)
+            if h.severity == "RECOMMENDED" and _label(h) not in short_term:
+                short_term.append(_label(h))
 
         long_term: list[str] = [
+            "Communicate and train the AI usage policy internally (AI Act Art. 4)",
+            "Schedule a regular review cycle for all documents (at least annually)",
+            "Update the privacy policy on the website",
+        ] if en else [
             "KI-Nutzungsrichtlinie intern kommunizieren und schulen (AI Act Art. 4)",
             "Regelmäßigen Review-Zyklus für alle Dokumente einplanen (mind. jährlich)",
             "Datenschutzerklärung auf Website aktualisieren",

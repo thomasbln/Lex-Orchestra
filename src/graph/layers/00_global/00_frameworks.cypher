@@ -107,16 +107,23 @@ SET c.description        = "Grundlegende organisatorische Regelungen für Inform
     c.source = "BSI IT-Grundschutz-Kompendium Edition 2023";
 
 // OPS.1.1.2 — Ordnungsgemäße IT-Administration (official Baustein ID; no standalone OPS.1.1 exists — ADR-126 Phase 3b)
+// Re-baselined 2026-07-28 (F23b reopen): the previous list carried old-scheme
+// IDs (OPS.1.1.A*) that do not exist in Ed. 2022/2023 — no verbatim EN twin was
+// possible. Both sides now come from the SAME-EDITION pair of the IT-Grundschutz
+// Compendium (DE 2022 + EN 2022; BYOS, see docs/sources/SOURCES.md), Basic
+// Requirements only (A1 ELIMINATED in both editions), layout metadata stripped
+// per the 01_bsi layer convention.
 MERGE (c:Control {framework: "BSI_Grundschutz", id: "OPS.1.1.2"})
 ON CREATE SET c.title = "Ordnungsgemäße IT-Administration", c.severity = "high"
 SET c.description        = "Sichere und geregelte Administration von IT-Systemen. Personalauswahl, Administrationskennungen und Schutz privilegierter Zugriffe.",
     c.basis_requirements = [
-      "OPS.1.1.A1 Personalauswahl für administrative Tätigkeiten",
-      "OPS.1.1.A2 Regelungen für IT-Administrationstätigkeiten",
-      "OPS.1.1.A3 Geregelte Einweisung von IT-Administrationspersonal",
-      "OPS.1.1.A5 Administrationskennungen",
-      "OPS.1.1.A6 Schutz administrativer Kennungen"
+      "OPS.1.1.2.A2 Vertretungsregelungen und Notfallvorsorge",
+      "OPS.1.1.2.A3 Geregelte Einstellung von IT-Administratoren",
+      "OPS.1.1.2.A4 Beendigung der Tätigkeit als IT-Administrator",
+      "OPS.1.1.2.A5 Nachweisbarkeit von administrativen Tätigkeiten",
+      "OPS.1.1.2.A6 Schutz administrativer Tätigkeiten"
     ],
+    c.basis_requirements_source = "BSI IT-Grundschutz-Kompendium Edition 2022 (DE)",
     c.source = "BSI IT-Grundschutz-Kompendium Edition 2023";
 
 // SYS.1.1 — Allgemeiner Server

@@ -17,6 +17,27 @@ from jinja2 import Environment, FileSystemLoader
 
 TEMPLATES_DIR = Path(__file__).parents[1] / "src" / "templates"
 FIXTURE = Path(__file__).parent / "fixtures"
+DEFAULT_CONFIG = "rand_industries_config.json"
+GAPS_CONFIG = "rand_industries_config_gaps.json"  # empty required fields — the gap-path fixture
+
+
+def _load_config(lang: str, config_file: str = DEFAULT_CONFIG) -> dict:
+    config = json.loads((FIXTURE / config_file).read_text())
+    config["doc_language"] = lang
+    return config
+
+
+def _linter_gap_hints(config: dict, config_file: str):
+    """Default fixture -> pre-baked gap list; gaps fixture -> LIVE detectors,
+    so the warn-header/gap branches actually fire (fixture-drift lesson)."""
+    from src.scanner.gap_analyzer import GapHint, analyze_gaps
+    if config_file == DEFAULT_CONFIG:
+        gaps_raw = json.loads((FIXTURE / "rand_industries_gaps.json").read_text())
+        return [GapHint(**g) if isinstance(g, dict) else g for g in gaps_raw]
+    graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
+    return analyze_gaps("rand-industries", config, None, [],
+                        graph.get("services", []), None)
+
 
 # ADR-102 §7: violation patterns that must be absent from all rendered output
 VIOLATION_PATTERNS = [
@@ -87,7 +108,7 @@ def _make_jinja(lang: str = "de") -> Environment:
                 p = p[len("DSGVO "):]
             p = _re.sub(r"Abs\. (\d+)", r"(\1)", p)
             p = _re.sub(r"lit\. ([a-z])", r"(\1)", p)
-            p = _re.sub(r"Satz (\d+)", r"sentence \1", p)
+            p = _re.sub(r"\s*Satz \d+", "", p)   # sentence counting dropped in EN (2026-07-28)
             p = _re.sub(r"Nr\. (\d+)", r"no. \1", p)
             p = _re.sub(r"Anhang III", "Annex III", p)
             p = p.replace("(TOM-Nachweispflicht)", "(TOM accountability)")
@@ -101,22 +122,26 @@ def _make_jinja(lang: str = "de") -> Environment:
     return env
 
 
-def _base_ctx(lang: str = "de") -> dict:
-    """Minimal flat context that satisfies all template header variables."""
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+def _base_ctx(lang: str = "de", config_file: str = DEFAULT_CONFIG) -> dict:
+    """Minimal flat context that satisfies all template header variables.
+    No value-inventing defaults — with the gaps fixture the empty fields must
+    reach the templates so the fallback branches fire."""
+    config = _load_config(lang, config_file)
     return {
         "lang":            lang,   # _warn_header / _bfdi_footer branch on this
         "project_name":    "rand-industries",
         "run_id":          "linter-test-00000000",
         "generation_date": "2026-04-23",
-        "company_name":    config.get("company_name", "Rand Industries Inc."),
-        "legal_form":      config.get("legal_form", "Inc."),
-        "address":         config.get("address", "123 Main St"),
+        # harness-mirror of _common_config_context: the flat header fields
+        # carry the SAME language-pure fallbacks as production, so the gaps
+        # fixture exercises the real header path.
+        "company_name":    config.get("company_name") or "rand-industries",
+        "legal_form":      config.get("legal_form", ""),
+        "address":         config.get("address") or ("(add address)" if lang == "en" else "(Adresse eintragen)"),
         "zip_code":        config.get("zip_code", ""),
         "city":            config.get("city", ""),
         "zip_city":        config.get("zip_city", ""),
-        "contact_email":   config.get("contact_email", "info@example.com"),
+        "contact_email":   config.get("contact_email") or ("(add e-mail)" if lang == "en" else "(E-Mail eintragen)"),
         "website_url":     config.get("website_url", ""),
         "responsible_name":  config.get("responsible_name", ""),
         "responsible_title": config.get("responsible_title", ""),
@@ -133,19 +158,17 @@ def _base_ctx(lang: str = "de") -> dict:
 # Per-document render helpers
 # ---------------------------------------------------------------------------
 
-def _render_avv(env: Environment, lang: str = "de") -> str:
+def _render_avv(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.avv_builder import AVVBuilder
     from src.documents.content_models import BuildContext
     from src.scanner.gap_analyzer import GapHint
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
-    gaps_raw = json.loads((FIXTURE / "rand_industries_gaps.json").read_text())
-    gap_hints = [GapHint(**g) if isinstance(g, dict) else g for g in gaps_raw]
+    config = _load_config(lang, config_file)
+    gap_hints = _linter_gap_hints(config, config_file)
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = AVVBuilder().build(graph, {}, config, gap_hints, ctx)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     ctx_dict["services"] = graph.get("services", [])
     # ADR-129 PR N4 (re-audit B-4): feed the builder's real deletion rows so § 7
@@ -158,61 +181,60 @@ def _render_avv(env: Environment, lang: str = "de") -> str:
     return env.get_template("avv.md.j2").render(**ctx_dict)
 
 
-def _render_tom(env: Environment, lang: str = "de") -> str:
+def _render_tom(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.tom_builder import TOMBuilder
     from src.documents.content_models import BuildContext
     from src.agents.document_architect import TOM_SECTION_ORDER
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = TOMBuilder().build(graph, {}, config, [], ctx)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     ctx_dict["priority_actions"] = []
     ctx_dict["active_risks"] = graph.get("active_risks", [])
     ctx_dict["controls_by_section"] = {}
     ctx_dict["tom_section_order"] = TOM_SECTION_ORDER
+    # harness-mirror: production (_write_tom) passes the display-label table
+    from src.documents.builders.tom_builder import TOM_SECTION_LABELS
+    ctx_dict["tom_section_labels"] = TOM_SECTION_LABELS.get(lang, {})
     return env.get_template("tom.md.j2").render(**ctx_dict)
 
 
-def _render_vvt(env: Environment, lang: str = "de") -> str:
+def _render_vvt(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.vvt_builder import VVTBuilder
     from src.documents.content_models import BuildContext
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = VVTBuilder().build(graph, {}, config, [], ctx)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     return env.get_template("vvt.md.j2").render(**ctx_dict)
 
 
-def _render_ki_policy(env: Environment, lang: str = "de") -> str:
+def _render_ki_policy(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.ki_policy_builder import KIPolicyBuilder
     from src.documents.content_models import BuildContext
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ai_services = [s for s in graph.get("services", []) if s.get("ai_act_relevant") or s.get("category") == "ai_llm"]
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = KIPolicyBuilder().build({"services": ai_services}, {}, config, [], ctx)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     return env.get_template("ki_policy.md.j2").render(**ctx_dict)
 
 
-def _render_ki_system(env: Environment, lang: str = "de") -> str:
+def _render_ki_system(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.ki_system_builder import KISystemBuilder
     from src.documents.content_models import BuildContext
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ai_services = [s for s in graph.get("services", []) if s.get("ai_act_relevant") or s.get("category") == "ai_llm"]
     service = ai_services[0] if ai_services else {"name": "OpenAI", "category": "ai_llm"}
     ai_usecase = {"type": "hr_recruitment_screening", "risk_level": "High",
@@ -220,52 +242,48 @@ def _render_ki_system(env: Environment, lang: str = "de") -> str:
                   "article": "6", "annex_iii_nr": 4, "deployer_action": "Konformitätsbewertung"}
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = KISystemBuilder().build(graph, {}, config, [], ctx, service=service, ai_usecase=ai_usecase)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     return env.get_template("ki_system.md.j2").render(**ctx_dict)
 
 
-def _render_dsfa(env: Environment, lang: str = "de") -> str:
+def _render_dsfa(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.dsfa_builder import DSFABuilder
     from src.documents.content_models import BuildContext
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ai_usecase = {"type": "hr_recruitment_screening", "risk_level": "High",
                   "title_de": "HR-Recruiting", "description_de": "Bewerberauswahl",
                   "article": "6", "annex_iii_nr": 4}
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = DSFABuilder().build(graph, {}, config, [], ctx, ai_usecase=ai_usecase)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     return env.get_template("dsfa.md.j2").render(**ctx_dict)
 
 
-def _render_ai_act_manifest(env: Environment, lang: str = "de") -> str:
+def _render_ai_act_manifest(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.ai_act_builder import AIActBuilder
     from src.documents.content_models import BuildContext
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = AIActBuilder().build(graph, {}, config, [], ctx)
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     return env.get_template("ai_act_manifest.md.j2").render(**ctx_dict)
 
 
-def _render_scan_report(env: Environment, lang: str = "de") -> str:
+def _render_scan_report(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.scan_report_builder import ScanReportBuilder
     from src.documents.content_models import BuildContext
     from src.scanner.gap_analyzer import GapHint
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
-    gaps_raw = json.loads((FIXTURE / "rand_industries_gaps.json").read_text())
-    gap_hints = [GapHint(**g) if isinstance(g, dict) else g for g in gaps_raw]
+    config = _load_config(lang, config_file)
+    gap_hints = _linter_gap_hints(config, config_file)
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     signals = graph.get("signals", [])
     active_risks = graph.get("active_risks", [])
@@ -441,24 +459,25 @@ def test_avv_deletion_list_renders_one_bullet_per_line(rendered_docs):
 # except the deliberately-labelled Class-C BfDI footer.
 # ---------------------------------------------------------------------------
 
-def _render_scc(env: Environment, lang: str = "de") -> str:
+def _render_scc(env: Environment, lang: str = "de", config_file: str = DEFAULT_CONFIG) -> str:
     from src.documents.builders.scc_builder import SCCBuilder
     from src.documents.content_models import BuildContext
 
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    config = json.loads((FIXTURE / "rand_industries_config.json").read_text())
-    config["doc_language"] = lang
+    config = _load_config(lang, config_file)
     ctx = BuildContext(run_id="linter000", generation_date="2026-04-23", project_name="rand-industries")
     model = SCCBuilder().build(graph, {}, config, [], ctx)
     if model is None:
         return ""
-    ctx_dict = _base_ctx(lang)
+    ctx_dict = _base_ctx(lang, config_file)
     ctx_dict["model"] = dataclasses.asdict(model)
     return env.get_template("scc.md.j2").render(**ctx_dict)
 
 
 @pytest.fixture(scope="module")
 def rendered_docs_en() -> dict[str, str]:
+    # EN close-out: all NINE doc types — the scan report was the 9th type that
+    # fell through the original 8-count (analysis 2026-07-28).
     env = _make_jinja("en")
     return {
         "AVV":             _render_avv(env, "en"),
@@ -469,8 +488,42 @@ def rendered_docs_en() -> dict[str, str]:
         "KI-System":       _render_ki_system(env, "en"),
         "DSFA":            _render_dsfa(env, "en"),
         "AI-Act-Manifest": _render_ai_act_manifest(env, "en"),
+        "Scan-Report":     _render_scan_report(env, "en"),
     }
 
+
+# ═══════════════════════════════════════════════════════════════════════════
+# EN-linter blind-spot inventory — EVERY deliberate exception in one place.
+# Each entry is a spot where this linter cannot see German; the TOM-§ column
+# leak stayed invisible through exactly this mechanic. Extend this list ONLY
+# with a one-line justification.
+#
+# Explicit exceptions (enforced below):
+#   1. Service.deletion_period values   — L14, graph data; owner text, own seed
+#      strand post-release (_accepted_remnants).
+#   2. TOM-§ taxonomy — EXCEPTION DROPPED 2026-07-28: the EN TOM now renders
+#      display labels (TOM_SECTION_LABELS, § 64(3) BDSG-EN terms); the 11
+#      German section words joined the stopword list below as a ratchet.
+#      Keys stay German (identity) — ADR-079 remains open.
+#   3. BfDI footer block                — Class C, deliberately German with an
+#      "unofficial for EN readers" label; block is cut, not word-whitelisted
+#      (_strip_accepted).
+#
+# Implicit blind spots (pass because _GERMAN_STOPWORDS is deliberately NOT
+# exhaustive and they carry no umlaut):
+#   4. Doc-type name TOM                — stands in the EN document itself
+#      ("Technical and Organisational Measures (TOM)"), kept by decision.
+#      AVV / VVT / DSFA are NOT exceptions anymore (unification 2026-07-28:
+#      gap prose, annex list AND affected column all say DPA / RoPA / DPIA;
+#      full probe over 9 EN renders + live-gap render = 0 hits) — they are in
+#      the stopword list below as a permanent re-introduction guard.
+#   5. "Impressum"                      — German legal institution, proper noun
+#      in EN prose (gap_reason_en references it deliberately).
+#   6. "a.s.k. Datenschutz"             — vendor name in the TOM template
+#      footer (en/tom.md.j2), not prose.
+#   7. The stopword list itself         — heuristic by design; umlaut check
+#      carries most of the load, the list only catches umlaut-free leaks.
+# ═══════════════════════════════════════════════════════════════════════════
 
 # German signals: umlauts + high-frequency legal/German stopwords. Deliberately
 # NOT exhaustive — the umlaut check catches most German; the word list catches
@@ -480,22 +533,37 @@ _GERMAN_STOPWORDS = [
     "Rechtsgrundlage", "Maßnahme", "eintragen", "ausstehend", "ausfüllen",
     "Pflicht", "Empfänger", "Betroffene", "Speicherfrist", "Hinweis",
     "Entwurf", "fehlt", "Anschrift", "Unterzeichner", "weitere", "Zweck",
+    # German doc acronyms — EN says DPA / RoPA / DPIA everywhere (2026-07-28
+    # unification); any reappearance is a leak, not an identifier.
+    "AVV", "VVT", "DSFA",
+    # Doc-type keys + their German display names — the affected column maps
+    # them per language (_AFFECTED_DOC_EN/_DE); a raw key or German doc name
+    # reappearing in the EN path is a leak (probe 2026-07-28: 0 hits for all).
+    "AI_Act_Manifest", "KI_Policy", "KI_System_Dokumentation",
+    "KI-Nutzungsrichtlinie", "KI-System-Dokumentation", "Risiko-Manifest",
+    "KI-System", "Dokumentation",
+    # TOM-§ taxonomy — the EN TOM renders § 64(3) BDSG-EN display labels
+    # (TOM_SECTION_LABELS) since 2026-07-28; a German section word in the EN
+    # path is a leak again, not an accepted remnant. ('Privacy by Design' is
+    # English — no stopword needed for 4.3.)
+    "Zutrittskontrolle", "Zugangskontrolle", "Zugriffskontrolle",
+    "Trennungskontrolle", "Pseudonymisierung", "Weitergabekontrolle",
+    "Eingangskontrolle", "Verfügbarkeitskontrolle", "Datenschutz-Maßnahmen",
+    "Incident-Response-Management", "Auftragskontrolle",
 ]
 
 
 def _accepted_remnants() -> list[str]:
     """Exact substrings that MAY be German in an EN document (documented):
-    - L14 (accepted): Service.deletion_period values + TOM section taxonomy
+    - L14 (accepted): Service.deletion_period values — owner text, own seed
+      strand post-release. (The TOM-§ taxonomy exception was DROPPED
+      2026-07-28: the EN TOM renders TOM_SECTION_LABELS now, and the German
+      section words are stopword-ratcheted instead.)
     - Class-C content is handled by cutting the BfDI footer block instead
     """
     graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
-    remnants = [s.get("deletion_period") for s in graph.get("services", [])
-                if s.get("deletion_period")]
-    from src.agents.document_architect import TOM_SECTION_ORDER
-    remnants += list(TOM_SECTION_ORDER)
-    # section labels also appear without their numeric prefix in table cells
-    remnants += [s.split(" ", 1)[1] for s in TOM_SECTION_ORDER if " " in s]
-    return remnants
+    return [s.get("deletion_period") for s in graph.get("services", [])
+            if s.get("deletion_period")]
 
 
 def _strip_accepted(text: str) -> str:
@@ -508,8 +576,143 @@ def _strip_accepted(text: str) -> str:
     return text
 
 
+def _render_scan_report_live_gaps(lang: str) -> str:
+    """Scan report rendered from LIVE analyze_gaps output on an empty config.
+
+    The fixture gaps are pre-baked; this path proves the gap branches actually
+    fire (empty required fields → company/address/… hints) so fix_label /
+    gap_reason reach the render in the requested language.
+    """
+    from src.documents.builders.scan_report_builder import ScanReportBuilder
+    from src.documents.content_models import BuildContext
+    from src.scanner.gap_analyzer import analyze_gaps
+
+    graph = json.loads((FIXTURE / "rand_industries_graph.json").read_text())
+    hints = analyze_gaps(
+        project_name="rand-industries",
+        config={"doc_language": lang},   # everything else empty → gaps fire
+        setup=None, retention_policies=[], services_detected=[],
+        extraction_summary=None,
+    )
+    assert len(hints) >= 8, "empty config must fire the company/hosting/retention detectors"
+    ctx = BuildContext(run_id="gapline0", generation_date="2026-04-23",
+                       project_name="rand-industries")
+    model = ScanReportBuilder().build(
+        graph, {}, {"doc_language": lang}, hints, ctx,
+        generated_doc_types=["AVV", "TOM", "VVT"],
+    )
+    env = _make_jinja(lang)
+    return env.get_template("scan_report.md.j2").render(model=dataclasses.asdict(model))
+
+
+def test_scan_report_live_gap_path_en_language_pure():
+    """EN close-out: live-emitted gap hints render English in the EN report."""
+    import re
+    text = _strip_accepted(_render_scan_report_live_gaps("en"))
+    hits = []
+    for i, line in enumerate(text.splitlines(), 1):
+        if any(u in line for u in "äöüÄÖÜß"):
+            hits.append((i, "umlaut", line.strip()[:90]))
+            continue
+        for w in _GERMAN_STOPWORDS:
+            if re.search(rf"\b{re.escape(w)}\b", line):
+                hits.append((i, w, line.strip()[:90]))
+                break
+    assert not hits, "Scan-Report (live gaps): German in EN render:\n" + "\n".join(
+        f"  line {n} [{why}]: {frag}" for n, why, frag in hits[:12]
+    )
+    assert "Set company details" in text          # fix_label_en fired
+    assert "Company name not configured" in text  # gap_reason_en fired
+    # Review 2026-07-28 corrections — each fires live, not merely exists:
+    assert "privacy policy and RoPA cannot state storage periods" in text   # VVT→RoPA
+    assert "required in the DPA signature block and the RoPA" in text       # AVV→DPA
+    assert "per Art. 28(3)(a) GDPR" in text                                 # norm at the law, EN citation style
+    assert "among others `privacy.html`, `impressum.html`, `DPA.*`" in text  # real globs, marked as selection
+    assert re.search(r"\bAVV Art\.", text) is None                          # no law glued to a doc name
+    # Unification 2026-07-28: affected column + annex list use the EN doc names
+    assert re.search(r"Affected documents:\*\* .*\bAVV\b", text) is None
+    assert re.search(r"Affected documents:\*\* .*\bVVT\b", text) is None
+    assert "DPA, TOM, RoPA" in text or "DPA, RoPA" in text                  # mapped column fired
+
+
+def test_scan_report_live_gap_path_de_labels_german():
+    """The DE side of the axis: previously-English labels are now German."""
+    text = _render_scan_report_live_gaps("de")
+    assert "Firmenangaben setzen" in text                      # was "Set company details"
+    assert "Unternehmensname nicht konfiguriert" in text       # was English gap_reason
+    assert "Set company details" not in text
+
+
+def test_scan_report_en_all_blocks_language_pure():
+    """The rand_industries fixture leaves signals / usecase blocks / Ebene-0
+    empty — this render activates EVERY template block (signals, high-risk
+    usecase incl. deployer_action_en, Ebene-0, repo extractions, HR actions)
+    and asserts the EN output stays language-pure."""
+    import re
+    from src.documents.builders.scan_report_builder import ScanReportBuilder
+    from src.documents.content_models import BuildContext
+
+    graph = {
+        "services": [{"name": "OpenAI", "category": "ai_llm"}],
+        "controls": [{"control_id": "LLM01"}],
+        "overall_risk": "limited",
+        "active_risks": ["PII_IN_LLM_CONTEXT", "NO_AI_AUDIT_TRAIL"],
+        "usecase_risks": [{
+            "type": "hr_recruitment_screening", "risk_level": "high",
+            "article": "Art. 6 Abs. 2", "annex_iii_nr": "4",
+            "title_de": "HR-Recruiting / Bewerbungsauswahl",
+            "title_en": "HR recruiting / applicant screening",
+            "deployer_action": "Menschliche Aufsicht sicherstellen",
+            "deployer_action_en": "Ensure human oversight",
+        }],
+    }
+    config = {
+        "doc_language": "en",
+        "ai_usecase_type": "hr_recruitment_screening",
+        "ai_usecase_confidence": 0.91,
+    }
+    ctx = BuildContext(run_id="fullblok", generation_date="2026-04-23",
+                       project_name="rand-industries")
+    model = ScanReportBuilder().build(
+        graph, {}, config, [], ctx,
+        risk_signals=[{"signal_type": "ai_usage", "confidence": 0.9},
+                      {"signal_type": "personal_data", "confidence": 0.8}],
+        repo_extraction_summary={
+            "extractions_count": 2, "extractions_successful": 1,
+            "fields_merged": 3, "fields_skipped": 1,
+            "source_files": ["privacy.html"], "merged_fields": ["company_name"],
+        },
+        generated_doc_types=["AVV", "TOM", "DSFA"],
+        provenance={"n": 5, "x": 3, "differenz": 2,
+                    "processors": ["OpenAI"], "tooling": ["pytest"],
+                    "other_services": ["Foo"], "x_drittland": 1,
+                    "third_country": ["OpenAI"]},
+    )
+    env = _make_jinja("en")
+    text = env.get_template("scan_report.md.j2").render(model=dataclasses.asdict(model))
+    # every optional block fired
+    for probe in ("What was detected?", "AI API usage detected",
+                  "HR recruiting / applicant screening", "Ensure human oversight",
+                  "Legal documents found in the repository",
+                  "Register the HR AI system in the EU database"):
+        assert probe in text, f"block probe missing: {probe}"
+    hits = []
+    for i, line in enumerate(text.splitlines(), 1):
+        if any(u in line for u in "äöüÄÖÜß"):
+            hits.append((i, "umlaut", line.strip()[:90]))
+            continue
+        for w in _GERMAN_STOPWORDS:
+            if re.search(rf"\b{re.escape(w)}\b", line):
+                hits.append((i, w, line.strip()[:90]))
+                break
+    assert not hits, "Scan-Report (all blocks): German in EN render:\n" + "\n".join(
+        f"  line {n} [{why}]: {frag}" for n, why, frag in hits[:12]
+    )
+
+
 @pytest.mark.parametrize("doc", [
-    "AVV", "TOM", "VVT", "SCC", "KI-Policy", "KI-System", "DSFA", "AI-Act-Manifest",
+    "AVV", "TOM", "VVT", "SCC", "KI-Policy", "KI-System", "DSFA",
+    "AI-Act-Manifest", "Scan-Report",
 ])
 def test_en_docs_contain_no_german(rendered_docs_en, doc):
     """Row 11: the EN render path never shows German (language-pure cut, N1).
@@ -528,3 +731,73 @@ def test_en_docs_contain_no_german(rendered_docs_en, doc):
     assert not hits, f"{doc}: German in EN render:\n" + "\n".join(
         f"  line {n} [{why}]: {frag}" for n, why, frag in hits[:12]
     )
+
+
+# ---------------------------------------------------------------------------
+# Gap-path fixture (2026-07-28) — the THIRD fixture blind spot of this week:
+# the default config is fully populated, so NO fallback branch ever fired in
+# this linter (that is how the German "(Adresse eintragen)" placeholders
+# survived in four builders). GAPS_CONFIG carries only project_name — every
+# field with a fallback branch is empty, and the branches run permanently.
+# ---------------------------------------------------------------------------
+
+_ALL_RENDERERS = {
+    "AVV": _render_avv, "TOM": _render_tom, "VVT": _render_vvt,
+    "SCC": _render_scc, "KI-Policy": _render_ki_policy,
+    "KI-System": _render_ki_system, "DSFA": _render_dsfa,
+    "AI-Act-Manifest": _render_ai_act_manifest, "Scan-Report": _render_scan_report,
+}
+
+
+@pytest.fixture(scope="module")
+def rendered_docs_en_gaps() -> dict[str, str]:
+    env = _make_jinja("en")
+    return {name: fn(env, "en", GAPS_CONFIG) for name, fn in _ALL_RENDERERS.items()}
+
+
+@pytest.mark.parametrize("doc", sorted(_ALL_RENDERERS))
+def test_en_gap_paths_contain_no_german(rendered_docs_en_gaps, doc):
+    """EMPTY required fields, EN render: every fallback branch fires and none
+    may show German. This is the ratchet the A5-A8 finding lacked."""
+    import re
+    text = _strip_accepted(rendered_docs_en_gaps[doc])
+    hits = []
+    for i, line in enumerate(text.splitlines(), 1):
+        if any(u in line for u in "äöüÄÖÜß"):
+            hits.append((i, "umlaut", line.strip()[:90]))
+            continue
+        for w in _GERMAN_STOPWORDS:
+            if re.search(rf"\b{re.escape(w)}\b", line):
+                hits.append((i, w, line.strip()[:90]))
+                break
+    assert not hits, f"{doc} (gaps fixture): German in EN render:\n" + "\n".join(
+        f"  line {n} [{why}]: {frag}" for n, why, frag in hits[:12]
+    )
+
+
+def test_gap_fixture_fires_the_fallbacks():
+    """Sanity: the gaps fixture actually exercises the branches — the EN
+    company-block fallbacks and the live warn-header must be present."""
+    env = _make_jinja("en")
+    tom = _render_tom(env, "en", GAPS_CONFIG)
+    assert "(add address)" in tom, "address fallback did not fire"
+    assert "(add e-mail)" in tom, "contact_email fallback did not fire"
+    avv = _render_avv(env, "en", GAPS_CONFIG)
+    assert "(add address)" in avv
+    # The warn-header is injected in production via the [[LEX_STATUS]] sentinel
+    # (_prepend_warn_header) — the harness renders templates raw, so assert the
+    # live-hint -> description_en chain on the partial directly.
+    cfg = _load_config("en", GAPS_CONFIG)
+    hints = [h for h in _linter_gap_hints(cfg, GAPS_CONFIG) if h.severity == "REQUIRED"]
+    assert hints, "empty config must fire REQUIRED hints"
+    header = env.get_template("_warn_header.md.j2").render(gaps=hints, lang="en")
+    assert "Company name" in header and "still missing" in header
+
+
+def test_all_docs_render_with_empty_config_both_langs():
+    """Smoke: all 9 doc types render in BOTH languages from the empty config."""
+    for lang in ("de", "en"):
+        env = _make_jinja(lang)
+        for name, fn in _ALL_RENDERERS.items():
+            out = fn(env, lang, GAPS_CONFIG)
+            assert isinstance(out, str) and len(out) > 100, f"{name}/{lang} empty"

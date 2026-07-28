@@ -99,7 +99,7 @@ EXPECTED_STATEMENT_COUNTS = {
     "10_jurisdiction/eu/10_de.cypher": 26,
     "00_global/00_frameworks.cypher": 128,
     "00_global/00_tom_defaults.cypher": 79,
-    "00_global/01_bsi_basis_requirements_en.cypher": 15,
+    "00_global/01_bsi_basis_requirements_en.cypher": 16,  # +1: OPS.1.1.2 re-baseline (F23b close, 2026-07-28)
     "10_jurisdiction/eu/11_data_subjects_normalize.cypher": 13,
     "10_jurisdiction/eu/12_legal_basis_backfill.cypher": 4,
     "10_jurisdiction/eu/14a_law_dedup.cypher": 1,

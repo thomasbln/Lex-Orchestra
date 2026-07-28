@@ -84,7 +84,19 @@ legal/logs/*
 # Internal docs — never in public repo (Prompt Library, GTM, podcast transcripts,
 # session-continuity, learnings, architecture notes, server snapshots, social drafts).
 # Local-only working files. T-01 — Public release hygiene.
-docs/internal/
+# Ignore the CONTENT (git does not descend into an excluded directory, so a bare
+# "docs/internal/" would make the negations below inert).
+docs/internal/*
+
+# …except the demo-video build pipeline. Only the two hand-maintained source
+# files are tracked; the recordings and every generated artefact stay local.
+# docs/internal/ is row 26 of docs/release/export-exclude-list.md, so these two
+# files are stripped from the public export by the existing rule — no new
+# exclude-list entry needed.
+!docs/internal/demo-videos/
+docs/internal/demo-videos/*
+!docs/internal/demo-videos/build.sh
+!docs/internal/demo-videos/cuts.tsv
 
 # public repo
 lex-orchestra-public

@@ -71,7 +71,11 @@ CREATE TABLE IF NOT EXISTS project_config (
     vat_id          TEXT,
     website_url     TEXT,
     extra_urls      TEXT[],
-    doc_language    TEXT DEFAULT 'de',
+    -- NEW rows start in English (2026-07-28). Column defaults apply to
+    -- INSERTs only — existing rows keep their stored value, and the render
+    -- fallback in the builders stays 'de' for a value that is absent at
+    -- render time. Existing DBs get this via migration 025.
+    doc_language    TEXT DEFAULT 'en',
     output_format   TEXT DEFAULT 'pdf',
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()

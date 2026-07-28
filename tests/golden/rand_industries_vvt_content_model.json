@@ -24,16 +24,18 @@
         "Datenschutzerkl\u00e4rung"
       ],
       "description": "Speicherfristen / L\u00f6schkonzept",
-      "description_en": "",
+      "description_en": "Retention periods / deletion concept",
       "field": "retention",
-      "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+      "gap_reason": "Keine L\u00f6schfristen definiert \u2014 Datenschutzerkl\u00e4rung und VVT k\u00f6nnen keine Speicherdauern angeben.",
       "affected_docs": [
         "AVV",
         "VVT",
         "Datenschutzerkl\u00e4rung"
       ],
       "fix_url": "http://localhost:3000/project/rand-industries/retention",
-      "fix_label": "Add retention policies",
+      "fix_label": "L\u00f6schfristen anlegen",
+      "fix_label_en": "Add retention policies",
+      "gap_reason_en": "No retention policies defined \u2014 privacy policy and RoPA cannot state storage periods.",
       "priority": 1
     }
   ],

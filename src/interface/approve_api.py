@@ -3045,6 +3045,11 @@ async def assistant_gaps(project_name: str) -> dict:
                 "affected_docs": h.affected_docs,
                 "fix_url":      h.fix_url,
                 "fix_label":    h.fix_label,
+                # EN close-out: additive twins — gap_reason/fix_label are now
+                # consistently German (they were a DE/EN mix); the dashboard can
+                # switch to the _en keys without an API change.
+                "gap_reason_en": h.gap_reason_en,
+                "fix_label_en":  h.fix_label_en,
                 "priority":     h.priority,
                 "severity":     h.severity,
             }

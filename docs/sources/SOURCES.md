@@ -68,6 +68,7 @@ is never embedded. Precedent: ISO 27001 is BYOS.
 | BSI IT-Grundschutz-Kompendium (DE) | Edition 2022 | https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Grundschutz/IT-GS-Kompendium/IT_Grundschutz_Kompendium_Edition2022.pdf?__blob=publicationFile&v=5 | BYOS, same BSI licence terms. Same-edition pair with the EN-2022 below (zero-skew re-baseline source for `basis_requirements` / `basis_requirements_en`). |
 | BSI IT-Grundschutz Compendium (EN) | Edition 2022 | https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Grundschutz/International/bsi_it_gs_comp_2022.pdf?__blob=publicationFile&v=2 | BYOS, same BSI licence terms. EN translation of the DE-2022 edition; verified DE-2022 ≡ EN-2022 across all 16 seeded Bausteine (Basic-requirement sets identical). |
 | AI-Cloud-Service-Compliance-Criteria-Catalogue (AIC4) | — | https://www.bsi.bund.de/ | same BSI licence terms |
+| BDSG — official English translation (BMI Language Service) | as amended 23 Jun 2021 | https://www.gesetze-im-internet.de/englisch_bdsg/englisch_bdsg.pdf | URL-only, NOT committed: reproduction/distribution requires prior consent (gesetze-im-internet "Translations" notice, quoted in `bdsg-en.meta.yaml`). Terminology source for the EN TOM-§ labels (§ 64(3) control terms); sha256-pinned in the meta file, verified 2026-07-28. |
 | ISO/IEC 27001 (2022) · 42001 (2023) · 22989 | — | purchase via ISO / Beuth | proprietary, purchase required |
 
 > **Carry-forward (stale seed path):** `pdf_ingest.py` `PDF_REGISTRY["bsi"]`

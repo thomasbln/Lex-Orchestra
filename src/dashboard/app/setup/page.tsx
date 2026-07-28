@@ -47,7 +47,11 @@ const EMPTY: WizardData = {
   responsible_title: '',
   dpo_name: '',
   dpo_email: '',
-  doc_language: 'de',
+  // NEW projects start in English (2026-07-28). Existing projects are NOT
+  // touched: every project_config row carries a stored value, and the backend
+  // render fallback stays 'de' — a project that never set the field keeps
+  // German documents.
+  doc_language: 'en',
 }
 
 const STEPS = ['projekt', 'repos', 'company', 'complete'] as const
@@ -907,7 +911,7 @@ export default function SetupPage() {
       responsible_title: 'Managing Director',
       dpo_name: 'Danny Rand',
       dpo_email: 'dpo@rand-industries.example.com',
-      doc_language: 'de',
+      doc_language: 'en',   // example app is a NEW project — same default
     }
     setData(exampleData)
     const exampleRepos: RepoEntry[] = [{

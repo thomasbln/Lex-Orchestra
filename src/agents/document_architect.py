@@ -380,6 +380,10 @@ class DocumentOrchestrator:
         # "DSGVO Art. 28 Abs. 3 lit. a" → "Art. 28(3)(a) GDPR". Mechanical,
         # lex-authored citation RENDERING — the norm reference itself is
         # unchanged. Unknown patterns pass through (linter catches leftovers).
+        # Sentence counting ("Satz N") is a German convention and is DROPPED in
+        # EN (unification 2026-07-28: "Art. 28(3)(a) GDPR", no "sentence 2" —
+        # same form as the gap_reason_en prose). Twin copy in
+        # tests/test_doc_linter.py _make_jinja — keep in sync.
         def _en_cite(value):
             if not value:
                 return value
@@ -391,7 +395,7 @@ class DocumentOrchestrator:
                     p = p[len("DSGVO "):]
                 p = re.sub(r"Abs\. (\d+)", r"(\1)", p)
                 p = re.sub(r"lit\. ([a-z])", r"(\1)", p)
-                p = re.sub(r"Satz (\d+)", r"sentence \1", p)
+                p = re.sub(r"\s*Satz \d+", "", p)
                 p = re.sub(r"Nr\. (\d+)", r"no. \1", p)
                 p = re.sub(r"Anhang III", "Annex III", p)
                 p = p.replace("(TOM-Nachweispflicht)", "(TOM accountability)")
@@ -458,11 +462,12 @@ class DocumentOrchestrator:
     def _get_template(self, name: str, lang: str = "de"):
         """Language fallback chain: {lang}/{name} → de/{name} → {name} (root).
 
-        ADR-079 2a: the 8 doc templates live in de/ and en/; DE is the
-        authoritative base language, so any non-de language falls back to the
-        German template before the root. Root remains the final fallback for
-        shared partials (_marker, _bfdi_footer, …) and scan_report, which are
-        not split and are looked up by bare name.
+        ADR-079 2a: all 9 doc templates live in de/ and en/ (scan_report joined
+        the split with the EN package close-out); DE is the authoritative base
+        language, so any non-de language falls back to the German template
+        before the root. Root remains the final fallback for shared partials
+        (_marker, _bfdi_footer, …), which are not split and are looked up by
+        bare name.
         """
         candidates = [f"{lang}/{name}"]
         if lang != "de":
@@ -703,7 +708,9 @@ class DocumentOrchestrator:
                 # Render a print-ready PDF alongside the Markdown (best-effort —
                 # a missing PDF never blocks the draft, see pdf_renderer).
                 from src.documents.pdf_renderer import render_md_to_pdf
-                pdf = render_md_to_pdf(path)
+                # _current_lang is set by the doc's own render pass (finding 3:
+                # the EN PDFs carried the German @page footer without this).
+                pdf = render_md_to_pdf(path, lang=getattr(self, "_current_lang", "de"))
                 generated.append(self._save_doc(
                     run_id, project_name, doc_type, str(path),
                     pdf_path=str(pdf) if pdf else None,
@@ -1027,11 +1034,14 @@ class DocumentOrchestrator:
                 config.get("company_name") or project_name,
                 config.get("legal_form") or "",
             ),
-            "address":           config.get("address") or "(Adresse eintragen)",
+            # A5-A8 root cause (2026-07-28): THIS flat ctx feeds the template
+            # headers — the builders' model.company fallbacks are never
+            # rendered by any template. Language-pure placeholders here.
+            "address":           config.get("address") or ("(add address)" if (config.get("doc_language") or "de") == "en" else "(Adresse eintragen)"),
             "zip_code":          config.get("zip_code") or "",
             "city":              config.get("city") or "",
             "zip_city":          config.get("zip_city") or "",
-            "contact_email":     config.get("contact_email") or "(E-Mail eintragen)",
+            "contact_email":     config.get("contact_email") or ("(add e-mail)" if (config.get("doc_language") or "de") == "en" else "(E-Mail eintragen)"),
             "website_url":       config.get("website_url") or "",
             "responsible_name":  config.get("responsible_name") or "",
             "responsible_title": config.get("responsible_title") or "",
@@ -1289,6 +1299,10 @@ class DocumentOrchestrator:
             if section in controls_by_section
         ]
 
+        # TOM-§ display labels (render-boundary provisional, 2026-07-28):
+        # keys stay German everywhere; only the EN template renders labels.
+        from src.documents.builders.tom_builder import TOM_SECTION_LABELS
+        _sect_lang = config.get("doc_language", "de") or "de"
         ctx.update({
             "framework_groups": [],   # migrated — template reads model.curated_controls
             "priority_actions": (reasoning_result or {}).get("priority_actions", []),
@@ -1296,6 +1310,7 @@ class DocumentOrchestrator:
             "controls_by_section": dict(controls_by_section),
             "controls_by_section_ordered": controls_by_section_ordered,
             "tom_section_order": TOM_SECTION_ORDER,
+            "tom_section_labels": TOM_SECTION_LABELS.get(_sect_lang, {}),
             # ADR-099 PR 1b: ContentModel for migrated template sections
             "model": _dc.asdict(model),
         })
@@ -1552,6 +1567,13 @@ class DocumentOrchestrator:
 
         # Load config ONCE — reused for both gap-fallback path and builder call
         config = self._load_project_config(project_name)
+        # EN close-out (analysis 2026-07-28, C2/C3): the scan report follows
+        # doc_language like the 8 legal docs — builder reads it from config,
+        # the template resolves through the same de/en fallback chain.
+        lang = config.get("doc_language", "de") or "de"
+        # Finding 3: the scan report bypasses _render_with_disclaimer, so set
+        # the render-lang marker here — the PDF pass in main.py reads it.
+        self._current_lang = lang
         # ADR-129 PR 15: owner-maintained retention rows ride along for AVV/VVT
         try:
             from src.scanner.gap_analyzer import load_retention_policies
@@ -1583,7 +1605,7 @@ class DocumentOrchestrator:
         )
 
         ctx = {"model": _dc.asdict(model)}
-        content = self._jinja.get_template("scan_report.md.j2").render(**ctx)
+        content = self._get_template("scan_report.md.j2", lang).render(**ctx)
         path = self.DRAFTS_DIR / f"scan_report_{run_id[:8]}.md"
         path.write_text(content, encoding="utf-8")
         return path

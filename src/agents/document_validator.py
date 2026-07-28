@@ -66,11 +66,29 @@ def _check_section_present(content: str, section: str) -> bool:
     Examples:
       "§9 Datenschutzkontrolle" → looks for "Datenschutzkontrolle"
       "1.1 Zutrittskontrolle"   → looks for "Zutrittskontrolle"
+
+    Double-match (2026-07-28, TOM-§ display fix): the spec values stay German
+    (identity), but the EN TOM renders display labels from TOM_SECTION_LABELS.
+    A section counts as present when EITHER the German spec string OR its EN
+    display label appears — without this, every EN TOM would score 0 on the
+    12 TOM sections. The broader language-blind-validator issue (EN scores for
+    all other doc types) is a separate backlog entry, deliberately not solved
+    here.
     """
-    clean = re.sub(r"^[§\d\.\s]+", "", section).strip()
-    if not clean:
-        clean = section
-    return clean.lower() in content.lower()
+    candidates = [section]
+    try:
+        from src.documents.builders.tom_builder import TOM_SECTION_LABELS
+        label = TOM_SECTION_LABELS.get("en", {}).get(section)
+        if label:
+            candidates.append(label)
+    except Exception:  # label table optional — never break validation
+        pass
+    lowered = content.lower()
+    for cand in candidates:
+        clean = re.sub(r"^[§\d\.\s]+", "", cand).strip() or cand
+        if clean.lower() in lowered:
+            return True
+    return False
 
 
 def _check_config_field(config: dict, field: str) -> bool:
@@ -81,20 +99,6 @@ def _check_config_field(config: dict, field: str) -> bool:
 
 class DocumentValidator:
     """Validates generated documents against graph specification."""
-
-    # Field → section hint mapping for gaps appendix
-    FIELD_HINTS = {
-        "responsible_name":  "Weisungsbefugnis (§ 3 AVV / TOM Unterschrift)",
-        "responsible_title": "Weisungsbefugnis (§ 3 AVV)",
-        "dpo_name":          "Datenschutzkontrolle (§ 9 AVV / TOM § 4.1)",
-        "dpo_email":         "Datenschutzkontrolle (§ 9 AVV)",
-        "address":           "Verantwortlicher-Header (§ 1 AVV / VVT)",
-        "zip_city":          "Verantwortlicher-Header",
-        "register_court":    "Handelsregister (VVT Header)",
-        "register_number":   "Handelsregister (VVT Header)",
-        "contact_email":     "Kontaktangaben",
-        "ai_usecase_type":   "AI Act Manifest § 3 / DSFA",
-    }
 
     def validate_all(self, generated_docs: list[dict], project_name: str) -> list[dict]:
         """
@@ -126,7 +130,10 @@ class DocumentValidator:
         for doc in generated_docs:
             report = self._validate_document(doc, config)
             results.append(report)
-            self._append_gaps_if_needed(report)
+            # gaps appendix removed 2026-07-28 (verdict): it was German-only
+            # with retired /config-/scan commands, wrote raw field identifiers
+            # into user documents, and duplicated info the warn-header, the
+            # header placeholders/markers and the scan report already carry.
             logger.info(
                 "Validated %s: score=%.2f usable=%s missing_sections=%d",
                 report["doc_type"],
@@ -178,45 +185,6 @@ class DocumentValidator:
             "completeness_score":    score,
             "is_usable":             len(missing_sections) == 0,
         }
-
-    def _append_gaps_if_needed(self, report: dict) -> None:
-        """
-        Append action-oriented gaps section to document file.
-        Only when config fields are missing. No legal disclaimers.
-        """
-        gaps = report["missing_config_fields"] + report["placeholder_fields"]
-        if not gaps:
-            return
-
-        path = Path(report.get("file_path", ""))
-        if not path.exists():
-            return
-
-        lines = [
-            "",
-            "---",
-            "",
-            "## Anhang: Noch ausstehende Angaben",
-            "",
-            "Diese Felder wurden noch nicht ausgefüllt:",
-            "",
-        ]
-        for field in gaps:
-            hint = self.FIELD_HINTS.get(field, "project_config")
-            lines.append(f"- **{field}** — wird benötigt in: {hint}")
-
-        lines += [
-            "",
-            "Ergänze diese Angaben in `/config` und starte neu mit `/scan`.",
-            "",
-        ]
-
-        try:
-            existing = path.read_text(encoding="utf-8")
-            if "## Anhang: Noch ausstehende Angaben" not in existing:
-                path.write_text(existing + "\n".join(lines), encoding="utf-8")
-        except Exception as e:
-            logger.warning("Could not append gaps to %s: %s", path, e)
 
     def format_telegram_summary(self, results: list[dict]) -> str:
         """

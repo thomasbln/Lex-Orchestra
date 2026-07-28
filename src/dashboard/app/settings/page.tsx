@@ -349,7 +349,7 @@ function SettingsPageInner() {
 
         {/* ── Hosting (project_setups) ────────────────────────────────────── */}
         <Section title="Hosting"
-          subtitle="Determines the ⊘ delegation block in TOM § 1.1 (physical access control).">
+          subtitle="Determines the ⊘ delegation block in TOM § 1.1 (equipment access control).">
           <Toggle
             label="On-premise"
             description="We run our own data centre. When off, physical controls are delegated to the hosting provider."

@@ -581,7 +581,7 @@ SET d.name_de = "Technisch-organisatorische Maßnahmen",
       "3.1 Verfügbarkeitskontrolle",
       "4.1 Datenschutz-Maßnahmen",
       "4.2 Incident-Response-Management",
-      "4.3 Privacy by Design/Default",
+      "4.3 Privacy by Design",
       "4.4 Auftragskontrolle"
     ],
     d.required_project_config_fields = [
@@ -604,8 +604,9 @@ SET d.name_de = "EU AI Act Risiko-Manifest",
       "1. Rollen- und Verantwortlichkeitsklärung",
       "2. Eingesetzte KI-Systeme (Provider-Perspektive)",
       "3. Deployer-Risiko und Anwendungsfall",
-      "4. Governance- und Kontrollmechanismen",
-      "5. AI Literacy — Schulungsmaßnahmen"
+      "4. Pflicht-Hinweise zum EU AI Act",
+      "5. AI Literacy",
+      "6. Governance- und Dokumenten-Verweise"
     ],
     d.required_project_config_fields = [
       "responsible_name", "responsible_title", "dpo_name", "dpo_email"
@@ -642,7 +643,7 @@ SET d.name_de = "Datenschutz-Folgenabschätzung",
     d.required_sections = [
       "Beschreibung der Verarbeitung",
       "Notwendigkeit und Verhältnismäßigkeit",
-      "Risikobewertung",
+      "Schritt 3: Risiken für Rechte und Freiheiten",
       "Maßnahmen zur Risikobehandlung",
       "Konsultation Datenschutzbeauftragter"
     ],
@@ -658,10 +659,9 @@ SET d.name_de = "KI-Nutzungsrichtlinie",
     d.jurisdictions = ["EU"],
     d.required_sections = [
       "Geltungsbereich und Zweck",
-      "Erlaubte und verbotene KI-Nutzung",
-      "Freigabeprozess für neue KI-Systeme",
-      "Pflichten der Mitarbeitenden",
-      "Datenschutz im KI-Kontext"
+      "3. Erlaubte KI-Nutzung",
+      "3.1 Verbotene KI-Praktiken",
+      "3.2 Do / Don't für Mitarbeitende"
     ],
     d.required_project_config_fields = [
       "company_name", "responsible_name"

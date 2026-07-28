@@ -17,8 +17,10 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Stylesheet lives next to this module so it is volume-mounted with src/ and can
-# be tuned without an image rebuild.
+# be tuned without an image rebuild. The EN overlay overrides only the two
+# language-bearing @page footer texts (finding 3, 2026-07-28).
 DEFAULT_CSS = Path(__file__).parent / "styles" / "lex-doc.css"
+EN_OVERLAY_CSS = Path(__file__).parent / "styles" / "lex-doc-en.css"
 
 _MD_EXTENSIONS = ["tables", "fenced_code", "sane_lists", "nl2br"]
 
@@ -27,15 +29,19 @@ def render_md_to_pdf(
     md_path: Path | str,
     output_path: Path | str | None = None,
     css_path: Path | str | None = None,
+    lang: str = "de",
 ) -> Path | None:
     """Render a Markdown file to PDF. Returns the PDF path, or None on failure.
 
     output_path defaults to md_path with a .pdf suffix.
     css_path defaults to styles/lex-doc.css.
+    lang controls the html[lang] attribute and, for 'en', loads the footer
+    overlay stylesheet — missing overlay falls back to the base (never fails).
     """
     md_path = Path(md_path)
     out_path = Path(output_path) if output_path else md_path.with_suffix(".pdf")
     css = Path(css_path) if css_path else DEFAULT_CSS
+    lang = (lang or "de").lower()[:2]
 
     try:
         import markdown
@@ -48,11 +54,13 @@ def render_md_to_pdf(
         text = md_path.read_text(encoding="utf-8")
         body = markdown.markdown(text, extensions=_MD_EXTENSIONS)
         html_doc = (
-            '<!DOCTYPE html><html lang="de"><head>'
+            f'<!DOCTYPE html><html lang="{lang}"><head>'
             '<meta charset="utf-8"></head><body>'
             f"{body}</body></html>"
         )
         stylesheets = [CSS(filename=str(css))] if css.exists() else []
+        if lang == "en" and EN_OVERLAY_CSS.exists():
+            stylesheets.append(CSS(filename=str(EN_OVERLAY_CSS)))
         HTML(string=html_doc, base_url=str(md_path.parent)).write_pdf(
             str(out_path), stylesheets=stylesheets
         )

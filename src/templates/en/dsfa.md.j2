@@ -25,6 +25,7 @@
 {% endif %}
 
 {% set _lm = ["gap", "derived"] %}
+{% if dpo_name %}{% set _lm = _lm + ["duty"] %}{% endif %}
 {% if fields.customer_info %}{% set _lm = _lm + ["provided"] %}{% endif %}
 {{ marker.legend(_lm) }}
 
@@ -103,6 +104,21 @@ planned — the field does not exist yet)._
 
 {% else %}
 ▸ **Automated preliminary assessment (to be evaluated by DPO/lawyer): no obligation to consult the supervisory authority under Art. 36 GDPR identified.** {{ model.step5.begruendung }}
+{% endif %}
+
+---
+
+## Step 6: DPO consultation (Art. 35(2) GDPR)
+
+{% if dpo_name %}
+⚖️ **Legal obligation (Art. 35(2) GDPR):** The advice of the designated data
+protection officer ({{ dpo_name }}) is to be sought in carrying out this data
+protection impact assessment. The evidence (date, outcome) is to be kept
+outside of Lex.
+{% else %}
+No data protection officer has been appointed — the duty to seek the DPO's
+advice under Art. 35(2) GDPR applies only where a DPO has been designated.
+The designation duty itself (Art. 37 GDPR) is to be assessed separately.
 {% endif %}
 
 ---

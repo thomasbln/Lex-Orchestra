@@ -1,0 +1,22 @@
+title: "Federal Data Protection Act (BDSG) — official English translation"
+publisher: "Language Service of the Federal Ministry of the Interior; provided by BMJ/BfJ via gesetze-im-internet.de"
+date: 2021-06-23
+tier: A
+license: "Copyright-restricted translation — reproduction/distribution requires prior consent"
+license_attribution: "gesetze-im-internet.de (Translations)"
+source_url: https://www.gesetze-im-internet.de/englisch_bdsg/englisch_bdsg.pdf
+sha256: d0ddf00d5eca4fe7409cc9866d6b267d005349e34d8d425af797877d0524260c
+in_repo: false
+seeds_used_by: []
+commercial_use: restricted
+in_public_repo: false
+license_note: >-
+  URL-only reference (BSI precedent): the translations page states verbatim
+  "Any reproduction, processing, distribution or other type of use of these
+  translations that does not fall within the relevant copyright exceptions
+  requires the prior consent of the author or other rights holder." —
+  docs/sources/ IS exported (not on the exclude list), so the PDF must not be
+  committed. The sha256 above pins the exact version verified on 2026-07-28.
+  Used as the terminology source for the EN TOM-section labels
+  (Section 64(3) BDSG-EN control terms, TOM_SECTION_LABELS in tom_builder.py);
+  no verbatim BDSG text is seeded or rendered.

@@ -1839,7 +1839,11 @@ def node_document_architect(state: LexState) -> LexState:
                 generated_doc_types=[d["doc_type"] for d in generated],
             )
             from src.documents.pdf_renderer import render_md_to_pdf
-            report_pdf = render_md_to_pdf(report_path)
+            # Finding 3 (2026-07-28): thread the report's render language into
+            # the PDF pass — _write_scan_report stamps it on the architect.
+            report_pdf = render_md_to_pdf(
+                report_path, lang=getattr(architect, "_current_lang", "de")
+            )
             scan_report = {
                 "doc_type": "scan_report",
                 "file_path": str(report_path),

@@ -1,0 +1,17 @@
+/* EN overlay for lex-doc.css — loaded AFTER the base stylesheet for
+   doc_language = en. Overrides ONLY the two language-bearing @page footer
+   texts (finding 3, 2026-07-28: every page of every EN PDF carried the German
+   footer). The @top-right doctitle slot is language-neutral (string(doctitle)
+   from the document's own H1) and needs no override. */
+@page {
+    @bottom-right {
+        content: "Page " counter(page) " / " counter(pages);
+        font: 8pt 'DejaVu Sans', sans-serif;
+        color: #888;
+    }
+    @bottom-left {
+        content: "Lex-Orchestra — auto-generated draft";
+        font: 8pt 'DejaVu Sans', sans-serif;
+        color: #aaa;
+    }
+}

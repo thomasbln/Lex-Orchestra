@@ -7,7 +7,7 @@
       "index": 1,
       "fix_label": "Weisungsberechtigte erg\u00e4nzen",
       "icon": "\ud83d\udd34",
-      "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+      "gap_reason": "Keine weisungsberechtigten Personen definiert \u2014 Kontrollmechanismus nach Art. 28 Abs. 3 Satz 2 lit. a DSGVO unvollst\u00e4ndig.",
       "affected_docs": [
         "AVV"
       ],
@@ -15,9 +15,9 @@
     },
     {
       "index": 2,
-      "fix_label": "Select hosting provider",
+      "fix_label": "Hosting-Provider w\u00e4hlen",
       "icon": "\ud83d\udd34",
-      "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+      "gap_reason": "Prim\u00e4rer Hosting-Provider nicht ausgew\u00e4hlt \u2014 TOM \u00a7 1.1 Delegationsblock unvollst\u00e4ndig.",
       "affected_docs": [
         "TOM \u00a7 1.1"
       ],
@@ -25,9 +25,9 @@
     },
     {
       "index": 3,
-      "fix_label": "Add retention policies",
+      "fix_label": "L\u00f6schfristen anlegen",
       "icon": "\ud83d\udd34",
-      "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+      "gap_reason": "Keine L\u00f6schfristen definiert \u2014 Datenschutzerkl\u00e4rung und VVT k\u00f6nnen keine Speicherdauern angeben.",
       "affected_docs": [
         "AVV",
         "VVT",
@@ -81,8 +81,8 @@
   "immediate_actions": [
     "Alle generierten Entw\u00fcrfe durch Rechtsberater pr\u00fcfen lassen",
     "Weisungsberechtigte erg\u00e4nzen",
-    "Select hosting provider",
-    "Add retention policies"
+    "Hosting-Provider w\u00e4hlen",
+    "L\u00f6schfristen anlegen"
   ],
   "short_term_actions": [
     "HR-KI-System bei EU-Datenbank registrieren (AI Act Annex III)",
@@ -92,7 +92,7 @@
     "Langfuse (oder gleichwertiges Tool) f\u00fcr AI Act Art. 12 Audit Trail integrieren",
     "UUID-Only Pattern implementieren \u2014 PII nie direkt in LLM-Kontext",
     "TOM-Implementierungen erg\u00e4nzen",
-    "Enter details manually",
+    "Angaben manuell eintragen",
     "Service-Rechtsgrundlagen erg\u00e4nzen"
   ],
   "long_term_actions": [
@@ -105,7 +105,7 @@
       "index": 1,
       "fix_label": "Weisungsberechtigte erg\u00e4nzen",
       "severity_label": "\ud83d\udd34 erforderlich",
-      "gap_reason": "No instructing persons defined \u2014 AVV Art. 28(3) Satz 2 lit. a control mechanism incomplete.",
+      "gap_reason": "Keine weisungsberechtigten Personen definiert \u2014 Kontrollmechanismus nach Art. 28 Abs. 3 Satz 2 lit. a DSGVO unvollst\u00e4ndig.",
       "affected_docs": [
         "AVV"
       ],
@@ -113,9 +113,9 @@
     },
     {
       "index": 2,
-      "fix_label": "Select hosting provider",
+      "fix_label": "Hosting-Provider w\u00e4hlen",
       "severity_label": "\ud83d\udd34 erforderlich",
-      "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+      "gap_reason": "Prim\u00e4rer Hosting-Provider nicht ausgew\u00e4hlt \u2014 TOM \u00a7 1.1 Delegationsblock unvollst\u00e4ndig.",
       "affected_docs": [
         "TOM \u00a7 1.1"
       ],
@@ -123,9 +123,9 @@
     },
     {
       "index": 3,
-      "fix_label": "Add retention policies",
+      "fix_label": "L\u00f6schfristen anlegen",
       "severity_label": "\ud83d\udd34 erforderlich",
-      "gap_reason": "No retention policies defined \u2014 privacy policy and VVT cannot state storage periods.",
+      "gap_reason": "Keine L\u00f6schfristen definiert \u2014 Datenschutzerkl\u00e4rung und VVT k\u00f6nnen keine Speicherdauern angeben.",
       "affected_docs": [
         "AVV",
         "VVT",
@@ -137,7 +137,7 @@
       "index": 4,
       "fix_label": "TOM-Implementierungen erg\u00e4nzen",
       "severity_label": "\ud83d\udfe1 empfohlen",
-      "gap_reason": "tom_implementations not configured \u2014 AVV cannot reference concrete TOM measures.",
+      "gap_reason": "Konkrete TOM-Umsetzungen sind nicht hinterlegt \u2014 der AVV kann keine konkreten TOM-Ma\u00dfnahmen referenzieren (tom_implementations).",
       "affected_docs": [
         "TOM"
       ],
@@ -145,9 +145,9 @@
     },
     {
       "index": 5,
-      "fix_label": "Enter details manually",
+      "fix_label": "Angaben manuell eintragen",
       "severity_label": "\ud83d\udfe1 empfohlen",
-      "gap_reason": "No legal artifacts found in repo (privacy.html, impressum.*, DPA.*). Fields must be entered manually.",
+      "gap_reason": "Keine Rechts-Artefakte im Repo gefunden (u. a. `privacy.html`, `impressum.html`, `DPA.*`). Felder m\u00fcssen manuell eingetragen werden.",
       "affected_docs": [
         "Impressum",
         "Datenschutzerkl\u00e4rung"
@@ -158,7 +158,7 @@
       "index": 6,
       "fix_label": "Service-Rechtsgrundlagen erg\u00e4nzen",
       "severity_label": "\ud83d\udfe1 empfohlen",
-      "gap_reason": "Services without legal_basis in graph \u2014 VVT cannot state legal ground: Braintree, MongoDB, Segment.",
+      "gap_reason": "Services ohne legal_basis im Graph \u2014 VVT kann keine Rechtsgrundlage angeben: Braintree, MongoDB, Segment.",
       "affected_docs": [
         "VVT"
       ],

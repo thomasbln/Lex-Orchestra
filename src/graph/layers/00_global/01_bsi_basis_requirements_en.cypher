@@ -8,10 +8,23 @@
 //
 // Honest omissions (edition skew DE=Ed.2021 vs EN=Ed.2022, verified in the PDF):
 //   - APP.3.1.A10, CON.3.A3, SYS.1.1.A3, SYS.1.1.A4 → officially ELIMINATED in Ed. 2022
-//   - OPS.1.1.2: DE list carries old-scheme IDs (OPS.1.1.A*) that do not exist in
-//     Ed. 2022 → NO basis_requirements_en (Re-Baseline track, session-continuity)
+//   - OPS.1.1.2: was omitted here (old-scheme DE IDs, no Ed.-2022 twin) —
+//     RE-BASELINED 2026-07-28 (F23b reopen: the control became edge-reachable
+//     and the DE fallback leaked German into the EN TOM). Both sides now use
+//     the same-edition pair Ed. 2022 (DE block in 00_frameworks.cypher, EN
+//     block below), Basic Requirements A2–A6 (A1 ELIMINATED in both editions).
 // SET (idempotent). NOT in make seed-all (Fujitsu track, ADR-130).
 // ============================================================
+
+MATCH (c:Control {framework: "BSI_Grundschutz", id: "OPS.1.1.2"})
+SET c.basis_requirements_en = [
+    "OPS.1.1.2.A2 Deputising Rules and Contingency Planning",
+    "OPS.1.1.2.A3 Controlled Hiring of IT Administrators",
+    "OPS.1.1.2.A4 Termination of IT Administration Duties",
+    "OPS.1.1.2.A5 Verifying Administrative Tasks",
+    "OPS.1.1.2.A6 Protecting Administrative Tasks"
+  ],
+  c.basis_requirements_en_source = "BSI IT-Grundschutz Compendium Ed. 2022 (EN)";
 
 MATCH (c:Control {framework: "BSI_Grundschutz", id: "APP.3.1"})
 SET c.basis_requirements_en = [

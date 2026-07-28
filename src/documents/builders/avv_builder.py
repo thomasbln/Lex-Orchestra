@@ -275,9 +275,9 @@ class AVVBuilder(DocumentBuilder):
         return CompanyBlock(
             name=config.get("company_name") or ctx.project_name,
             legal_form=config.get("legal_form") or "",
-            address=config.get("address") or "(Adresse eintragen)",
+            address=config.get("address") or ("(add address)" if (config.get("doc_language") or "de") == "en" else "(Adresse eintragen)"),
             zip_city=zip_city,
-            contact_email=config.get("contact_email") or "(E-Mail eintragen)",
+            contact_email=config.get("contact_email") or ("(add e-mail)" if (config.get("doc_language") or "de") == "en" else "(E-Mail eintragen)"),
             website_url=config.get("website_url") or "",
             responsible_name=config.get("responsible_name") or None,
             responsible_title=config.get("responsible_title") or None,

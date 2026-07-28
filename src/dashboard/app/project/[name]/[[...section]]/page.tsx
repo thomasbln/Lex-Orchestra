@@ -822,7 +822,7 @@ function HostingSection({
   return (
     <div className="space-y-8 max-w-3xl">
       <SectionHint>
-        Determines the delegation block in TOM § 1.1 (physical access control).
+        Determines the delegation block in TOM § 1.1 (equipment access control).
       </SectionHint>
       <Section title="Infrastructure">
         <Toggle

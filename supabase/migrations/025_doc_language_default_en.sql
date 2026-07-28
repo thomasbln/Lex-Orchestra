@@ -1,0 +1,14 @@
+-- 025 — project_config.doc_language: column default 'de' -> 'en' (2026-07-28)
+--
+-- NEW projects start in English. A column default applies to INSERTs only, so
+-- this does NOT touch a single existing row: the 16 rows on the reference
+-- system keep their stored value (15x 'de', 1x 'en'), and any project that
+-- never chose a language keeps German documents because the render fallback in
+-- the builders (config.get("doc_language", "de") or "de") stays 'de'.
+--
+-- Separation of concerns (verdict 2026-07-28):
+--   new-project surfaces  -> 'en'  (setup form default, this column default)
+--   render-time fallback  -> 'de'  (builders + document_architect, unchanged)
+--
+-- Idempotent: SET DEFAULT is a catalog-only change, safe to re-run.
+ALTER TABLE project_config ALTER COLUMN doc_language SET DEFAULT 'en';

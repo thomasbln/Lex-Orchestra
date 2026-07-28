@@ -3,6 +3,39 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.2.0 — 2026-07-28
+
+English document output is now complete and is the default for new projects.
+
+**English output**
+
+- The scan report — the cover document of every run — is generated in English
+  too. It was the ninth document type and the only one still German-only.
+- The TOM section column shows English labels (equipment access control, user
+  control, data access control, …) taken verbatim from the official English
+  translation of the German Federal Data Protection Act, § 64(3).
+- Document names in English texts match the documents you actually receive:
+  DPA, RoPA, DPIA.
+- Gap texts, the annex list and the affected-documents column are language-pure
+  in both directions; norm citations name the law, not the document.
+- PDFs carry an English footer and page count.
+
+**Documents**
+
+- The data protection impact assessment gains a step for the duty to seek the
+  data protection officer's advice (Art. 35(2) GDPR) — the assessment
+  documented the supervisory-authority consultation but had lost this one.
+- Removed a leftover appendix that listed raw field identifiers and referred to
+  commands that no longer exist. What is missing is shown by the status header,
+  the markers in the document and the scan report.
+- The document specification in the knowledge graph now matches the current
+  section headings, so the completeness score reports real values again.
+
+**Setup**
+
+- New projects start in English. Existing projects keep their language — a
+  project that never chose one still produces German documents.
+
 ## v1.1.3 — 2026-07-24
 
 The footer still read `Release: v1.0.0` while the badge at the top of the README

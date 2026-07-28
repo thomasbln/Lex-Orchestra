@@ -22,14 +22,16 @@
         "TOM"
       ],
       "description": "Prim\u00e4rer Hosting-Provider (TOM \u00a7 1.1 Zutrittskontrolle)",
-      "description_en": "",
+      "description_en": "Primary hosting provider (TOM \u00a7 1.1 equipment access control)",
       "field": "hosting_provider",
-      "gap_reason": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
+      "gap_reason": "Prim\u00e4rer Hosting-Provider nicht ausgew\u00e4hlt \u2014 TOM \u00a7 1.1 Delegationsblock unvollst\u00e4ndig.",
       "affected_docs": [
         "TOM \u00a7 1.1"
       ],
       "fix_url": "http://localhost:3000/project/rand-industries/hosting",
-      "fix_label": "Select hosting provider",
+      "fix_label": "Hosting-Provider w\u00e4hlen",
+      "fix_label_en": "Select hosting provider",
+      "gap_reason_en": "Primary hosting provider not selected \u2014 TOM \u00a7 1.1 delegation block incomplete.",
       "priority": 1
     }
   ],
