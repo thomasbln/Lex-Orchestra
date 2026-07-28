@@ -7,22 +7,30 @@ not node property names.
 
 Fixture honesty (2026-07-28)
 ----------------------------
-This file used to pin the bucket as ``tooling`` and fill it with ``dotenv``,
-``ts-node`` and ``typescript``. Neither the name nor the members survived a
-check against production:
+This file used to pin the bucket as ``tooling``. The name did not survive a check
+against production: the bucket is not tooling. It is "no Service node in the catalog", which is a
+statement about *our* knowledge, not about the third party. See the rationale in
+``graph_client._classify_provenance``.
 
-* The bucket is not tooling. It is "no Service node in the catalog", which is a
-  statement about *our* knowledge, not about the third party. See the rationale
-  in ``graph_client._classify_provenance``.
-* Those three names cannot reach ``scan_signals`` today. The manifest path drops
-  a token whose ``canonical()`` is ``None`` (``workflow/main.py`` around the
-  ``manifest_services`` build), and the compose path in
-  ``lex_orchestra_scout._scan_deployment_signals`` emits
-  ``canonical(raw) or raw.capitalize()`` — so an unmapped compose service
-  arrives capitalised, never as lowercase ``ts-node``.
+Correction (also 2026-07-28): an earlier version of this note claimed those three
+names "cannot reach scan_signals today". **That was wrong** — a live check found
+``dotenv``, ``ts-node`` and ``typescript`` in ``scan_signals`` on the working
+system with a same-day timestamp. The reasoning error was to look only at the
+static map: ``_add_canonical`` (``workflow/main.py``) falls through to
+``canonical_with_fallback(raw, use_llm=True)`` when ``canonical()`` misses, and
+Gemma4 happily returns the package name itself as the canonical name. It is then
+added with no Service node behind it — straight into this bucket.
 
-The fixture below therefore uses names each of the two reachable paths can
-actually produce, and says which path produces them.
+So there are three reachable paths, not two, and the third is the common one:
+
+1. a canonical ``SIGNAL_MAP`` name with no catalog node (a catalog gap),
+2. an unmapped compose image via ``canonical(raw) or raw.capitalize()`` in
+   ``lex_orchestra_scout._scan_deployment_signals`` (arrives capitalised —
+   a live document once read "1 Entwicklungswerkzeug … (Openai)"),
+3. **Gemma4 echoing a package name** it could classify but the catalog does not
+   know — how ``dotenv``/``ts-node``/``typescript`` got there.
+
+The fixture keeps one synthetic member per path so the arithmetic stays legible.
 """
 from src.graph.graph_client import _classify_provenance
 
@@ -34,9 +42,11 @@ _DETECTED = [
     # ── the three unclassified members, one per reachable production path ──
     # 1. unmapped docker-compose image → canonical() misses → .capitalize()
     "Worker",
-    "Nginx",
-    # 2. Gemma4 named it in the 0.60–0.75 confidence band: detected, but
-    #    below the 0.75 threshold that would create a Service node
+    # 2. Gemma4 echoed the package name; no catalog node behind it. This is the
+    #    common case in the field — dotenv/ts-node/typescript arrive this way.
+    "ts-node",
+    # 3. Gemma4 named it in the 0.60–0.75 confidence band: detected, but below
+    #    the 0.75 threshold that would create a Service node
     #    (workflow/main.py, create_service_node_from_llm).
     "Acme Analytics",
 ]
@@ -44,7 +54,7 @@ _DETECTED = [
 _THIRD_COUNTRY = {"Braintree", "MongoDB", "OpenAI", "Postmark", "Redis",
                   "Segment", "Stripe", "Supabase"}
 _PROCESSORS = _THIRD_COUNTRY | {"Elasticsearch", "Resend", "Sentry"}
-_UNCLASSIFIED = {"Worker", "Nginx", "Acme Analytics"}
+_UNCLASSIFIED = {"Worker", "ts-node", "Acme Analytics"}
 
 
 def _graph_rows():

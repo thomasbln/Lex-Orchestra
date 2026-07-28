@@ -50,7 +50,12 @@ SET s.data_subjects = ["website_visitors", "end_users"];
 MATCH (s:Service) WHERE s.name IN ["Braintree", "Mollie"]
 SET s.data_subjects = ["customers"];
 
-MATCH (s:Service) WHERE s.name IN ["Chroma", "MongoDB", "Replicate", "Telegram", "Firecrawl"]
+// "Chroma" dropped 2026-07-28: it was a duplicate of "ChromaDB", which the
+// [end_users] block above already covers. "MongoDB" stays — it is a separate
+// service from the catalog's "MongoDB Atlas" (ADR-072: library presence is
+// ambiguous between self-hosted and Atlas, so naming a processor would be a
+// false claim), and it is the string detection actually produces.
+MATCH (s:Service) WHERE s.name IN ["MongoDB", "Replicate", "Telegram", "Firecrawl"]
 SET s.data_subjects = ["end_users"];
 
 // "Mistral AI EU" is a catalog stub (ADR-082 Marketplace), NOT a scanned compliance

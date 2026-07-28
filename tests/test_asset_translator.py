@@ -94,10 +94,18 @@ def test_idempotent_store(translator):
 
 
 def test_canonical_name_known_service():
-    """Known services are mapped to their canonical Neo4j seed name."""
+    """Known services are mapped to their canonical Neo4j seed name.
+
+    Until 2026-07-28 the last line here read ``== "Openai"`` — the test pinned
+    the defect as intended behaviour. ``Openai`` is not a catalog name, so
+    ``Q_META``'s hard ``MATCH`` dropped the service and OpenAI silently left the
+    DPA processor list. The factory now passes an already-canonical name through
+    untouched; see tests/test_name_factory_pin.py for the general bar.
+    """
     assert _canonical_name("Stripe") == "Stripe"
     assert _canonical_name("stripe-js") == "Stripe"
-    assert _canonical_name("OpenAI") == "Openai"
+    assert _canonical_name("OpenAI") == "OpenAI"
+    assert _canonical_name("openai") == "OpenAI"
 
 
 def test_canonical_name_unknown_service():

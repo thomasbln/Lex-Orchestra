@@ -478,13 +478,24 @@ ADR_082_INTEGRATIONS: list[dict] = [
 # ServiceCategory layer (ADR-061) provides Controls automatically.
 STUB_SERVICES = [
     # (name, category, country, gdpr_adequate, dpa_required, ai_act_relevant)
+    #
+    # "Chroma" was removed here on 2026-07-28: it duplicated "ChromaDB" from
+    # 00_services_global.cypher, which owns the detection tokens and the DPA URL.
+    # ADR-100 PR 7 had already DETACH DELETEd it at runtime — this table kept
+    # recreating it on every seed, so the fix had to happen HERE, not in the graph.
+    #
+    # "MongoDB" deliberately STAYS, next to the catalog's "MongoDB Atlas". Equal
+    # category is not evidence of a duplicate: signal_map (see the ADR-072 note
+    # around "mongodb (JS), pymongo, motor all intentionally unmapped") treats
+    # self-hosted MongoDB and Atlas as two different things on purpose, and no
+    # detection path ever produces the string "MongoDB Atlas" — retargeting this
+    # row to it orphaned the data categories and stripped them from the DPA.
     ("MongoDB",       "nosql_db",    "USA", False, True,  False),
     ("Braintree",     "payment",     "USA", False, True,  False),
     ("Segment",       "analytics",   "USA", False, True,  False),
     ("Amplitude",     "analytics",   "USA", False, True,  False),
     ("Mollie",        "payment",     "NLD", True,  True,  False),
     ("Replicate",     "ai_platform", "USA", False, True,  True),
-    ("Chroma",        "vector_db",   "USA", False, True,  False),
     # ADR-072: Google OAuth / Expo intentionally NOT seeded as Service nodes —
     # Gemma4 classifies them by category (auth / baas) and controls flow via
     # ServiceCategory-[:SUBJECT_TO_CONTROL]->(Control). Prevents graph
@@ -1210,7 +1221,7 @@ def seed_pr_b1_gpai(session):
 # entry: (service_name, [data_categories]).
 SERVICE_DATA_CATEGORIES = [
     ("Amplitude", ["Event-Daten", "Nutzer-IDs", "Session-Daten", "Nutzungsverhalten", "Gerätedaten", "IP-Adressen"]),
-    ("Chroma", ["Embedding-Vektoren", "Indizierte Dokumente", "ggf. personenbezogene Inhalte"]),
+    ("ChromaDB", ["Embedding-Vektoren", "Indizierte Dokumente", "ggf. personenbezogene Inhalte"]),
     ("Firecrawl", ["Crawled-Webinhalte", "URLs", "ggf. personenbezogene Inhalte aus Web-Quellen"]),
     ("Google Cloud Authentication", ["E-Mail-Adressen", "OAuth-Tokens", "Authentifizierungs-Metadaten", "IP-Adressen"]),
     ("HashiCorp Vault", ["Verschlüsselte Secrets", "Audit-Logs", "Zugriffs-Metadaten"]),
@@ -1247,7 +1258,7 @@ def seed_pr_b2_data_categories(session):
 # originals ("Endnutzer", "Verantwortliche", …) made every full seed re-write
 # validator-red state (found 2026-07-14, Nachschlag B).
 SERVICE_DATA_SUBJECTS = [
-    ("Chroma",   ["end_users"]),  # vector DB for RAG over application data
+    ("ChromaDB", ["end_users"]),  # vector DB for RAG over application data
     ("MongoDB",  ["end_users"]),  # general application DB
     ("eRecht24", ["employees"]),  # B2B compliance tool — users are the controller's staff
 ]
@@ -1424,7 +1435,7 @@ SERVICE_ACTIVITY_MAPPINGS = [
     ("Amplitude", "tracking_analytics"),
     ("OpenAI", "ki_inferenz"),
     ("Anthropic", "ki_inferenz"),
-    ("Chroma", "rag_retrieval"),
+    ("ChromaDB", "rag_retrieval"),
 ]
 
 
@@ -2682,7 +2693,7 @@ SERVICE_EN_DESCRIPTORS = [
     ("Anthropic", "AI-assisted text generation and processing", "API requests, model inputs and outputs, potentially personal content in prompts"),
     ("Auth0", "Authentication, authorisation, identity management", "Authentication data, e-mail addresses, password hashes, login logs, MFA data"),
     ("Azure", "Server hosting, cloud infrastructure, compute, storage", "Server logs, IP addresses, technical connection data, hosted application data"),
-    ("Chroma", None, "Embedding vectors, indexed documents, potentially personal content"),
+    ("ChromaDB", None, "Embedding vectors, indexed documents, potentially personal content"),
     ("Clerk", "Authentication, authorisation, identity management", "Authentication data, e-mail addresses, password hashes, login logs, MFA data"),
     ("Cloudflare", "CDN, DDoS protection, DNS, WAF", "IP addresses, HTTP requests, DNS queries, security logs"),
     ("Cloudinary", "Media hosting, image optimisation, CDN delivery", "Image and video files, media data, potentially personal content in media"),

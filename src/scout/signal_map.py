@@ -85,8 +85,11 @@ SIGNAL_MAP: dict[str, str | None] = {
     "weaviateclient":        "Weaviate",
     "qdrant":                "Qdrant",
     "qdrantclient":          "Qdrant",
-    "chromadb":              "Chroma",
-    "chroma":                "Chroma",
+    # 2026-07-28: both retargeted from "Chroma" to "ChromaDB". The catalog had
+    # two nodes for the same product; "ChromaDB" is the surviving one (it owns
+    # canonical_names + dpa_url), "Chroma" came from STUB_SERVICES and is gone.
+    "chromadb":              "ChromaDB",
+    "chroma":                "ChromaDB",
     "llamaindex":            None,        # framework (similar to langchain)
     "vercel":                "Vercel",
     "netlify":               "Netlify",

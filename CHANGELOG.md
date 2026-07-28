@@ -3,6 +3,38 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.3.1 — 2026-07-28
+
+A bugfix release. Some services you use were being filed under the wrong name
+internally, which quietly kept them out of your documents.
+
+**Services with capital letters inside their name were dropped**
+
+- When a service was detected through code analysis rather than through a
+  dependency file, its name was rebuilt from a lowercase form. "OpenAI" became
+  "Openai", "GitHub" became "Github", "PayPal" became "Paypal". None of those
+  match the service catalog, so the service fell out of the processor list in
+  the Data Processing Agreement, lost its controls in the technical measures
+  document, and lost its row in the Standard Contractual Clauses.
+- Affected: AWS, GitHub, HubSpot, Mistral AI, MongoDB Atlas, OpenAI, PayPal,
+  SendGrid. A service whose name was already correct is now left alone instead
+  of being rewritten.
+- If you generated documents with v1.3.0 or earlier and any of these appear in
+  your stack, run the scan again.
+
+**MongoDB is no longer reported as MongoDB Atlas**
+
+- A bare `mongodb` dependency resolved to "MongoDB Atlas" through a substring
+  match. Whether you run MongoDB yourself or use Atlas cannot be told from a
+  library, and naming the wrong one in a processing agreement is a factual
+  claim we cannot support. It is now left unresolved, which is what the
+  detection rules always intended.
+
+**Two duplicate catalog entries merged**
+
+- Chroma and ChromaDB were two entries for the same product; they are one now.
+  MongoDB and MongoDB Atlas stay separate — they are genuinely two services.
+
 ## v1.3.0 — 2026-07-28
 
 Your documents change what they say about the services you use. If you generated
