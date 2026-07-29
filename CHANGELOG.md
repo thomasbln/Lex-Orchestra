@@ -3,6 +3,26 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.3.2 — 2026-07-29
+
+### Changed
+- **Demo GIFs rebuilt from the current recordings.** The two README GIFs were a
+  five-image slideshow assembled on 2026-07-23; they showed a scan with three
+  documents and German document names. They now come from the same cut list as
+  the demo video: a frozen install-success beat, the empty dashboard, the running
+  scan and the generated documents — 28.4 s, dark and light frame variants.
+
+### Added
+- **Reproducible video pipeline** (`docs/internal/demo-videos/`, maintainer-only):
+  a hand-maintained cut list plus a build script that renders the demo video and
+  both GIFs deterministically from unmodified screen recordings.
+
+### Deprecated
+- `scripts/gif/` carries a RETIRED header pointing at the new pipeline. Kept, not
+  deleted — the light/dark frame idea and the palette size came from it.
+
+_No code path, seed step or documented command changed in this release._
+
 ## v1.3.1 — 2026-07-28
 
 A bugfix release. Some services you use were being filed under the wrong name

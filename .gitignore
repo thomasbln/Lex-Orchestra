@@ -97,6 +97,8 @@ docs/internal/*
 docs/internal/demo-videos/*
 !docs/internal/demo-videos/build.sh
 !docs/internal/demo-videos/cuts.tsv
+!docs/internal/demo-videos/sweep.sh
+!docs/internal/demo-videos/recording-checklist.md
 
 # public repo
 lex-orchestra-public

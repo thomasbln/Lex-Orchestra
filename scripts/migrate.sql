@@ -148,6 +148,15 @@ ALTER TABLE disclaimer_templates
     ADD CONSTRAINT disclaimer_templates_lang_doc_type_key
     UNIQUE NULLS NOT DISTINCT (lang, doc_type);
 
+-- The licence notice in the 10 rows below points at the REPOSITORY, not at
+-- lex-orchestra.com. That is deliberate, not a stale value:
+--   * AGPL-3.0 §13 asks for access to the corresponding source at this spot,
+--     and the repository is where the source actually is.
+--   * A compliance document is filed and read for years. The repo URL is the
+--     more durable address for that lifetime.
+--   * The domain is alive and redirects to the same repository — it carries the
+--     brand, not the licence notice.
+-- Do not "repair" these rows back to the domain.
 INSERT INTO disclaimer_templates (lang, doc_type, content) VALUES
 ('de', NULL, E'---\n⚠️ ENTWURF — ARBEITSGRUNDLAGE, KEINE RECHTSBERATUNG\n\nLex-Orchestra dokumentiert die erkannten technischen Systeme und Datenflüsse und\nleitet daraus diesen Entwurf ab. Er dient als Arbeitsgrundlage für Datenschutz-,\nCompliance- und Rechtsberatung und ersetzt keine individuelle rechtliche Prüfung.\nVor produktivem Einsatz ist eine fachliche Prüfung erforderlich.\n\nErstellt von Lex-Orchestra (AGPL-3.0)\nhttps://github.com/thomasbln/Lex-Orchestra\n---'),
 ('de', 'avv', E'---\n⚠️ ENTWURF — ARBEITSGRUNDLAGE, KEINE RECHTSBERATUNG\n\nDieser AVV-Entwurf wurde aus den erkannten Auftragsverarbeitern abgeleitet und ist\neine Arbeitsgrundlage zur fachlichen Prüfung. Er ist nicht unmittelbar\nunterschriftsreif und stellt keinen rechtsverbindlichen Vertrag dar; vor Abschluss\nist eine individuelle Prüfung und Anpassung erforderlich.\n\nErstellt von Lex-Orchestra (AGPL-3.0)\nhttps://github.com/thomasbln/Lex-Orchestra\n---'),
