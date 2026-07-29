@@ -3,6 +3,17 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.3.4 — 2026-07-29
+
+### Fixed
+- **The demo GIF no longer shows the browser address bar.** It carried the
+  recording machine's LAN address and a German "not secure" label in every frame
+  of a looping image on the front page. The top 40 px of the master are cropped
+  away, which removes both. Files get slightly smaller as a side effect
+  (1.45 MB dark, 1.46 MB light).
+
+_No code path, seed step or documented command changed in this release._
+
 ## v1.3.3 — 2026-07-29
 
 ### Changed
