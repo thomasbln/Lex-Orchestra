@@ -3,6 +3,21 @@
 All notable changes to this project are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v1.3.3 — 2026-07-29
+
+### Changed
+- **Demo GIF spans the full column width.** The two fragment-suffixed image lines
+  switched themes but could not carry a width, so the GIF rendered at its native
+  size inside a wider column. Now a `<picture>` element with `width="100%"`, the
+  same pattern the README already uses for the Scout architecture diagram.
+
+### Removed
+- `docs/assets/lex-demo-dark.mp4` and `lex-demo-light.mp4`. Built by the retired
+  GIF tooling as social-post assets and shipped in every export since, but nothing
+  referenced them. Export drops from 306 files to 304, about 900 KB lighter.
+
+_No code path, seed step or documented command changed in this release._
+
 ## v1.3.2 — 2026-07-29
 
 ### Changed

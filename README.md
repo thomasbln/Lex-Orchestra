@@ -5,7 +5,7 @@
 # Lex-Orchestra
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Release: v1.3.2](https://img.shields.io/badge/Release-v1.3.2-blue)](https://github.com/thomasbln/Lex-Orchestra/releases)
+[![Release: v1.3.3](https://img.shields.io/badge/Release-v1.3.3-blue)](https://github.com/thomasbln/Lex-Orchestra/releases)
 [![Data: Stays local](https://img.shields.io/badge/Data-Stays%20local-green)]()
 
 <!-- tagline slot — final one-liner pending (Thomas' call); replace the two lines below when it lands -->
@@ -26,8 +26,10 @@ The reasoning runs on a deterministic Context Graph.
 
 One scan produces nine document types in two languages, fully local.
 
-![Lex-Orchestra: repo in, compliance docs out](docs/assets/lex-demo-dark.gif#gh-dark-mode-only)
-![Lex-Orchestra: repo in, compliance docs out](docs/assets/lex-demo-light.gif#gh-light-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/lex-demo-dark.gif">
+  <img src="docs/assets/lex-demo-light.gif" alt="Lex-Orchestra: repo in, compliance docs out" width="100%">
+</picture>
 
 ![Lex-Orchestra Architecture: Sense, Know, Act](docs/images/architecture.svg)
 
@@ -305,7 +307,7 @@ specific stack, a CI/CD hook for GitHub Actions, and webhook notifications.
 
 **Further ahead:** US law coverage and additional jurisdiction layers.
 
-Release: v1.3.2 · License: AGPL-3.0 · [Changelog](CHANGELOG.md) · Partner access: [open an issue](https://github.com/thomasbln/Lex-Orchestra/issues)
+Release: v1.3.3 · License: AGPL-3.0 · [Changelog](CHANGELOG.md) · Partner access: [open an issue](https://github.com/thomasbln/Lex-Orchestra/issues)
 
 ---
 
